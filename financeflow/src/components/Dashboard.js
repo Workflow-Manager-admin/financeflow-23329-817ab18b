@@ -139,7 +139,7 @@ function Dashboard({ showToast }) {
           />
           <TransactionList
             transactions={filtered}
-            onEdit={function handleEditTx(tx) {
+            onEdit={(tx) => {
               setEditTx(tx);
               setShowTxModal(true);
             }}

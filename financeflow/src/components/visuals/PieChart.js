@@ -81,18 +81,21 @@ function PieChart({ transactions }) {
             {pieData.length ? 'Total' : 'No data'}
           </text>
         </svg>
-        {/* Show total expense */}
+        {/* Show total expense next to the chart for context */}
         <div style={{
-          minWidth: 76,
+          minWidth: 88,
           textAlign: "center",
-          fontWeight: 600,
+          fontWeight: 700,
           color: "var(--expense,#E74C3C)",
-          fontSize: "1.14rem"
+          fontSize: "1.16rem",
+          letterSpacing: "0.01em"
         }}>
-          <span style={{ display: "block", fontSize: "1.04rem", color: "var(--text-secondary,#aaa)", fontWeight: 400, marginBottom: 2 }}>
-            Total
+          <span style={{ display: "block", fontSize: "1.075rem", color: "var(--text-secondary,#aaa)", fontWeight: 500, marginBottom: 2 }}>
+            Total Expense
           </span>
-          ${total.toFixed(2)}
+          <span data-testid="expense-total" style={{fontSize:"1.21rem"}}>
+            ${total.toFixed(2)}
+          </span>
         </div>
       </div>
       {pieData.length > 0 && (

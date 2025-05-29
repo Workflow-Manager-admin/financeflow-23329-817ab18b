@@ -38,3 +38,88 @@ ERROR in ./src/App.js 11:0-63
 Module not found: Error: Can't resolve './components/ToastNotification' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
 
 webpack compiled with 5 errors
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve './components/Navbar' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+ERROR in ./src/App.js 8:0-41
+Module not found: Error: Can't resolve './components/Navbar' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 9:0-59
+Module not found: Error: Can't resolve './components/OnboardingModal' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 10:0-47
+Module not found: Error: Can't resolve './components/Dashboard' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 11:0-63
+Module not found: Error: Can't resolve './components/ToastNotification' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+webpack compiled with 4 errors
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve './components/Navbar' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+ERROR in ./src/App.js 8:0-41
+Module not found: Error: Can't resolve './components/Navbar' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 9:0-59
+Module not found: Error: Can't resolve './components/OnboardingModal' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 10:0-47
+Module not found: Error: Can't resolve './components/Dashboard' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 11:0-63
+Module not found: Error: Can't resolve './components/ToastNotification' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+webpack compiled with 4 errors
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve './components/Navbar' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+ERROR in ./src/App.js 8:0-41
+Module not found: Error: Can't resolve './components/Navbar' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 9:0-59
+Module not found: Error: Can't resolve './components/OnboardingModal' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 10:0-47
+Module not found: Error: Can't resolve './components/Dashboard' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 11:0-63
+Module not found: Error: Can't resolve './components/ToastNotification' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+webpack compiled with 4 errors
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve './components/OnboardingModal' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+ERROR in ./src/App.js 9:0-59
+Module not found: Error: Can't resolve './components/OnboardingModal' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 10:0-47
+Module not found: Error: Can't resolve './components/Dashboard' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 11:0-63
+Module not found: Error: Can't resolve './components/ToastNotification' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/components/Navbar.js 7:0-22
+Module not found: Error: Can't resolve './Navbar.css' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src/components'
+
+webpack compiled with 4 errors
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve './components/OnboardingModal' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+ERROR in ./src/App.js 9:0-59
+Module not found: Error: Can't resolve './components/OnboardingModal' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 10:0-47
+Module not found: Error: Can't resolve './components/Dashboard' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 11:0-63
+Module not found: Error: Can't resolve './components/ToastNotification' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/components/Navbar.js 7:0-22
+Module not found: Error: Can't resolve './Navbar.css' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src/components'
+
+webpack compiled with 4 errors

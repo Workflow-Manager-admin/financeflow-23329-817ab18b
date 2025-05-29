@@ -23,7 +23,7 @@ function TransactionFormModal({ onSave, onClose, initial }) {
   useEffect(() => { if (ref.current) ref.current.focus(); }, []);
 
   function validate() {
-    if (!form.category) return 'Category required.';
+    if (form.type === 'expense' && !form.category) return 'Category required.';
     if (!form.amount || Number.isNaN(Number(form.amount)) || Number(form.amount) <= 0) return 'Amount must be positive.';
     if (!form.date) return 'Date required.';
     return '';
@@ -33,7 +33,12 @@ function TransactionFormModal({ onSave, onClose, initial }) {
     e.preventDefault();
     const err = validate();
     if (err) { setError(err); return; }
-    onSave({ ...form, amount: Number(form.amount), id: initial?.id || undefined });
+    // Only include category for expense, remove it for income
+    let tx = { ...form, amount: Number(form.amount), id: initial?.id || undefined };
+    if (form.type !== 'expense') {
+      delete tx.category;
+    }
+    onSave(tx);
     setError('');
   }
 
@@ -50,16 +55,20 @@ function TransactionFormModal({ onSave, onClose, initial }) {
           <option value="expense">Expense</option>
           <option value="income">Income</option>
         </select>
-        <select
-          value={form.category}
-          onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
-          aria-label="Category"
-        >
-          <option value="">Category</option>
-          {categories.map(c =>
-            <option key={c} value={c}>{c}</option>
-          )}
-        </select>
+        {/* Show category selection only if type is expense */}
+        {form.type === 'expense' && (
+          <select
+            value={form.category}
+            onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+            aria-label="Category"
+            required
+          >
+            <option value="">Category</option>
+            {categories.map(c =>
+              <option key={c} value={c}>{c}</option>
+            )}
+          </select>
+        )}
         <input
           type="number"
           min="0.01"

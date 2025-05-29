@@ -1,10 +1,14 @@
 import React from 'react';
 import './SavingsRing.css';
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * SavingsRing component always shows the label 'Savings Goal'
+ * (no user or custom label displayed), with a clean appearance.
+ */
 function SavingsRing({ goal, stats, onSetGoal }) {
   const target = goal?.target || 0;
-  const label = goal?.label || 'Savings Goal';
+  // Always show 'Savings Goal' as title, no personalization
   const saved = stats.balance || 0;
   const percent = target > 0 ? Math.min(1, saved / target) : 0;
 
@@ -41,7 +45,7 @@ function SavingsRing({ goal, stats, onSetGoal }) {
         </text>
       </svg>
       <div className="savingring-label">
-        <span style={{ fontWeight: 600 }}>{label}</span>
+        <span style={{ fontWeight: 600 }}>Savings Goal</span>
         <span>
           <span style={{ color: 'var(--text-secondary)' }}>${saved.toFixed(2)}/</span>
           <span>${target ? target.toFixed(2) : '---'}</span>

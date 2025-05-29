@@ -15,6 +15,14 @@ const STORAGE_GOAL = 'fflow-savings-goal-v1';
 /**
  * Dashboard component for managing transactions, savings goals,
  * and visualizations.
+ *
+ * Root cause analysis (developer note): If dashboard data is lost only between
+ * tab navigations, not on browser refresh, data should always reload from localStorage.
+ * If you see data loss, it likely means:
+ *  - Storage keys are cleared or overwritten elsewhere (not expected in this codebase).
+ *  - Your browser/extensions clear localStorage or operate in private mode.
+ *  - Storage corruption/quota.
+ * For cross-device sync, add a backend/Firebase adapter to this state model.
  */
 function Dashboard({ showToast }) {
   // ============ Data State ===============
@@ -43,7 +51,7 @@ function Dashboard({ showToast }) {
       // eslint-disable-next-line
       console.warn(
         "[FinanceFlow] Dashboard mounted: localStorage['fflow-transactions-v1'] previously set but empty after parse. " +
-        "If you experience data loss, check for corruption or clearing of localStorage by other code or manual action."
+        "If you experience data loss, check for corruption or clearing of localStorage by other code, manual browser actions, or extensions. For cross-device/cloud sync, use a backend."
       );
     }
   }, []);

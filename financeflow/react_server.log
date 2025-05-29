@@ -1028,3 +1028,4 @@ src/components/Dashboard.js
   Line 95:41:  Parsing error: Unexpected token, expected "," (95:41)
 
 webpack compiled with 2 errors
+Compiling...

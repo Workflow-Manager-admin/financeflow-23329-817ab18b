@@ -12,6 +12,10 @@ const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
 const STORAGE_GOAL = 'fflow-savings-goal-v1';
 
 // PUBLIC_INTERFACE
+/**
+ * Dashboard component for managing transactions, savings goals,
+ * and visualizations.
+ */
 function Dashboard({ showToast }) {
   // ============ Data State ===============
   const [transactions, setTransactions] = useState([]);
@@ -40,26 +44,25 @@ function Dashboard({ showToast }) {
     // eslint-disable-next-line
   }, [transactions]);
 
-  // Filter recompute
+  // Apply filters when filters or transactions change
   useEffect(() => {
     setFiltered(applyFilters(transactions, filters));
     // eslint-disable-next-line
   }, [filters, transactions]);
 
-  // Save goal
+  // Save goal to localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_GOAL, JSON.stringify(goal));
     // eslint-disable-next-line
   }, [goal]);
 
-
   // ========== Actions ==============
   // Add or Edit transaction
   function handleSaveTransaction(tx) {
-    setTransactions((prev) => {
+    setTransactions(prev => {
       let arr;
       if (tx.id) {
-        arr = prev.map((t) => (t.id === tx.id ? tx : t));
+        arr = prev.map(t => (t.id === tx.id ? tx : t));
         showToast('Transaction updated!', 'success');
       } else {
         const id = 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
@@ -73,7 +76,7 @@ function Dashboard({ showToast }) {
   }
 
   function handleDeleteTransaction(id) {
-    setTransactions((prev) => prev.filter((t) => t.id !== id));
+    setTransactions(prev => prev.filter(t => t.id !== id));
     showToast('Transaction deleted!', 'success');
   }
 
@@ -86,22 +89,25 @@ function Dashboard({ showToast }) {
   // Milestone notification support for savings
   useEffect(() => {
     if (!goal) return;
-    const { target } = goal;
-    const sum = transactions.reduce((acc, t) => t.type === 'income'
-      ? acc + Number(t.amount)
-      : acc - Number(t.amount), 0);
+    const target = goal.target;
+    const sum = transactions.reduce(
+      (acc, t) => t.type === 'income'
+        ? acc + Number(t.amount)
+        : acc - Number(t.amount)
+      , 0
+    );
     if (target && sum >= target && !goal.achieved) {
-      setGoal((g) => ({ ...g, achieved: true }));
+      setGoal(g => ({ ...g, achieved: true }));
       showToast('🎉 Congratulations! You've reached your savings goal!', 'success');
     }
     // eslint-disable-next-line
   }, [goal, transactions]);
 
   // Filtering logic
-  function applyFilters(data, filters) {
-    const { category = "All", from = "", to = "" } = filters || {};
+  function applyFilters(data, filtersArg) {
+    const { category = 'All', from = '', to = '' } = filtersArg || {};
     let arr = data;
-    if (category && category !== "All") {
+    if (category && category !== 'All') {
       arr = arr.filter(t => t.category === category);
     }
     if (from) arr = arr.filter(t => t.date >= from);
@@ -112,16 +118,16 @@ function Dashboard({ showToast }) {
   // Category choices
   const categories = useMemo(() => {
     const set = new Set(transactions.map(t => t.category));
-    return ["All", ...Array.from(set)];
+    return ['All', ...Array.from(set)];
   }, [transactions]);
 
   // Amount stats
   const stats = useMemo(() => {
     const income = transactions
-      .filter(t => t.type === "income")
+      .filter(t => t.type === 'income')
       .reduce((sum, t) => sum + Number(t.amount), 0);
     const expense = transactions
-      .filter(t => t.type === "expense")
+      .filter(t => t.type === 'expense')
       .reduce((sum, t) => sum + Number(t.amount), 0);
     const balance = income - expense;
     return { income, expense, balance };
@@ -133,6 +139,7 @@ function Dashboard({ showToast }) {
     setShowTxModal(true);
   }
 
+  // ========== Render ================
   return (
     <section className="dashboard">
       <div className="container dashboard-layout">

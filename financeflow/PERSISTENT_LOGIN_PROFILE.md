@@ -11,8 +11,17 @@ FinanceFlow aims for a seamless, user-friendly experience. Core data (transactio
 - **Restoring Profile**: On reload/app start, profile is loaded directly from localStorage; no external authentication is needed.
 - **Logout**: Optionally, we can allow profile reset/clear for demo/testing.
 
-### Pros
-- No network connection required.
+---
+
+**Dashboard Tab: Data Loss Analysis**
+
+- If dashboard info is lost *only* when navigating between tabs, but is restored on browser refresh, this implies the state is correctly loaded from localStorage.
+- If dashboard info is lost after reloading or navigating (and no JavaScript errors/corruption), likely something or some code is clearing `localStorage`.
+- No current code in Expenses/Calendar/Settings/Sidebar clears the Dashboard's storage keys.
+
+**Recommendation:**
+- If you want persistence only on this device/browser, the codebase is already handling this appropriately (localStorage-level).
+- If you require data to sync across browsers/devices or recover after clearing browser data, a backend (e.g., Firebase) is required. See section below.
 - User data stays private ("on-device", privacy friendly).
 - Instant load, fast prototyping.
 

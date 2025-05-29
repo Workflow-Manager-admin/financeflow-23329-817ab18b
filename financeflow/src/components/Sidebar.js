@@ -117,24 +117,22 @@ function Sidebar({ currentRoute, onNavigate, collapsed, onToggle }) {
             onClick={toggleTheme}
             aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
             {theme === 'dark' ? (
-              // Sun SVG for light mode
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <circle cx="11" cy="11" r="4.5" stroke="currentColor" strokeWidth="1.6"/>
-                <g stroke="currentColor" strokeWidth="1.5">
-                  <line x1="11" y1="2" x2="11" y2="4"/>
-                  <line x1="11" y1="18" x2="11" y2="20"/>
-                  <line x1="2" y1="11" x2="4" y2="11"/>
-                  <line x1="18" y1="11" x2="20" y2="11"/>
-                  <line x1="5" y1="5" x2="6.4" y2="6.4"/>
-                  <line x1="16" y1="16" x2="17" y2="17"/>
-                  <line x1="5" y1="17" x2="6.4" y2="15.6"/>
-                  <line x1="16" y1="6" x2="17" y2="5"/>
-                </g>
+              // Modern outlined sun icon for light mode (heroicons style)
+              <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
               </svg>
             ) : (
-              // Moon SVG for dark mode
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <path d="M14.6 18c-2.7 0-5.2-1.8-6.2-4.5-.7-2 .1-4.1 2.2-6.2.4-.4.4-1 0-1.3C9.7 5.4 8.2 4 6.3 3.6c-.7-.2-1.2.6-.8 1.1A9 9 0 0020 11.1c0 4.6-3.6 6.9-5.4 6.9z" stroke="currentColor" strokeWidth="1.3" fill="none"/>
+              // Modern outlined crescent-moon for dark mode (heroicons style)
+              <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z" />
               </svg>
             )}
           </button>

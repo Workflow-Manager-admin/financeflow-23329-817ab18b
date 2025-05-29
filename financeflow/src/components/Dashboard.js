@@ -172,7 +172,7 @@ function Dashboard({ showToast }) {
             }}
             type="button"
           >
-            ＋
+            +
           </button>
           <button
             className="fab-small"

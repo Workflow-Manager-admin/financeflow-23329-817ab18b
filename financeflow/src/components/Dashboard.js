@@ -167,30 +167,20 @@ function Dashboard({ showToast }) {
             emptyMsg="No transactions found for selected filters."
           />
         </div>
-        {/* Floating Action Buttons */}
-        <div className="dashboard-fab-col">
-          <button
-            className="fab"
-            aria-label="Add transaction"
-            title="Add new transaction"
-            type="button"
-            onClick={() => {
-              setShowTxModal(true);
-              setEditTx(null);
-            }}
-          >
-            ADD
-          </button>
-          <button
-            className="fab-small"
-            aria-label="Set savings goal"
-            title="Set savings goal"
-            type="button"
-            onClick={() => setShowGoalModal(true)}
-          >
-            GOAL
-          </button>
-        </div>
+        {/* Main Add Button (FAB, bottom right on desktop, sticky on mobile) */}
+        <button
+          className="dashboard-add-btn"
+          aria-label="Add transaction"
+          title="Add new transaction"
+          type="button"
+          onClick={() => {
+            setShowTxModal(true);
+            setEditTx(null);
+          }}
+        >
+          <span className="dashboard-add-btn-icon">＋</span>
+          <span className="dashboard-add-btn-label">Add Transaction</span>
+        </button>
       </div>
       {showTxModal && (
         <TransactionFormModal

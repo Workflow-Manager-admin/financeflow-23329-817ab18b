@@ -12,7 +12,9 @@ function TransactionList({ transactions, onEdit, onDelete, emptyMsg }) {
       {transactions.map((tx) => (
         <div className={`tx-row tx-${tx.type}`} key={tx.id}>
           <div className="tx-main">
-            <span className="tx-title">{tx.category}</span>
+            <span className="tx-title">
+              {tx.type === 'expense' ? tx.category : (tx.description || 'Income')}
+            </span>
             <span className="tx-date">{tx.date}</span>
             <span className="tx-desc">{tx.description}</span>
           </div>

@@ -179,7 +179,7 @@ function Dashboard({ showToast }) {
               setEditTx(null);
             }}
           >
-            +
+            ADD
           </button>
           <button
             className="fab-small"

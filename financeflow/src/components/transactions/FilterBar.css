@@ -1,0 +1,23 @@
+.filterbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 13px;
+}
+.filterbar select,
+.filterbar input[type="date"] {
+  font-size: 1em;
+  padding: 7px;
+  border-radius: 6px;
+  border: 1px solid var(--secondary, #ececec);
+  outline: none;
+  background: var(--surface, #fff);
+  color: var(--text-color,#23243A);
+}
+@media (max-width: 520px) {
+  .filterbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+  }
+}

@@ -107,18 +107,19 @@ function Dashboard({ showToast }) {
   function applyFilters(data, filtersArg) {
     const { category = 'All', from = '', to = '' } = filtersArg || {};
     let arr = data;
+    // Only filter by category for expenses; skip filter for incomes
     if (category && category !== 'All') {
-      arr = arr.filter(t => t.category === category);
+      arr = arr.filter(t => t.type === 'expense' && t.category === category);
     }
     if (from) arr = arr.filter(t => t.date >= from);
     if (to) arr = arr.filter(t => t.date <= to);
     return arr.sort((a, b) => b.date.localeCompare(a.date));
   }
 
-  // Category choices
+  // Category choices (only from expenses, skip incomes)
   const categories = useMemo(() => {
-    const set = new Set(transactions.map(t => t.category));
-    return ['All', ...Array.from(set)];
+    const set = new Set(transactions.filter(t => t.type === 'expense').map(t => t.category));
+    return ['All', ...Array.from(set).filter(Boolean)];
   }, [transactions]);
 
   // Amount stats

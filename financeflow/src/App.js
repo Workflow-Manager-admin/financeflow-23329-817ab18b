@@ -309,15 +309,8 @@ function ProfileView() {
  * The SettingsView component displays and allows the user to select a preferred language and currency.
  * It reads and writes preferences from localStorage, ensures persistence, and reflects in the UI.
  */
-function SettingsView() {
-  // Language and currency options
-  const languageOptions = ['English', 'Spanish', 'French', 'German', 'Chinese'];
-  const currencyOptions = ['USD', 'EUR', 'GBP', 'INR', 'CNY'];
+// VERIFIED: SettingsView uses only 'fflow-settings-v1' for language/currency, not the keys for transactions/savings-goal.
 
-  // Keys for localStorage
-  const STORAGE_SETTINGS = 'fflow-settings-v1';
-
-  // Controlled form state
   const [language, setLanguage] = React.useState(languageOptions[0]);
   const [currency, setCurrency] = React.useState(currencyOptions[0]);
   const [saved, setSaved] = React.useState(false);

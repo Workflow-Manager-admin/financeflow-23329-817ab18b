@@ -30,15 +30,22 @@ function Dashboard({ showToast }) {
   // ========== Storage Sync & Boot =========
   useEffect(() => {
     // Init from storage
-    const storedTx = JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || [];
+    const lsRaw = localStorage.getItem(STORAGE_TRANSACTIONS);
+    const storedTx = JSON.parse(lsRaw) || [];
     setTransactions(storedTx);
 
     const storedGoal = JSON.parse(localStorage.getItem(STORAGE_GOAL)) || null;
     setGoal(storedGoal);
-    // If the Dashboard ever loads EMPTY state after visiting another tab,
-    // it can only mean (1) localStorage key was cleared (manually or by another component),
-    // or (2) transactions/goals are being set to []/null by code OUTSIDE Dashboard, probably a bug.
-    // -> Ensure: No "clear" or accidental overwrite by other views.
+
+    // Developer-facing warning: If localStorage previously held transactions but now state is empty,
+    // signal a possible bug or external clear.
+    if (lsRaw && storedTx.length === 0) {
+      // eslint-disable-next-line
+      console.warn(
+        "[FinanceFlow] Dashboard mounted: localStorage['fflow-transactions-v1'] previously set but empty after parse. " +
+        "If you experience data loss, check for corruption or clearing of localStorage by other code or manual action."
+      );
+    }
   }, []);
 
   // Save transactions to localStorage

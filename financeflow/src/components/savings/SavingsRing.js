@@ -8,9 +8,18 @@ import './SavingsRing.css';
  */
 function SavingsRing({ goal, stats, onSetGoal }) {
   const target = goal?.target || 0;
-  // Always show 'Savings Goal' as title, no personalization
+  // Always show 'Savings Goal' as title
   const saved = stats.balance || 0;
   const percent = target > 0 ? Math.min(1, saved / target) : 0;
+
+  // Get label for goal period (fallback = "Goal")
+  const periodMap = {
+    weekly: 'Weekly Goal',
+    monthly: 'Monthly Goal',
+    quarterly: 'Quarterly Goal',
+    yearly: 'Yearly Goal'
+  };
+  const goalPeriodLabel = periodMap[goal?.period] || "Goal";
 
   return (
     <div className="savingring-box">
@@ -46,6 +55,7 @@ function SavingsRing({ goal, stats, onSetGoal }) {
       </svg>
       <div className="savingring-label">
         <span style={{ fontWeight: 600 }}>Savings Goal</span>
+        <span style={{ fontSize: "0.96em", color: "var(--primary,#6C2EBE)", fontWeight: 500 }}>{goal ? goalPeriodLabel : null}</span>
         <span>
           <span style={{ color: 'var(--text-secondary)' }}>${saved.toFixed(2)}/</span>
           <span>${target ? target.toFixed(2) : '---'}</span>

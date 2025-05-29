@@ -1,0 +1,42 @@
+.onboarding-modal-bg {
+  position: fixed;
+  z-index: 1001;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: rgba(25,25,50,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.onboarding-modal {
+  min-width: 290px;
+  max-width: 98vw;
+  min-height: 220px;
+  background: var(--surface, #fff);
+  color: var(--text-color, #23243A);
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(60,42,150,.12), 0 1.5px 3px rgba(0,0,0,0.15);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: fadein 0.3s;
+}
+
+.onboarding-modal h2 {
+  font-size: 1.6rem;
+  margin: 0 0 12px;
+  color: var(--primary, #6C2EBE);
+  text-align: center;
+}
+
+.onboarding-modal ul {
+  padding-left: 16px;
+  margin-bottom: 20px;
+  color: var(--text-secondary, #8A889A);
+  font-size: 1.09rem;
+}
+@keyframes fadein {
+  from { opacity: 0; transform: scale(0.94);}
+  to   { opacity: 1; transform: scale(1);}
+}

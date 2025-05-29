@@ -139,7 +139,10 @@ function Dashboard({ showToast }) {
           />
           <TransactionList
             transactions={filtered}
-            onEdit={tx => { setEditTx(tx); setShowTxModal(true); }}
+            onEdit={(tx) => {
+              setEditTx(tx);
+              setShowTxModal(true);
+            }}
             onDelete={handleDeleteTransaction}
             emptyMsg="No transactions found for selected filters."
           />

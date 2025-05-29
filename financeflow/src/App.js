@@ -110,10 +110,89 @@ function ProfileView() {
     </section>
   );
 }
+/**
+ * PUBLIC_INTERFACE
+ * The SettingsView component displays and allows the user to select a preferred language and currency.
+ * It reads and writes preferences from localStorage, ensures persistence, and reflects in the UI.
+ */
 function SettingsView() {
+  // Language and currency options
+  const languageOptions = ['English', 'Spanish', 'French', 'German', 'Chinese'];
+  const currencyOptions = ['USD', 'EUR', 'GBP', 'INR', 'CNY'];
+
+  // Keys for localStorage
+  const STORAGE_SETTINGS = 'fflow-settings-v1';
+
+  // Controlled form state
+  const [language, setLanguage] = React.useState(languageOptions[0]);
+  const [currency, setCurrency] = React.useState(currencyOptions[0]);
+  const [saved, setSaved] = React.useState(false);
+
+  // On mount, restore saved settings if present
+  React.useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_SETTINGS);
+    if (stored) {
+      try {
+        const obj = JSON.parse(stored);
+        if (obj.language && languageOptions.includes(obj.language)) setLanguage(obj.language);
+        if (obj.currency && currencyOptions.includes(obj.currency)) setCurrency(obj.currency);
+      } catch {
+        // Ignore parse errors - use default
+      }
+    }
+  // eslint-disable-next-line
+  }, []);
+
+  // Save handler
+  function handleSave(e) {
+    e.preventDefault();
+    const obj = { language, currency };
+    localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(obj));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 1200);
+  }
+
   return (
-    <section className="placeholder-view"><h1>Settings</h1>
-      <div className="container"><p>Settings and app preferences go here.</p></div>
+    <section className="placeholder-view">
+      <h1>Settings</h1>
+      <div className="container" style={{maxWidth: 410}}>
+        <form onSubmit={handleSave} aria-label="Preferences">
+          <div style={{marginBottom: 23}}>
+            <label style={{ fontWeight: 500, display: 'block', marginBottom: 5 }}>
+              Language
+              <select
+                value={language}
+                onChange={e => setLanguage(e.target.value)}
+                style={{ width: '100%', padding: '9px 10px', marginTop: 7 }}
+                aria-label="Language Selector"
+              >
+                {languageOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+              </select>
+            </label>
+          </div>
+          <div style={{marginBottom: 27}}>
+            <label style={{ fontWeight: 500, display: 'block', marginBottom: 5 }}>
+              Currency
+              <select
+                value={currency}
+                onChange={e => setCurrency(e.target.value)}
+                style={{ width: '100%', padding: '9px 10px', marginTop: 7 }}
+                aria-label="Currency Selector"
+              >
+                {currencyOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+              </select>
+            </label>
+          </div>
+          <button type="submit" className="btn btn-large" style={{width: 160}}>Save Preferences</button>
+          {saved && <span style={{color: 'var(--income,#22C55E)', marginLeft: 14, fontWeight: 500}}>Saved!</span>}
+        </form>
+
+        <div style={{ marginTop: 34, padding: '17px 16px', background: 'var(--secondary,#f8f8fa)', borderRadius: 10 }}>
+          <h3 style={{margin: '0 0 10px 0', fontSize: '1.09em', color: 'var(--primary,#6C2EBE)'}}>Current Preferences</h3>
+          <p style={{margin: 0}}><strong>Language:</strong> <span data-testid="current-language">{language}</span></p>
+          <p style={{margin: 0}}><strong>Currency:</strong> <span data-testid="current-currency">{currency}</span></p>
+        </div>
+      </div>
     </section>
   );
 }

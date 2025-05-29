@@ -109,13 +109,10 @@ function Dashboard({ showToast }) {
   }
 
   // Category choices
-  const categories = useMemo(
-    () => {
-      const set = new Set(transactions.map((t) => t.category));
-      return ['All', ...Array.from(set)];
-    },
-    [transactions]
-  );
+  const categories = useMemo(() => {
+    const set = new Set(transactions.map((t) => t.category));
+    return ['All', ...Array.from(set)];
+  }, [transactions]);
 
   // Amount stats
   const stats = useMemo(

@@ -18,3 +18,23 @@ Note that the development build is not optimized.
 To create a production build, use npm run build.
 
 webpack compiled successfully
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve './components/ThemeProvider' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+ERROR in ./src/App.js 7:0-55
+Module not found: Error: Can't resolve './components/ThemeProvider' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 8:0-41
+Module not found: Error: Can't resolve './components/Navbar' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 9:0-59
+Module not found: Error: Can't resolve './components/OnboardingModal' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 10:0-47
+Module not found: Error: Can't resolve './components/Dashboard' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+ERROR in ./src/App.js 11:0-63
+Module not found: Error: Can't resolve './components/ToastNotification' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+webpack compiled with 5 errors

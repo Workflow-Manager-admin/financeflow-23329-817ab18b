@@ -36,7 +36,7 @@ const icons = {
 };
 
 const navItems = [
-  { label: 'Home', icon: 'dashboard', route: '/' },
+  { label: 'Dashboard', icon: 'dashboard', route: '/' },
   { label: 'Expenses', icon: 'list', route: '/expenses' },
   { label: 'Calendar', icon: 'calendar', route: '/calendar' },
   { label: 'Profile', icon: 'user', route: '/profile' },

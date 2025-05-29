@@ -298,3 +298,76 @@ src/components/Dashboard.js
   Line 95:41:  Parsing error: Unexpected token, expected "," (95:41)
 
 webpack compiled with 2 errors
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/Dashboard.js
+Syntax error: Unexpected token, expected "," (95:41) (95:41)
+ERROR in ./src/components/Dashboard.js
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: /home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src/components/Dashboard.js: Unexpected token, expected "," (95:41)
+
+  93 |     if (target && sum >= target && !goal.achieved) {
+  94 |       setGoal((g) => ({ ...g, achieved: true }));
+> 95 |       showToast('🎉 Congratulations! You've reached your savings goal!', 'success');
+     |                                          ^
+  96 |     }
+  97 |     // eslint-disable-next-line
+  98 |   }, [goal, transactions]);
+    at constructor (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:360:19)
+    at FlowParserMixin.raise (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:3327:19)
+    at FlowParserMixin.unexpected (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:3347:16)
+    at FlowParserMixin.expect (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:3657:12)
+    at FlowParserMixin.parseCallExpressionArguments (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10918:14)
+    at FlowParserMixin.parseCoverCallAndAsyncArrowHead (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10861:29)
+    at FlowParserMixin.parseSubscript (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10798:19)
+    at FlowParserMixin.parseSubscript (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:5874:18)
+    at FlowParserMixin.parseSubscripts (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10771:19)
+    at FlowParserMixin.parseSubscripts (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:5840:18)
+    at FlowParserMixin.parseExprSubscripts (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10762:17)
+    at FlowParserMixin.parseUpdate (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10743:21)
+    at FlowParserMixin.parseMaybeUnary (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10723:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10576:61)
+    at FlowParserMixin.parseExprOps (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10581:23)
+    at FlowParserMixin.parseMaybeConditional (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10558:23)
+    at FlowParserMixin.parseMaybeAssign (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10521:21)
+    at FlowParserMixin.parseMaybeAssign (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:5773:18)
+    at FlowParserMixin.parseExpressionBase (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10475:23)
+    at /home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10471:39
+    at FlowParserMixin.allowInAnd (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12095:16)
+    at FlowParserMixin.parseExpression (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:10471:17)
+    at FlowParserMixin.parseStatementContent (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12539:23)
+    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12406:17)
+    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:5140:24)
+    at FlowParserMixin.parseStatementListItem (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12386:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12960:61)
+    at FlowParserMixin.parseBlockBody (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12953:10)
+    at FlowParserMixin.parseBlock (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12941:10)
+    at FlowParserMixin.parseStatementContent (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12496:21)
+    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12406:17)
+    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:5140:24)
+    at FlowParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12396:17)
+    at FlowParserMixin.parseIfStatement (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12774:28)
+    at FlowParserMixin.parseStatementContent (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12435:21)
+    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12406:17)
+    at FlowParserMixin.parseStatementLike (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:5140:24)
+    at FlowParserMixin.parseStatementListItem (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12386:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12960:61)
+    at FlowParserMixin.parseBlockBody (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12953:10)
+    at FlowParserMixin.parseBlock (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:12941:10)
+    at FlowParserMixin.parseFunctionBody (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:11783:24)
+    at /home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:5114:63
+    at FlowParserMixin.forwardNoArrowParamsConversionAt (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:5290:16)
+    at FlowParserMixin.parseFunctionBody (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:5114:12)
+    at FlowParserMixin.parseArrowExpression (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:11758:10)
+    at FlowParserMixin.parseParenAndDistinguishExpression (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:11371:12)
+    at FlowParserMixin.parseParenAndDistinguishExpression (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:5815:18)
+    at FlowParserMixin.parseExprAtom (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:11006:23)
+    at FlowParserMixin.parseExprAtom (/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/node_modules/@babel/parser/lib/index.js:6937:20)
+
+ERROR in [eslint] 
+src/components/Dashboard.js
+  Line 95:41:  Parsing error: Unexpected token, expected "," (95:41)
+
+webpack compiled with 2 errors

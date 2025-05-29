@@ -2,39 +2,50 @@ import React, { useContext, useState } from 'react';
 import './Sidebar.css';
 import { ThemeContext } from './ThemeProvider';
 
-// Icon SVGs for navigation
+/**
+ * Minimal, modern, and visually consistent SVG icon set for Sidebar navigation.
+ * Each icon is outlined, has rounded corners or endpoints, and defaults to "none" fill
+ * except where visually intended. The settings (gear) icon is a clean, accessible SVG.
+ */
 const icons = {
   dashboard: (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-      <rect x="3" y="3" width="7" height="9" rx="2" /><rect x="14" y="3" width="7" height="5" rx="2" />
-      <rect x="14" y="10" width="7" height="11" rx="2" /><rect x="3" y="13" width="7" height="8" rx="2" />
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="3" width="7" height="9" rx="2" />
+      <rect x="14" y="3" width="7" height="5" rx="2" />
+      <rect x="14" y="10" width="7" height="11" rx="2" />
+      <rect x="3" y="13" width="7" height="8" rx="2" />
     </svg>
   ),
   list: (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-      <rect x="4" y="6" width="16" height="2" rx="1" /><rect x="4" y="11" width="16" height="2" rx="1" />
-      <rect x="4" y="16" width="16" height="2" rx="1" />
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <line x1="4" y1="7" x2="20" y2="7" />
+      <line x1="4" y1="12" x2="20" y2="12" />
+      <line x1="4" y1="17" x2="20" y2="17" />
     </svg>
   ),
   calendar: (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-      <rect x="3" y="4" width="18" height="17" rx="3" /><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="1.5"/>
-      <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="1.5"/><rect x="7" y="10" width="2" height="2" rx="1"/>
-      <rect x="11" y="10" width="2" height="2" rx="1"/><rect x="15" y="10" width="2" height="2" rx="1"/>
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="16" rx="3" />
+      <line x1="8" y1="2.7" x2="8" y2="7.4" />
+      <line x1="16" y1="2.7" x2="16" y2="7.4" />
+      <rect x="7" y="10" width="2.3" height="2.3" rx="0.8"/>
+      <rect x="11" y="10" width="2.3" height="2.3" rx="0.8"/>
+      <rect x="15" y="10" width="2.3" height="2.3" rx="0.8"/>
     </svg>
   ),
   user: (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-      <circle cx="12" cy="9" r="4"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6"/>
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="9" r="4" />
+      <path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" />
     </svg>
   ),
   settings: (
-    // Modern, outlined gear/cog icon
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.7l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.7-.3c-.6.2-1.3.4-2 .4s-1.4-.2-2-.4a1.7 1.7 0 0 0-1.7.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.7c-.2-.6-.4-1.3-.4-2s.2-1.4.4-2a1.7 1.7 0 0 0-.3-1.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1c.5.5 1.2.5 1.7.3.6-.2 1.3-.4 2-.4s1.4.2 2 .4c.6.2 1.2.2 1.7-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1c-.5.5-.5 1.2-.3 1.7.2.6.4 1.3.4 2s-.1 1.4-.3 2z"/>
+    // Modern, minimal outlined gear/cog SVG (visually balanced at 22x22)
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.3" />
+      <path d="M19.2 14.3a2 2 0 0 0 .3 2.1l.05.05a2.1 2.1 0 1 1-3 3l-.05-.05a2 2 0 0 0-2.1-.3c-.7.3-1.5.5-2.4.5s-1.7-.2-2.4-.5a2 2 0 0 0-2.1.3l-.05.05a2.1 2.1 0 1 1-3-3l.05-.05a2 2 0 0 0 .3-2.1c-.3-.7-.5-1.5-.5-2.4s.2-1.7.5-2.4a2 2 0 0 0-.3-2.1l-.05-.05a2.1 2.1 0 0 1 3-3l.05.05a2 2 0 0 0 2.1.3c.7-.3 1.5-.5 2.4-.5s1.7.2 2.4.5a2 2 0 0 0 2.1-.3l.05-.05a2.1 2.1 0 1 1 3 3l-.05.05a2 2 0 0 0-.3 2.1c.3.7.5 1.5.5 2.4s-.2 1.7-.5 2.4z"/>
     </svg>
-  )
+  ),
 };
 
 const navItems = [

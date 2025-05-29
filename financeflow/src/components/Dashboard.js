@@ -98,7 +98,7 @@ function Dashboard({ showToast }) {
     );
     if (target && sum >= target && !goal.achieved) {
       setGoal(g => ({ ...g, achieved: true }));
-      showToast('🎉 Congratulations! You've reached your savings goal!', 'success');
+      showToast('Congratulations! You have reached your savings goal!', 'success');
     }
     // eslint-disable-next-line
   }, [goal, transactions]);
@@ -188,7 +188,7 @@ function Dashboard({ showToast }) {
             type="button"
             onClick={() => setShowGoalModal(true)}
           >
-            🎯
+            GOAL
           </button>
         </div>
       </div>

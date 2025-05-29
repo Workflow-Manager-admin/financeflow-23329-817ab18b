@@ -21,11 +21,11 @@ const LIGHT_THEME = {
 const DARK_THEME = {
   '--primary': '#6C2EBE',
   '--secondary': '#23243A',
-  '--accent': '#6C2EBE',
+  '--accent': '#B19CFF',
   '--background': '#23243A',
   '--surface': '#292B44',
-  '--text-color': '#F5F6FA',
-  '--text-secondary': '#B5B9C9',
+  '--text-color': '#fff',
+  '--text-secondary': '#fff',
   '--income': '#22C55E',
   '--expense': '#E74C3C',
 };

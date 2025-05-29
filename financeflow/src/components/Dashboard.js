@@ -98,40 +98,34 @@ function Dashboard({ showToast }) {
   }, [goal, transactions]);
 
   // Filtering logic
-  const applyFilters = (data, filters) => {
-    // Defensive: Ensure filters always has all fields, defaulting to ''
-    const category = filters.category || "All";
-    const from = filters.from || "";
-    const to = filters.to || "";
+  function applyFilters(data, filters) {
+    const { category = "All", from = "", to = "" } = filters || {};
     let arr = data;
     if (category && category !== "All") {
-      arr = arr.filter((t) => t.category === category);
+      arr = arr.filter(t => t.category === category);
     }
-    if (from) arr = arr.filter((t) => t.date >= from);
-    if (to) arr = arr.filter((t) => t.date <= to);
+    if (from) arr = arr.filter(t => t.date >= from);
+    if (to) arr = arr.filter(t => t.date <= to);
     return arr.sort((a, b) => b.date.localeCompare(a.date));
-  };
+  }
 
   // Category choices
   const categories = useMemo(() => {
-    const set = new Set(transactions.map((t) => t.category));
+    const set = new Set(transactions.map(t => t.category));
     return ["All", ...Array.from(set)];
   }, [transactions]);
 
   // Amount stats
-  const stats = useMemo(
-    () => {
-      const income = transactions
-        .filter((t) => t.type === 'income')
-        .reduce((sum, t) => sum + Number(t.amount), 0);
-      const expense = transactions
-        .filter((t) => t.type === 'expense')
-        .reduce((sum, t) => sum + Number(t.amount), 0);
-      const balance = income - expense;
-      return { income, expense, balance };
-    },
-    [transactions]
-  );
+  const stats = useMemo(() => {
+    const income = transactions
+      .filter(t => t.type === "income")
+      .reduce((sum, t) => sum + Number(t.amount), 0);
+    const expense = transactions
+      .filter(t => t.type === "expense")
+      .reduce((sum, t) => sum + Number(t.amount), 0);
+    const balance = income - expense;
+    return { income, expense, balance };
+  }, [transactions]);
 
   // Handler for editing a transaction
   function handleEditTransaction(tx) {

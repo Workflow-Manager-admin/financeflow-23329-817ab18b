@@ -45,7 +45,7 @@
   position: fixed;
   right: 38px;
   bottom: 38px;
-  z-index: 900;
+  z-index: 1001;
   display: flex;
   align-items: center;
   gap: 13px;
@@ -53,51 +53,54 @@
   color: #fff;
   border: none;
   border-radius: 32px;
-  box-shadow: 0 3px 12px rgba(60,42,150,0.10);
-  padding: 14px 29px 14px 19px;
-  font-size: 1.15rem;
+  box-shadow: 0 6px 20px rgba(60,42,150,0.13);
+  padding: 16px 36px 16px 19px;
+  font-size: 1.17rem;
   font-weight: 600;
   letter-spacing: 0.01em;
   cursor: pointer;
-  transition: background 0.26s, box-shadow 0.17s;
+  transition: background 0.23s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.15s;
   outline: none;
 }
+
 .dashboard-add-btn:hover, .dashboard-add-btn:focus {
   background: #7938d4;
-  box-shadow: 0 8px 32px rgba(60,42,150,0.16);
+  box-shadow: 0 16px 38px rgba(60,42,150,0.18);
 }
+
 .dashboard-add-btn-icon {
   background: #fff;
   color: var(--primary, #6C2EBE);
-  width: 31px;
-  height: 31px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  font-size: 1.53rem;
+  font-size: 1.55rem;
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 6px rgba(120,110,180,0.09);
-  margin-right: 6px;
+  box-shadow: 0 3px 9px rgba(120,110,180,0.11);
+  margin-right: 10px;
 }
 .dashboard-add-btn-label {
-  font-size: 1.08rem;
+  font-size: 1.11rem;
   font-weight: 500;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
 }
+
 @media (max-width: 600px) {
   .dashboard-add-btn {
-    width: 95vw;
-    max-width: 480px;
-    left: 2.5vw;
+    width: 96vw;
+    max-width: 500px;
+    left: 2vw;
     right: auto;
-    bottom: 16px;
-    border-radius: 15px;
-    padding: 14px 0;
+    bottom: 15px;
+    border-radius: 18px;
+    padding: 16px 0;
     justify-content: center;
-    font-size: 1.15rem;
+    font-size: 1.17rem;
   }
   .dashboard-add-btn-icon {
-    margin-right: 12px;
+    margin-right: 15px;
   }
 }

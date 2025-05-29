@@ -98,7 +98,8 @@ function Dashboard({ showToast }) {
   }, [goal, transactions]);
 
   // Filtering logic
-  function applyFilters(data, { category, from, to }) {
+  function applyFilters(data, filters) {
+    const { category, from, to } = filters;
     let arr = data;
     if (category && category !== 'All') {
       arr = arr.filter((t) => t.category === category);

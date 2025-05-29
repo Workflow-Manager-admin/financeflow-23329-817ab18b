@@ -34,7 +34,6 @@
   position: relative;
   min-height: 68px;
 }
-
 .sidebar-logo-svg {
   width: 38px;
   height: 38px;
@@ -43,7 +42,6 @@
   align-items: center;
   justify-content: center;
 }
-
 .sidebar-title {
   font-weight: 700;
   font-size: 1.19rem;
@@ -65,6 +63,8 @@
   padding: 0 8px;
   transition: color 0.18s;
   outline: none;
+  align-self: flex-end;
+  margin-top: -34px;
 }
 .sidebar-toggle-btn:hover {
   color: var(--primary, #6C2EBE);
@@ -142,6 +142,8 @@
   background: var(--primary, #6C2EBE);
   color: #fff;
 }
+
+/* Responsive tweaks */
 @media (max-width: 900px) {
   .sidebar {
     width: 62px;

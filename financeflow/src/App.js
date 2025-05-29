@@ -7,17 +7,99 @@ import Dashboard from './components/Dashboard';
 import ToastNotification from './components/ToastNotification';
 
 // Placeholder views
+import TransactionList from './components/transactions/TransactionList';
+import FilterBar from './components/transactions/FilterBar';
+// Expense and Calendar state: load from localStorage like Dashboard does
+const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
+
+// PUBLIC_INTERFACE
 function ExpensesView() {
+  const [transactions, setTransactions] = React.useState(() => {
+    return JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || [];
+  });
+  // Only expenses, sorted newest first
+  const expenseTx = React.useMemo(
+    () => transactions.filter(t => t.type === 'expense').sort((a, b) => b.date.localeCompare(a.date)),
+    [transactions]
+  );
+  // Filtering state (optional: reuse Dashboard logic)
+  const [filters, setFilters] = React.useState({ category: 'All', from: '', to: '' });
+  const categories = React.useMemo(() => {
+    const set = new Set(expenseTx.map(t => t.category));
+    return ['All', ...Array.from(set).filter(Boolean)];
+  }, [expenseTx]);
+  function applyFilters(data, filtersArg) {
+    const { category = 'All', from = '', to = '' } = filtersArg || {};
+    let arr = data;
+    if (category && category !== 'All') {
+      arr = arr.filter(t => t.category === category);
+    }
+    if (from) arr = arr.filter(t => t.date >= from);
+    if (to) arr = arr.filter(t => t.date <= to);
+    return arr;
+  }
+  const filtered = React.useMemo(() => applyFilters(expenseTx, filters), [expenseTx, filters]);
   return (
-    <section className="placeholder-view"><h1>Expenses</h1>
-      <div className="container"><p>Your expenses will appear here soon.</p></div>
+    <section className="placeholder-view">
+      <h1>Expenses</h1>
+      <div className="container">
+        <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
+        <TransactionList
+          transactions={filtered}
+          onEdit={() => {}} // No editing in this tab; dashboard only
+          onDelete={() => {}} // No deleting; dashboard only
+          emptyMsg="No expenses found."
+        />
+        {filtered.length === 0 && <p style={{color: "var(--text-secondary)"}}>No expenses for current filters.</p>}
+      </div>
     </section>
   );
 }
+
+// PUBLIC_INTERFACE
 function CalendarView() {
+  // Read all transactions
+  const [transactions] = React.useState(() => JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || []);
+  // Group by date
+  const grouped = React.useMemo(() => {
+    let byDate = {};
+    transactions.forEach(tx => {
+      if (!tx.date) return;
+      if (!byDate[tx.date]) byDate[tx.date] = [];
+      byDate[tx.date].push(tx);
+    });
+    // Sort dates descending
+    const allDates = Object.keys(byDate).sort((a, b) => b.localeCompare(a));
+    return allDates.map(date => ({ date, txs: byDate[date] }));
+  }, [transactions]);
   return (
-    <section className="placeholder-view"><h1>Calendar</h1>
-      <div className="container"><p>The finance calendar will be displayed here.</p></div>
+    <section className="placeholder-view">
+      <h1>Transaction Calendar</h1>
+      <div className="container">
+        {grouped.length === 0 ? (
+          <p>No transactions to show on the calendar yet.</p>
+        ) : (
+          <ul style={{ listStyle: "none", padding: 0 }}>
+            {grouped.map(day => (
+              <li key={day.date} style={{marginBottom: 14, borderBottom: "1px solid var(--secondary,#ececec)"}}>
+                <div style={{ fontWeight: 600, color: "var(--primary,#6C2EBE)" }}>{day.date}</div>
+                <ul style={{ listStyle: "disc", marginLeft: 14, color: "var(--text-secondary)" }}>
+                  {day.txs.map((tx, idx) => (
+                    <li key={idx}>
+                      {tx.type === "expense" ? (
+                        <span style={{color:"var(--expense,#E74C3C)"}}>– ${Number(tx.amount).toFixed(2)} | {tx.category}</span>
+                      ) : (
+                        <span style={{color:"var(--income,#22C55E)"}}>+ ${Number(tx.amount).toFixed(2)} | Income</span>
+                      )}
+                      <span style={{marginLeft:8, fontStyle:"italic"}}>{tx.description}</span>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </section>
   );
 }

@@ -167,21 +167,21 @@ function Dashboard({ showToast }) {
             emptyMsg="No transactions found for selected filters."
           />
         </div>
-        {/* Main Add Button (FAB, bottom right on desktop, sticky on mobile) */}
-        <button
-          className="dashboard-add-btn"
-          aria-label="Add transaction"
-          title="Add new transaction"
-          type="button"
-          onClick={() => {
-            setShowTxModal(true);
-            setEditTx(null);
-          }}
-        >
-          <span className="dashboard-add-btn-icon">＋</span>
-          <span className="dashboard-add-btn-label">Add Transaction</span>
-        </button>
+        {/* Modern single Add Transaction FAB */}
       </div>
+      <button
+        className="dashboard-add-btn"
+        aria-label="Add transaction"
+        title="Add new transaction"
+        type="button"
+        onClick={() => {
+          setShowTxModal(true);
+          setEditTx(null);
+        }}
+      >
+        <span className="dashboard-add-btn-icon">＋</span>
+        <span className="dashboard-add-btn-label">Add Transaction</span>
+      </button>
       {showTxModal && (
         <TransactionFormModal
           onSave={handleSaveTransaction}

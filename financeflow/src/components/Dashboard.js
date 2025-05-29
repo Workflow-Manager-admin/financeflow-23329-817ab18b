@@ -99,7 +99,10 @@ function Dashboard({ showToast }) {
 
   // Filtering logic
   const applyFilters = (data, filters) => {
-    const { category, from, to } = filters;
+    // Defensive: Ensure filters always has all fields, defaulting to ''
+    const category = filters.category || "All";
+    const from = filters.from || "";
+    const to = filters.to || "";
     let arr = data;
     if (category && category !== "All") {
       arr = arr.filter((t) => t.category === category);

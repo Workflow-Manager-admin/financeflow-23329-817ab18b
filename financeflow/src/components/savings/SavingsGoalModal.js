@@ -4,32 +4,35 @@ import './SavingsGoalModal.css';
 // PUBLIC_INTERFACE
 function SavingsGoalModal({ onSave, onClose, initial }) {
   const [amount, setAmount] = useState(initial?.target || '');
-  const [label, setLabel] = useState(initial?.label || '');
+  // Now use period (weekly, monthly, quarterly, yearly) instead of label text input
+  const [period, setPeriod] = useState(initial?.period || 'monthly');
   const [error, setError] = useState('');
   const ref = useRef();
   useEffect(() => { if (ref.current) ref.current.focus(); }, []);
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!label) { setError('Goal name required'); return; }
+    if (!period) { setError('Please select a period.'); return; }
     if (!amount || Number(amount) <= 0) { setError('Enter valid target amount'); return; }
     setError('');
-    onSave({ label, target: Number(amount), achieved: false });
+    onSave({ period, target: Number(amount), achieved: false });
   }
 
   return (
     <div className="goalmodal-bg" role="dialog" aria-modal="true">
       <form className="goalmodal" onSubmit={handleSubmit}>
         <h3>Set Savings Goal</h3>
-        <input
+        <select
           ref={ref}
-          type="text"
-          aria-label="Goal name"
-          placeholder="Goal (e.g., Emergency Fund)"
-          maxLength={32}
-          value={label}
-          onChange={e => setLabel(e.target.value)}
-        />
+          aria-label="Savings period"
+          value={period}
+          onChange={e => setPeriod(e.target.value)}
+        >
+          <option value="weekly">Weekly Goal</option>
+          <option value="monthly">Monthly Goal</option>
+          <option value="quarterly">Quarterly Goal</option>
+          <option value="yearly">Yearly Goal</option>
+        </select>
         <input
           type="number"
           aria-label="Target amount"

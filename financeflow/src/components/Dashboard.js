@@ -175,13 +175,19 @@ function Dashboard({ showToast }) {
               setShowTxModal(true);
               setEditTx(null);
             }}
-          >＋</button>
+            type="button"
+          >
+            ＋
+          </button>
           <button
             className="fab-small"
             aria-label="Set savings goal"
             title="Set savings goal"
             onClick={() => setShowGoalModal(true)}
-          >🎯</button>
+            type="button"
+          >
+            🎯
+          </button>
         </div>
       </div>
       {showTxModal && (

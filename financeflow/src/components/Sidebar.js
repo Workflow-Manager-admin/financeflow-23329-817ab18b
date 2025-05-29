@@ -115,9 +115,25 @@ function Sidebar({ currentRoute, onNavigate, collapsed, onToggle }) {
             onClick={toggleTheme}
             aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
             {theme === 'dark' ? (
-              <span role="img" aria-label="sun">🌞</span>
+              // Sun SVG for light mode
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <circle cx="11" cy="11" r="4.5" stroke="currentColor" strokeWidth="1.6"/>
+                <g stroke="currentColor" strokeWidth="1.5">
+                  <line x1="11" y1="2" x2="11" y2="4"/>
+                  <line x1="11" y1="18" x2="11" y2="20"/>
+                  <line x1="2" y1="11" x2="4" y2="11"/>
+                  <line x1="18" y1="11" x2="20" y2="11"/>
+                  <line x1="5" y1="5" x2="6.4" y2="6.4"/>
+                  <line x1="16" y1="16" x2="17" y2="17"/>
+                  <line x1="5" y1="17" x2="6.4" y2="15.6"/>
+                  <line x1="16" y1="6" x2="17" y2="5"/>
+                </g>
+              </svg>
             ) : (
-              <span role="img" aria-label="moon">🌙</span>
+              // Moon SVG for dark mode
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M14.6 18c-2.7 0-5.2-1.8-6.2-4.5-.7-2 .1-4.1 2.2-6.2.4-.4.4-1 0-1.3C9.7 5.4 8.2 4 6.3 3.6c-.7-.2-1.2.6-.8 1.1A9 9 0 0020 11.1c0 4.6-3.6 6.9-5.4 6.9z" stroke="currentColor" strokeWidth="1.3" fill="none"/>
+              </svg>
             )}
           </button>
         )}

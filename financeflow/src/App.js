@@ -9,7 +9,7 @@ import ToastNotification from './components/ToastNotification';
 // Placeholder views
 import TransactionList from './components/transactions/TransactionList';
 import FilterBar from './components/transactions/FilterBar';
-// Expense and Calendar state: load from localStorage like Dashboard does
+
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
 
 // PUBLIC_INTERFACE
@@ -22,7 +22,6 @@ function ExpensesView() {
     () => transactions.filter(t => t.type === 'expense').sort((a, b) => b.date.localeCompare(a.date)),
     [transactions]
   );
-  // Filtering state (optional: reuse Dashboard logic)
   const [filters, setFilters] = React.useState({ category: 'All', from: '', to: '' });
   const categories = React.useMemo(() => {
     const set = new Set(expenseTx.map(t => t.category));
@@ -46,8 +45,8 @@ function ExpensesView() {
         <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
         <TransactionList
           transactions={filtered}
-          onEdit={() => {}} // No editing in this tab; dashboard only
-          onDelete={() => {}} // No deleting; dashboard only
+          onEdit={() => {}}
+          onDelete={() => {}}
           emptyMsg="No expenses found."
         />
         {filtered.length === 0 && <p style={{color: "var(--text-secondary)"}}>No expenses for current filters.</p>}
@@ -56,40 +55,26 @@ function ExpensesView() {
   );
 }
 
-/**
- * PUBLIC_INTERFACE
- * CalendarView displays a full Apple-style calendar month grid.
- * Each day shows small colored blocks: green for income, red for expense,
- * supporting multiple transactions for the same day.
- */
+// PUBLIC_INTERFACE
 function CalendarView() {
-  // Read transactions once from localStorage
   const [transactions] = React.useState(
     () => JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || []
   );
 
-  // Calendar logic helpers
   const today = new Date();
-  // Use controlled month/year state for navigation if desired in future
   const currentMonthDate = new Date(today.getFullYear(), today.getMonth(), 1);
 
-  // Build date objects for current month grid (start/end days, etc)
   function getMonthGrid(year, month) {
-    // month: 0-indexed (0=Jan)
     const firstOfMonth = new Date(year, month, 1);
     const lastOfMonth = new Date(year, month + 1, 0);
-    const firstDayIdx = firstOfMonth.getDay(); // 0=Sun...6=Sat
+    const firstDayIdx = firstOfMonth.getDay();
     const daysInMonth = lastOfMonth.getDate();
 
-    // Apple/Google calendar grid: always show Sun-Sat (start weekday Sunday)
-    // Fill leading days with prev month if firstDayIdx>0.
     const prevMonth = month === 0 ? 11 : month - 1;
     const prevMonthYear = month === 0 ? year - 1 : year;
     const prevMonthDays = new Date(prevMonthYear, prevMonth + 1, 0).getDate();
 
-    // Calculate grid: returns array of {dateObj, inMonth, dateStr}
     let days = [];
-    // Leading prev month
     for (let i = 0; i < firstDayIdx; i++) {
       const d = prevMonthDays - (firstDayIdx - i - 1);
       let dateObj = new Date(prevMonthYear, prevMonth, d);
@@ -99,7 +84,6 @@ function CalendarView() {
         dateStr: dateObj.toISOString().slice(0, 10),
       });
     }
-    // Main month
     for (let d = 1; d <= daysInMonth; d++) {
       let dateObj = new Date(year, month, d);
       days.push({
@@ -108,7 +92,6 @@ function CalendarView() {
         dateStr: dateObj.toISOString().slice(0, 10),
       });
     }
-    // Trailing next month
     let totalCells = days.length;
     let trailing = (7 - (totalCells % 7)) % 7;
     for (let i = 1; i <= trailing; i++) {
@@ -122,7 +105,6 @@ function CalendarView() {
     return days;
   }
 
-  // Group transactions per date for easy lookup; { 'YYYY-MM-DD': [tx, ...], ... }
   const txByDate = React.useMemo(() => {
     const map = {};
     transactions.forEach((tx) => {
@@ -134,17 +116,12 @@ function CalendarView() {
     return map;
   }, [transactions]);
 
-  // Prepare grid days for current month
   const gridDays = React.useMemo(
     () => getMonthGrid(currentMonthDate.getFullYear(), currentMonthDate.getMonth()),
     [currentMonthDate]
   );
 
-  // Names of weekdays, Sun-Sat (Apple style uses short e.g. S M T W T F S)
   const weekdayLabels = ["S", "M", "T", "W", "T", "F", "S"];
-
-  // ENSURE CSS INTEGRATION: Add .calendar-view, .calendar-table, .calendar-cell, .calendar-daynum, .calendar-block (expense/income) etc.
-  // In actual prod, this CSS would be in a separate file, inlined here for demo/speed
 
   return (
     <section className="placeholder-view calendar-view">
@@ -167,7 +144,6 @@ function CalendarView() {
             </thead>
             <tbody>
               {
-                // chunk gridDays into rows of 7
                 Array.from({ length: Math.ceil(gridDays.length / 7) }, (_, w) => (
                   <tr key={w}>
                     {gridDays.slice(w * 7, w * 7 + 7).map((cell, i) => {
@@ -202,7 +178,6 @@ function CalendarView() {
                             minWidth: 22,
                             textAlign: "center",
                           }}>{cell.dateObj.getDate()}</div>
-                          {/* Show blocks for tx */}
                           {txList.length > 0 &&
                             <div style={{
                               marginTop: 6,
@@ -229,7 +204,6 @@ function CalendarView() {
                                   }}
                                 />
                               ))}
-                              {/* If >7 tx on date, show +N */}
                               {txList.length > 7 && (
                                 <span style={{
                                   fontSize: "0.90em",
@@ -247,7 +221,6 @@ function CalendarView() {
               }
             </tbody>
           </table>
-          {/* Optional: Legend below table */}
           <div style={{
             marginTop: 18, display: "flex", gap: 17, justifyContent: "center", fontSize: "1em"
           }}>
@@ -269,14 +242,12 @@ function CalendarView() {
             </span>
           </div>
         </div>
-        {/* Show empty callout if no transactions at all */}
         {transactions.length === 0 &&
           <div style={{ textAlign: "center", color: "var(--text-secondary)", marginTop: 33 }}>
             No transactions to show on the calendar yet.
           </div>
         }
       </div>
-      {/* Inline calendar styling if not factored yet */}
       <style>
         {`
         .calendar-table {
@@ -297,6 +268,7 @@ function CalendarView() {
     </section>
   );
 }
+
 function ProfileView() {
   return (
     <section className="placeholder-view"><h1>Profile</h1>
@@ -304,18 +276,18 @@ function ProfileView() {
     </section>
   );
 }
-/**
- * PUBLIC_INTERFACE
- * The SettingsView component displays and allows the user to select a preferred language and currency.
- * It reads and writes preferences from localStorage, ensures persistence, and reflects in the UI.
- */
-// VERIFIED: SettingsView uses only 'fflow-settings-v1' for language/currency, not the keys for transactions/savings-goal.
+
+// PUBLIC_INTERFACE
+function SettingsView() {
+  const languageOptions = ['English', 'Spanish', 'French', 'German', 'Chinese'];
+  const currencyOptions = ['USD', 'EUR', 'GBP', 'INR', 'CNY'];
+
+  const STORAGE_SETTINGS = 'fflow-settings-v1';
 
   const [language, setLanguage] = React.useState(languageOptions[0]);
   const [currency, setCurrency] = React.useState(currencyOptions[0]);
   const [saved, setSaved] = React.useState(false);
 
-  // On mount, restore saved settings if present
   React.useEffect(() => {
     const stored = localStorage.getItem(STORAGE_SETTINGS);
     if (stored) {
@@ -327,10 +299,9 @@ function ProfileView() {
         // Ignore parse errors - use default
       }
     }
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
-  // Save handler
   function handleSave(e) {
     e.preventDefault();
     const obj = { language, currency };
@@ -373,7 +344,6 @@ function ProfileView() {
           <button type="submit" className="btn btn-large" style={{width: 160}}>Save Preferences</button>
           {saved && <span style={{color: 'var(--income,#22C55E)', marginLeft: 14, fontWeight: 500}}>Saved!</span>}
         </form>
-
         <div style={{ marginTop: 34, padding: '17px 16px', background: 'var(--secondary,#f8f8fa)', borderRadius: 10 }}>
           <h3 style={{margin: '0 0 10px 0', fontSize: '1.09em', color: 'var(--primary,#6C2EBE)'}}>Current Preferences</h3>
           <p style={{margin: 0}}><strong>Language:</strong> <span data-testid="current-language">{language}</span></p>
@@ -425,16 +395,13 @@ function App() {
   // Toast utility for child components
   const notify = useCallback((message, type = 'success') => {
     setToast({ message, type });
-    // Auto dismiss
     setTimeout(() => setToast(null), 3000);
   }, []);
 
-  // Collapse sidebar on mobile by default
   const [sidebarCollapsed, setSidebarCollapsed] = useState(
     window.innerWidth < 650
   );
   useEffect(() => {
-    // Responsive collapse/expand on window resize
     const handler = () => {
       if (window.innerWidth < 650 && !sidebarCollapsed) {
         setSidebarCollapsed(true);
@@ -447,7 +414,6 @@ function App() {
     // eslint-disable-next-line
   }, [sidebarCollapsed]);
 
-  // Determine view based on "route"
   let View;
   switch (route) {
     case '/':

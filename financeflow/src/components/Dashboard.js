@@ -122,6 +122,12 @@ function Dashboard({ showToast }) {
     return { income, expense, balance };
   }, [transactions]);
 
+  // Handler for editing a transaction (fixes syntax error with inline arrow function in JSX)
+  function handleEditTransaction(tx) {
+    setEditTx(tx);
+    setShowTxModal(true);
+  }
+
   return (
     <section className="dashboard">
       <div className="container dashboard-layout">
@@ -144,10 +150,7 @@ function Dashboard({ showToast }) {
           />
           <TransactionList
             transactions={filtered}
-            onEdit={tx => {
-              setEditTx(tx);
-              setShowTxModal(true);
-            }}
+            onEdit={handleEditTransaction}
             onDelete={handleDeleteTransaction}
             emptyMsg="No transactions found for selected filters."
           />

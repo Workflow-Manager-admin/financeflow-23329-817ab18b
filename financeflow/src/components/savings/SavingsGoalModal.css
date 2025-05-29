@@ -34,45 +34,50 @@
   background: var(--secondary, #F5F6FA);
   color: var(--text-color,#23243A);
   outline: none;
-  /* Minimal box-shadow for consistency */
-  box-shadow: 0 1px 4px rgba(60,42,150,0.04);
-  transition: border-color 0.18s, box-shadow 0.17s, background 0.16s;
+  box-shadow: 0 1.5px 5px rgba(60,42,150,0.038);
+  transition: border-color 0.18s, box-shadow 0.19s, background 0.16s;
 }
+
 .goalmodal select {
   appearance: none;
   -webkit-appearance: none;
-  background: var(--secondary, #F5F6FA) url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8L10 12L14 8' stroke='%238A889A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 11px center/18px 18px;
+  background: var(--secondary, #F5F6FA) url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8L10 12L14 8' stroke='%238A889A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 11px center/22px 22px;
   cursor: pointer;
-  padding-right: 29px;
+  padding-right: 32px;
   min-width: 160px;
+  font-family: inherit;
+  font-weight: 500;
 }
+
 .goalmodal select:focus,
 .goalmodal input:focus {
   border-color: var(--primary, #6C2EBE);
   box-shadow: 0 0 0 2px rgba(108,46,190,0.10);
   background: var(--surface, #fff);
 }
+
 .goalmodal select:hover,
 .goalmodal input:hover {
   border-color: var(--primary, #6C2EBE);
 }
+
+/* match Add Transaction: make dropdown arrow match */
+.goalmodal select::-ms-expand {
+  display: none;
+}
+
 /* Placeholder color for disabled/placeholder option */
 .goalmodal select option[disabled],
 .goalmodal select option[value=""] {
   color: var(--text-secondary, #8A889A) !important;
 }
 
-/* Remove browser default arrow */
-.goalmodal select::-ms-expand {
-  display: none;
-}
-
-/* For minimalism and alignment, add slight spacing if stacked with input */
+/* More minimal, modern margin feedback for stacked elements */
 .goalmodal select + input {
-  margin-top: 3px;
+  margin-top: 5px;
 }
 
-/* Make touch targets slightly larger */
+/* Slight shadow, subtle hover, minimal spacing, touch target min. */
 @media (max-width: 600px) {
   .goalmodal select,
   .goalmodal input {

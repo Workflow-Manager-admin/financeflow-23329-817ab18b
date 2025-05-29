@@ -36,9 +36,52 @@ body {
 .app {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background: var(--background, #F5F6FA);
+  width: 100vw;
 }
+
+/* Sidebar + Main Content Layout */
+.main-content {
+  flex: 1 1 auto;
+  margin-left: 230px;
+  min-height: 100vh;
+  background: var(--background, #F5F6FA);
+  transition: margin-left 0.23s;
+  padding: 0;
+}
+@media (max-width: 900px) {
+  .main-content {
+    margin-left: 62px;
+  }
+}
+@media (max-width: 640px) {
+  .main-content {
+    margin-left: 0;
+    padding-left: 5vw;
+    padding-right: 3vw;
+  }
+}
+
+.placeholder-view {
+  padding-top: 46px;
+  padding-bottom: 29px;
+  min-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: none;
+  animation: fadein 0.22s;
+}
+.placeholder-view .container {
+  background: var(--surface,#fff);
+  border-radius: 13px;
+  box-shadow: 0 2px 16px rgba(60,42,150,0.07);
+  padding: 36px 17px;
+  max-width: 650px;
+  margin: 33px auto 0;
+}
+
 
 .container {
   max-width: 930px;

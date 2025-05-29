@@ -35,38 +35,69 @@
   padding: 26px 14px 5px 14px;
 }
 
+/* Remove old floating action column styles */
 .dashboard-fab-col {
-  position: fixed;
-  right: 36px;
-  bottom: 38px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  z-index: 900;
+  display: none;
 }
 
-.fab, .fab-small {
-  border: none;
-  background: var(--primary,#6C2EBE);
+/* Modern single floating/sticky Add button (bottom right on desktop, fixed at bottom on mobile) */
+.dashboard-add-btn {
+  position: fixed;
+  right: 38px;
+  bottom: 38px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  background: var(--primary, #6C2EBE);
   color: #fff;
+  border: none;
+  border-radius: 32px;
+  box-shadow: 0 3px 12px rgba(60,42,150,0.10);
+  padding: 14px 29px 14px 19px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 0.26s, box-shadow 0.17s;
+  outline: none;
+}
+.dashboard-add-btn:hover, .dashboard-add-btn:focus {
+  background: #7938d4;
+  box-shadow: 0 8px 32px rgba(60,42,150,0.16);
+}
+.dashboard-add-btn-icon {
+  background: #fff;
+  color: var(--primary, #6C2EBE);
+  width: 31px;
+  height: 31px;
   border-radius: 50%;
-  font-size: 2.1rem;
-  width: 58px;
-  height: 58px;
+  font-size: 1.53rem;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(45,23,130,0.13);
-  transition: background 0.18s, box-shadow 0.14s;
+  box-shadow: 0 1px 6px rgba(120,110,180,0.09);
+  margin-right: 6px;
 }
-.fab:hover, .fab-small:hover {
-  background: #7938d4;
-  box-shadow: 0 6px 24px rgba(60,42,150,0.10);
+.dashboard-add-btn-label {
+  font-size: 1.08rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
-.fab-small {
-  font-size: 1.25rem;
-  width: 39px;
-  height: 39px;
-  background: var(--income, #22C55E);
+@media (max-width: 600px) {
+  .dashboard-add-btn {
+    width: 95vw;
+    max-width: 480px;
+    left: 2.5vw;
+    right: auto;
+    bottom: 16px;
+    border-radius: 15px;
+    padding: 14px 0;
+    justify-content: center;
+    font-size: 1.15rem;
+  }
+  .dashboard-add-btn-icon {
+    margin-right: 12px;
+  }
 }

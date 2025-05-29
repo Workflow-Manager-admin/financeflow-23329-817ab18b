@@ -110,8 +110,8 @@ function Dashboard({ showToast }) {
 
   // Category choices
   const categories = useMemo(() => {
-    const all = ['All', ...Array.from(new Set(transactions.map((t) => t.category)))];
-    return all;
+    const catSet = new Set(transactions.map((t) => t.category));
+    return ['All', ...Array.from(catSet)];
   }, [transactions]);
 
   // Amount stats
@@ -126,7 +126,7 @@ function Dashboard({ showToast }) {
     return { income, expense, balance };
   }, [transactions]);
 
-  // Handler for editing a transaction (fixes syntax error with inline arrow function in JSX)
+  // Handler for editing a transaction
   function handleEditTransaction(tx) {
     setEditTx(tx);
     setShowTxModal(true);

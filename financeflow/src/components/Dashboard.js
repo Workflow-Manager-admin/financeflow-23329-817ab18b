@@ -98,21 +98,21 @@ function Dashboard({ showToast }) {
   }, [goal, transactions]);
 
   // Filtering logic
-  function applyFilters(data, filters) {
+  const applyFilters = (data, filters) => {
     const { category, from, to } = filters;
     let arr = data;
-    if (category && category !== 'All') {
+    if (category && category !== "All") {
       arr = arr.filter((t) => t.category === category);
     }
     if (from) arr = arr.filter((t) => t.date >= from);
     if (to) arr = arr.filter((t) => t.date <= to);
     return arr.sort((a, b) => b.date.localeCompare(a.date));
-  }
+  };
 
   // Category choices
   const categories = useMemo(() => {
     const set = new Set(transactions.map((t) => t.category));
-    return ['All', ...Array.from(set)];
+    return ["All", ...Array.from(set)];
   }, [transactions]);
 
   // Amount stats

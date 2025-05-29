@@ -15,15 +15,37 @@ function groupByMonth(transactions) {
   return labels.map(l => ({ month: l, ...byDate[l] }));
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * Displays a line chart of cash flow trends, or a dynamic message indicating how many
+ * more transactions are needed to generate the chart.
+ */
 function LineChart({ transactions }) {
+  // Minimum number of grouped periods (e.g., months) for a trend to be meaningful
+  const MIN_PERIODS = 2;
+
   const data = groupByMonth(transactions);
-  if (data.length < 2) {
+
+  // Determine the raw count of transactions required to get at least MIN_PERIODS
+  // For month-wise grouping, need transactions from at least MIN_PERIODS unique months
+  const uniqueMonths = new Set(transactions.map(t => t.date && t.date.slice(0, 7)).filter(Boolean));
+  const monthsNeeded = Math.max(0, MIN_PERIODS - uniqueMonths.size);
+
+  if (data.length < MIN_PERIODS) {
+    const remaining = monthsNeeded > 0 ? monthsNeeded : (MIN_PERIODS - data.length);
+    let msg = '';
+    if (transactions.length === 0) {
+      msg = `Add at least ${MIN_PERIODS} transactions (from different months) to view your trends!`;
+    } else if (monthsNeeded > 0) {
+      msg = `Add transactions from ${monthsNeeded} more month${monthsNeeded > 1 ? 's' : ''} to view your trends!`;
+    } else {
+      msg = `Add ${MIN_PERIODS - data.length} more transaction${MIN_PERIODS - data.length > 1 ? 's' : ''} to view your trends!`;
+    }
     return (
       <div className="linechart-box">
         <h4>Cash Flow Trend</h4>
         <div style={{ marginTop: 48, color: 'var(--text-secondary,#aaa)', fontSize: '1.13em', textAlign: 'center' }}>
-          Add more data to view trends.
+          {msg}
         </div>
       </div>
     );

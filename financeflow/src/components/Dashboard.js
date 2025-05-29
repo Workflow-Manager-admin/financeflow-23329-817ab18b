@@ -166,11 +166,11 @@ function Dashboard({ showToast }) {
             className="fab"
             aria-label="Add transaction"
             title="Add new transaction"
+            type="button"
             onClick={() => {
               setShowTxModal(true);
               setEditTx(null);
             }}
-            type="button"
           >
             +
           </button>
@@ -178,8 +178,8 @@ function Dashboard({ showToast }) {
             className="fab-small"
             aria-label="Set savings goal"
             title="Set savings goal"
-            onClick={() => setShowGoalModal(true)}
             type="button"
+            onClick={() => setShowGoalModal(true)}
           >
             🎯
           </button>

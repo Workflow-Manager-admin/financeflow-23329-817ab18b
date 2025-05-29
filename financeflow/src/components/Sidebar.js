@@ -61,7 +61,20 @@ function Sidebar({ currentRoute, onNavigate, collapsed, onToggle }) {
     <aside className={`sidebar${sidebarCollapsed ? ' collapsed' : ''}`}>
       <div className="sidebar-upper">
         <div className="sidebar-logo-row">
-          <span className="sidebar-logo-mark">{/* stylized logo mark */}💸</span>
+          {/* Minimal, beautiful SVG logo */}
+          <span className="sidebar-logo-svg" aria-label="FinanceFlow logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{display: 'block'}}>
+              <defs>
+                <linearGradient id="fflow-logo-gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#6C2EBE"/>
+                  <stop offset="1" stopColor="#E87A41"/>
+                </linearGradient>
+              </defs>
+              <circle cx="16" cy="16" r="14" fill="url(#fflow-logo-gradient)" />
+              <path d="M10.8 18.7c.8 2.1 2.7 3.5 5.2 3.5 2.8 0 5-1.8 5-4.3 0-2.7-2.2-3.5-4.5-4.1-2.2-.5-3.2-1-3.2-2.3 0-1.2 1.1-2.1 2.8-2.1 1.7 0 2.8.7 3.2 2.1" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <circle cx="16" cy="16" r="14" fill="none" stroke="#fff" strokeWidth=".8" opacity=".12"/>
+            </svg>
+          </span>
           {!sidebarCollapsed && (
             <span className="sidebar-title">Finance<span className="flow-accent">Flow</span></span>
           )}

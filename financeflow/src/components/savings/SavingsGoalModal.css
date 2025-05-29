@@ -24,14 +24,26 @@
   font-size: 1.18rem;
   text-align: center;
 }
-.goalmodal input {
+.goalmodal input,
+.goalmodal select {
   font-size: 1.07rem;
   padding: 8px 7px;
+  margin-bottom: 1px;
   border: 1px solid var(--secondary, #ececec);
   border-radius: 8px;
   background: var(--secondary, #F5F6FA);
   color: var(--text-color,#23243A);
   outline: none;
+  transition: border-color 0.18s, box-shadow 0.17s;
+}
+.goalmodal select:focus,
+.goalmodal input:focus {
+  border-color: var(--primary, #6C2EBE);
+  box-shadow: 0 0 0 2px rgba(108,46,190,0.10);
+}
+.goalmodal select:hover,
+.goalmodal input:hover {
+  border-color: var(--primary, #6C2EBE);
 }
 .goalmodal-btnrow {
   display: flex;

@@ -237,3 +237,19 @@ ERROR in ./src/components/ToastNotification.js 5:0-33
 Module not found: Error: Can't resolve './ToastNotification.css' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src/components'
 
 webpack compiled with 2 errors
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve './components/Dashboard' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+ERROR in ./src/App.js 10:0-47
+Module not found: Error: Can't resolve './components/Dashboard' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+webpack compiled with 1 error
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve './components/Dashboard' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+ERROR in ./src/App.js 10:0-47
+Module not found: Error: Can't resolve './components/Dashboard' in '/home/kavia/workspace/code-generation/financeflow-23329-817ab18b/financeflow/src'
+
+webpack compiled with 1 error

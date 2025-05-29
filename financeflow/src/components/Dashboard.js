@@ -144,18 +144,21 @@ function Dashboard({ showToast }) {
   return (
     <section className="dashboard">
       <div className="container dashboard-layout">
-        <div className="dashboard-upper">
+        {/* Visualizations moved to top & larger */}
+        <div className="dashboard-visuals-grid" style={{marginBottom: 0, marginTop: '20px'}}>
+          <PieChart transactions={transactions} />
+          <LineChart transactions={transactions} />
+        </div>
+        {/* Savings ring just below, but prominent */}
+        <div className="dashboard-upper" style={{marginTop: '20px', marginBottom: 0}}>
           <SavingsRing
             goal={goal}
             stats={stats}
             onSetGoal={() => setShowGoalModal(true)}
           />
         </div>
-        <div className="dashboard-visuals-grid">
-          <PieChart transactions={transactions} />
-          <LineChart transactions={transactions} />
-        </div>
-        <div className="dashboard-txlist-outer">
+        {/* Transactions list aligns with grid/visuals */}
+        <div className="dashboard-txlist-outer" style={{marginTop: '24px'}}>
           <FilterBar
             filters={filters}
             setFilters={setFilters}
@@ -168,7 +171,6 @@ function Dashboard({ showToast }) {
             emptyMsg="No transactions found for selected filters."
           />
         </div>
-        {/* Modern single Add Transaction FAB */}
       </div>
       <button
         className="dashboard-add-btn"

@@ -12,13 +12,18 @@ function getPieData(transactions) {
   expenses.forEach((t) => {
     data[t.category] = (data[t.category] || 0) + Number(t.amount);
   });
-  const total = Object.values(data).reduce((a, b) => a + b, 0) || 1;
-  return Object.entries(data).map(([cat, value], i) => ({
-    category: cat,
-    value,
-    percent: value / total,
-    color: COLORS[i % COLORS.length]
-  }));
+  const total = Object.values(data).reduce((a, b) => a + b, 0);
+  // Avoid division by zero for empty case
+  const divisor = total || 1;
+  return {
+    total,
+    slices: Object.entries(data).map(([cat, value], i) => ({
+      category: cat,
+      value,
+      percent: value / divisor,
+      color: COLORS[i % COLORS.length]
+    }))
+  };
 }
 
 // PUBLIC_INTERFACE

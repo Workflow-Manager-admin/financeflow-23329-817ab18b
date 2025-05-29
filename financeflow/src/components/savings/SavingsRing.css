@@ -1,0 +1,29 @@
+.savingring-box {
+  display: flex;
+  align-items: center;
+  gap: 29px;
+  background: var(--surface,#fff);
+  border-radius: 13px;
+  padding: 14px 24px;
+  margin-bottom: 7px;
+  box-shadow: 0 1.6px 7px rgba(60,42,150,0.07);
+  flex-wrap: wrap;
+}
+.savingring-label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--primary,#6C2EBE);
+  font-size: 1.14em;
+}
+.savingring-bar {
+  stroke-linecap: round;
+}
+@media (max-width: 600px) {
+  .savingring-box {
+    flex-direction: column;
+    gap: 13px;
+    padding: 11px 6px;
+    align-items: flex-start;
+  }
+}

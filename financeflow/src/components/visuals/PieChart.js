@@ -26,9 +26,14 @@ function getPieData(transactions) {
   };
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * PieChart displays a pie of expenses by category, with total expense value shown next to chart.
+ */
 function PieChart({ transactions }) {
-  const pieData = getPieData(transactions);
+  const pie = getPieData(transactions);
+  const pieData = pie.slices || [];
+  const total = pie.total !== undefined ? pie.total : 0;
 
   // Prepare arcs
   let start = 0;
@@ -54,20 +59,42 @@ function PieChart({ transactions }) {
   return (
     <div className="piechart-box">
       <h4>Expenses by Category</h4>
-      <svg width="120" height="120" viewBox="0 0 120 120" className="piechart-svg">
-        {arcs}
-        <circle cx="60" cy="60" r="32" fill="var(--surface,#fff)" />
-        <text
-          x="60"
-          y="65"
-          textAnchor="middle"
-          fontSize="1rem"
-          fill="var(--primary)"
-          fontWeight="bold"
-        >
-          {pieData.length ? 'Total' : 'No data'}
-        </text>
-      </svg>
+      {/* Add a wrapper to show chart + total in a row */}
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "14px",
+        marginBottom: pieData.length ? 8 : 0,
+        justifyContent: "center"
+      }}>
+        <svg width="120" height="120" viewBox="0 0 120 120" className="piechart-svg">
+          {arcs}
+          <circle cx="60" cy="60" r="32" fill="var(--surface,#fff)" />
+          <text
+            x="60"
+            y="65"
+            textAnchor="middle"
+            fontSize="1rem"
+            fill="var(--primary)"
+            fontWeight="bold"
+          >
+            {pieData.length ? 'Total' : 'No data'}
+          </text>
+        </svg>
+        {/* Show total expense */}
+        <div style={{
+          minWidth: 76,
+          textAlign: "center",
+          fontWeight: 600,
+          color: "var(--expense,#E74C3C)",
+          fontSize: "1.14rem"
+        }}>
+          <span style={{ display: "block", fontSize: "1.04rem", color: "var(--text-secondary,#aaa)", fontWeight: 400, marginBottom: 2 }}>
+            Total
+          </span>
+          ${total.toFixed(2)}
+        </div>
+      </div>
       {pieData.length > 0 && (
         <div className="piechart-legend">
           {pieData.map(d =>

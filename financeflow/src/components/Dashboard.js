@@ -37,16 +37,19 @@ function Dashboard({ showToast }) {
   useEffect(() => {
     localStorage.setItem(STORAGE_TRANSACTIONS, JSON.stringify(transactions));
     setFiltered(applyFilters(transactions, filters));
+    // eslint-disable-next-line
   }, [transactions]);
 
   // Filter recompute
   useEffect(() => {
     setFiltered(applyFilters(transactions, filters));
+    // eslint-disable-next-line
   }, [filters, transactions]);
 
   // Save goal
   useEffect(() => {
     localStorage.setItem(STORAGE_GOAL, JSON.stringify(goal));
+    // eslint-disable-next-line
   }, [goal]);
 
 
@@ -83,13 +86,15 @@ function Dashboard({ showToast }) {
   // Milestone notification support for savings
   useEffect(() => {
     if (!goal) return;
-    const { target, label } = goal;
-    const sum = transactions.reduce((acc, t) => t.type === 'income' ? acc + Number(t.amount) : acc - Number(t.amount), 0);
-    if (sum >= target && !goal.achieved) {
+    const { target } = goal;
+    const sum = transactions.reduce((acc, t) => t.type === 'income'
+      ? acc + Number(t.amount)
+      : acc - Number(t.amount), 0);
+    if (target && sum >= target && !goal.achieved) {
       setGoal((g) => ({ ...g, achieved: true }));
       showToast('🎉 Congratulations! You've reached your savings goal!', 'success');
     }
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [goal, transactions]);
 
   // Filtering logic
@@ -139,7 +144,7 @@ function Dashboard({ showToast }) {
           />
           <TransactionList
             transactions={filtered}
-            onEdit={(tx) => {
+            onEdit={tx => {
               setEditTx(tx);
               setShowTxModal(true);
             }}
@@ -153,7 +158,10 @@ function Dashboard({ showToast }) {
             className="fab"
             aria-label="Add transaction"
             title="Add new transaction"
-            onClick={() => { setShowTxModal(true); setEditTx(null); }}
+            onClick={() => {
+              setShowTxModal(true);
+              setEditTx(null);
+            }}
           >＋</button>
           <button
             className="fab-small"
@@ -166,7 +174,10 @@ function Dashboard({ showToast }) {
       {showTxModal && (
         <TransactionFormModal
           onSave={handleSaveTransaction}
-          onClose={() => { setShowTxModal(false); setEditTx(null); }}
+          onClose={() => {
+            setShowTxModal(false);
+            setEditTx(null);
+          }}
           initial={editTx}
         />
       )}

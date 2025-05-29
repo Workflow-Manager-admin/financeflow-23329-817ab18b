@@ -35,6 +35,10 @@ function Dashboard({ showToast }) {
 
     const storedGoal = JSON.parse(localStorage.getItem(STORAGE_GOAL)) || null;
     setGoal(storedGoal);
+    // If the Dashboard ever loads EMPTY state after visiting another tab,
+    // it can only mean (1) localStorage key was cleared (manually or by another component),
+    // or (2) transactions/goals are being set to []/null by code OUTSIDE Dashboard, probably a bug.
+    // -> Ensure: No "clear" or accidental overwrite by other views.
   }, []);
 
   // Save transactions to localStorage

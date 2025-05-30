@@ -223,7 +223,6 @@ function BudgetPlanner({ transactions = [], showToast }) {
                             onChange={e => {
                               let candidateValue = e.target.value === '' ? '' : parseFloat(e.target.value);
                               setRowDraft({ value: candidateValue });
-                              setEditError('');
                             }}
                             aria-label={`Budget for ${cat}`}
                             onKeyDown={e => {
@@ -234,7 +233,6 @@ function BudgetPlanner({ transactions = [], showToast }) {
                                 e.preventDefault();
                                 setEditingRow(null);
                                 setRowDraft({});
-                                setEditError('');
                               }
                             }}
                           />
@@ -279,7 +277,6 @@ function BudgetPlanner({ transactions = [], showToast }) {
                               e.preventDefault();
                               setEditingRow(null);
                               setRowDraft({});
-                              setEditError('');
                             }}
                             aria-label={`Cancel editing budget for ${cat}`}
                             style={{
@@ -304,9 +301,6 @@ function BudgetPlanner({ transactions = [], showToast }) {
                               />
                             </svg>
                           </button>
-                          {editError &&
-                            <div style={{ color: 'var(--expense,#E74C3C)', fontWeight: 600, marginTop: 6, fontSize: '0.95em' }}>{editError}</div>
-                          }
                         </div>
                       ) : (
                         <>
@@ -378,11 +372,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                             aria-label={`Edit budget for ${cat}`}
                             disabled={editingRow !== null}
                           >Edit</button>
-                          {justSavedCat === cat && !showToast && (
-                            <span style={{ color: 'var(--income,#22C55E)', marginLeft: 6, fontWeight: 600, transition: 'opacity 0.16s', opacity: 0.955 }}>
-                              budget saved!
-                            </span>
-                          )}
+                          {/* No budget saved! inline message */}
                         </span>
                       )}
                     </td>

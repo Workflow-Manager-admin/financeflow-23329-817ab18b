@@ -10,10 +10,13 @@ const defaultForm = {
   description: '',
 };
 
-// Categories example
+/*
+ * Categories: Updated to replace 'Salary' (which is not an expense) with 'Rent/House'
+ * (Also: 'Investment' is present as category, which may be used, but not touched here per requirements)
+ */
 const categories = [
   'Food', 'Transport', 'Shopping', 'Utilities', 'Subscriptions',
-  'Salary', 'Investment', 'Gift', 'Healthcare', 'Other'
+  'Rent/House', 'Investment', 'Gift', 'Healthcare', 'Other'
 ];
 
 // PUBLIC_INTERFACE

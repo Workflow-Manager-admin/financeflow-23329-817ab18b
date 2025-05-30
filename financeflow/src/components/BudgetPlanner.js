@@ -1,26 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { usePreferences } from './PreferencesProvider';
 
 /**
- * Robust fallback to detect navigation for both react-router and hash-based routing.
- * If react-router's useLocation is not present, returns a {pathname} object derived from window.location.hash.
+ * Robust fallback to detect navigation for hash-based routing.
+ * (This app uses window.location.hash for view navigation.)
+ * Always call hooks at the top level for compatibility with React rules.
  */
 function useNavLocation() {
-  try {
-    // eslint-disable-next-line
-    // @ts-ignore
-    const { useLocation } = require('react-router-dom');
-    return useLocation();
-  } catch {
-    // Fallback for hash-based navigation
-    const [hash, setHash] = React.useState(window.location.hash);
-    React.useEffect(() => {
-      const handler = () => setHash(window.location.hash);
-      window.addEventListener('hashchange', handler);
-      return () => window.removeEventListener('hashchange', handler);
-    }, []);
-    return { pathname: hash || '/' };
-  }
+  const [pathname, setPathname] = useState(window.location.hash || '/');
+  useEffect(() => {
+    const handler = () => setPathname(window.location.hash || '/');
+    window.addEventListener('hashchange', handler);
+    return () => window.removeEventListener('hashchange', handler);
+  }, []);
+  return { pathname };
 }
 
 // Expense categories (matching TransactionFormModal minus 'Investment' & 'Salary')
@@ -46,12 +39,12 @@ function BudgetPlanner({ transactions = [], showToast }) {
   const [rowDraft, setRowDraft] = useState({});
   const [justSavedCat, setJustSavedCat] = useState(null);
 
-  // Track navigation/location for robust reload (supports both react-router and hash-based)
+  // Detect hash navigation changes for reload
   const navLocation = useNavLocation();
   const lastLocationRef = useRef(navLocation && navLocation.pathname);
 
   // Loads budgets from localStorage
-  const loadBudgets = React.useCallback(() => {
+  const loadBudgets = useCallback(() => {
     try {
       const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
       setBudgets(lsBudgets ? JSON.parse(lsBudgets) : {});
@@ -75,7 +68,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
     };
   }, [loadBudgets]);
 
-  // On navigation/route change (react-router or hash)
+  // On hash navigation change
   useEffect(() => {
     if (navLocation && navLocation.pathname !== lastLocationRef.current) {
       loadBudgets();

@@ -75,8 +75,7 @@ function Sidebar({ currentRoute, onNavigate }) {
   // For current nav highlight, accept currentRoute (e.g. "/expenses"), fallback home "/"
   const routeMatch = r => (r === "/" && currentRoute === "/") || (r !== "/" && currentRoute?.startsWith(r));
 
-  // Sidebar is always expanded and open (never collapsed or auto-closing)
-  const sidebarCollapsed = false;
+  // Auto-close/collapse logic removed; sidebar is always open/persistent.
 
   return (
     <aside className="sidebar">

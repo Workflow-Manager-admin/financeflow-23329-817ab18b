@@ -228,20 +228,7 @@ function Dashboard({ showToast }) {
             gap: 0
           }}
         >
-          {/* <h1
-            style={{
-              margin: 0,
-              fontSize: "2.15rem",
-              color: "var(--primary,#6C2EBE)",
-              fontWeight: 700,
-              letterSpacing: "0.01em",
-              textAlign: "left",
-              flex: "1 1 auto",
-              lineHeight: 1.13
-            }}
-          >
-            Dashboard
-          </h1> */}
+          {/* Dashboard title intentionally removed as per requirements */}
         </div>
         <div className="dashboard-layout" style={{ paddingTop: 4 }}>
           {/* Visualizations */}

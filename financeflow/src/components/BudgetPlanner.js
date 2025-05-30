@@ -17,24 +17,18 @@ const STORAGE_TRANSACTIONS_KEY = 'fflow-transactions-v1';
  * Persists budgets in localStorage; reads currency symbol from preferences.
  * Reverted: Category heading restored to classic, no margin shift/grouping with content.
  */
-function BudgetPlanner() {
+function BudgetPlanner({ transactions = [] }) {
   const { currencySymbol } = usePreferences() || { currencySymbol: '$' };
   const [budgets, setBudgets] = useState({});
   const [editingRow, setEditingRow] = useState(null); // Category string or null
   const [rowDraft, setRowDraft] = useState({});
-  const [transactions, setTransactions] = useState([]);
 
-  // On mount, load budgets and transactions
+  // Only load budgets from localStorage (transactions now come from props/cloud/local sync)
   useEffect(() => {
     try {
       setBudgets(JSON.parse(localStorage.getItem(STORAGE_BUDGETS_KEY)) || {});
     } catch {
       setBudgets({});
-    }
-    try {
-      setTransactions(JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS_KEY)) || []);
-    } catch {
-      setTransactions([]);
     }
   }, []);
 

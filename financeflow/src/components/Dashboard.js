@@ -19,64 +19,25 @@ const STORAGE_GOAL = 'fflow-savings-goal-v1';
  * 
  * Layout reverted: No dashboard title/grouping—all content blocks follow original, "stacked" loose container layout.
  */
-function Dashboard({ showToast }) {
-  // ============ Data State ===============
-  const [transactions, setTransactions] = useState([]);
+function Dashboard({ showToast, transactions = [], setTransactions }) {
   const [filtered, setFiltered] = useState([]);
   const [filters, setFilters] = useState({ category: 'All', from: '', to: '' });
   const [showTxModal, setShowTxModal] = useState(false);
   const [editTx, setEditTx] = useState(null);
 
-  const [goal, setGoal] = useState(null);
+  // Savings goal is still only device-local
+  const [goal, setGoal] = useState(() => {
+    return JSON.parse(localStorage.getItem(STORAGE_GOAL)) || null;
+  });
   const [showGoalModal, setShowGoalModal] = useState(false);
 
-  // ========== Storage Sync & Boot =========
-  useEffect(() => {
-    function rehydrateFromStorage() {
-      const lsRaw = localStorage.getItem(STORAGE_TRANSACTIONS);
-      const storedTx = JSON.parse(lsRaw) || [];
-      setTransactions(storedTx);
-
-      const storedGoal = JSON.parse(localStorage.getItem(STORAGE_GOAL)) || null;
-      setGoal(storedGoal);
-    }
-
-    rehydrateFromStorage();
-
-    function onHashChange() {
-      if (window.location.hash.replace('#', '') === '' || window.location.hash.replace('#', '') === '/') {
-        rehydrateFromStorage();
-      }
-    }
-    function onStorage(e) {
-      if (e.key === STORAGE_TRANSACTIONS || e.key === STORAGE_GOAL) {
-        rehydrateFromStorage();
-      }
-    }
-    window.addEventListener('hashchange', onHashChange);
-    window.addEventListener('storage', onStorage);
-    return () => {
-      window.removeEventListener('hashchange', onHashChange);
-      window.removeEventListener('storage', onStorage);
-    };
-  }, []);
-
-  useEffect(() => {
-    // Only persist legitimate transaction arrays; never overwrite with null/undefined or corrupted (non-array) values.
-    if (Array.isArray(transactions) && transactions !== null && transactions !== undefined) {
-      localStorage.setItem(STORAGE_TRANSACTIONS, JSON.stringify(transactions));
-    }
-    setFiltered(applyFilters(transactions, filters));
-    // eslint-disable-next-line
-  }, [transactions]);
-
+  // --- Filtering, calculation, local goal ---
   useEffect(() => {
     setFiltered(applyFilters(transactions, filters));
     // eslint-disable-next-line
   }, [filters, transactions]);
 
   useEffect(() => {
-    // Prevent accidental destructive write: only commit goal if not null/undefined and is object.
     if (goal && typeof goal === 'object' && Object.keys(goal).length > 0) {
       localStorage.setItem(STORAGE_GOAL, JSON.stringify(goal));
     }
@@ -85,24 +46,22 @@ function Dashboard({ showToast }) {
 
   // ========== Actions ==============
   function handleSaveTransaction(tx) {
-    setTransactions(prev => {
-      let arr;
-      if (tx.id) {
-        arr = prev.map(t => (t.id === tx.id ? tx : t));
-        showToast && showToast('Transaction updated!', 'success');
-      } else {
-        const id = 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
-        arr = [{ ...tx, id }, ...prev];
-        showToast && showToast('Transaction added!', 'success');
-      }
-      return arr;
-    });
+    let arr;
+    if (tx.id) {
+      arr = transactions.map(t => (t.id === tx.id ? tx : t));
+      showToast && showToast('Transaction updated!', 'success');
+    } else {
+      const id = 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+      arr = [{ ...tx, id }, ...transactions];
+      showToast && showToast('Transaction added!', 'success');
+    }
+    setTransactions(arr);
     setShowTxModal(false);
     setEditTx(null);
   }
 
   function handleDeleteTransaction(id) {
-    setTransactions(prev => prev.filter(t => t.id !== id));
+    setTransactions(transactions.filter(t => t.id !== id));
     showToast && showToast('Transaction deleted!', 'success');
   }
 

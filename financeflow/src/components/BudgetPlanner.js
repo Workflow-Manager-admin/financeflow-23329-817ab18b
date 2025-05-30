@@ -20,6 +20,7 @@ function BudgetPlanner() {
   const { currencySymbol } = usePreferences() || { currencySymbol: '$' };
   const [budgets, setBudgets] = useState({});
   const [editing, setEditing] = useState({});
+  const [rowDrafts, setRowDrafts] = useState({});
   const [transactions, setTransactions] = useState([]);
 
   // On mount, load budgets and transactions
@@ -35,6 +36,19 @@ function BudgetPlanner() {
       setTransactions([]);
     }
   }, []);
+
+  // Keep rowDrafts in sync with budgets for new categories/budget changes
+  useEffect(() => {
+    // Only update for rows NOT currently being edited
+    setRowDrafts((prev) => {
+      const next = { ...prev };
+      for (const cat of EXPENSE_CATEGORIES) {
+        if (!editing[cat]) next[cat] = Number(budgets[cat] || 0);
+      }
+      return next;
+    });
+    // eslint-disable-next-line
+  }, [budgets]);
 
   // Save budgets to localStorage on change
   useEffect(() => {

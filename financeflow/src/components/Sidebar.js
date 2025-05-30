@@ -9,6 +9,12 @@ import { ThemeContext } from './ThemeProvider';
  */
 const icons = {
   dashboard: (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="3" width="7" height="9" rx="2" />
+      <rect x="14" y="3" width="7" height="5" rx="2" />
+      <rect x="14" y="10" width="7" height="11" rx="2" />
+      <rect x="3" y="13" width="7" height="8" rx="2" />
+    </svg>
   ),
   budget: (
     // Modern wallet/money SVG

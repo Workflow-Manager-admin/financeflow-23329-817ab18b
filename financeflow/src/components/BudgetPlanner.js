@@ -398,28 +398,8 @@ function BudgetPlanner({ transactions = [], showToast }) {
                     </td>
                     <td className="budgetplanner-actions-cell" style={{padding: "2px 2px", minWidth: 54}}>
                       {isEditing ? (
-                        <div>
-                          <button
-                            className="btn btn-large"
-                            style={{ minWidth: 32, padding: "6px 11px", fontSize: "0.99em" }}
-                            onClick={e => {
-                              e.preventDefault();
-                              handleSaveBudget(cat, rowDraft.value);
-                            }}
-                            aria-label={`Save budget for ${cat}`}
-                          >Save</button>
-                          <button
-                            className="btn btn-cancel"
-                            style={{ minWidth: 30, padding: "6px 8px", fontSize: "0.99em" }}
-                            onClick={e => {
-                              e.preventDefault();
-                              setEditingRow(null);
-                              setRowDraft({});
-                              setEditError('');
-                            }}
-                            aria-label={`Cancel editing budget for ${cat}`}
-                          >Cancel</button>
-                        </div>
+                        // No text buttons: handled as icon controls next to input above, so leave actions cell empty for editing row
+                        <span></span>
                       ) : (
                         <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                           <button

@@ -311,11 +311,12 @@ function ProfileView() {
           name: obj.name || "",
           email: obj.email || "",
           mobile: obj.mobile || "",
+          countryCode: obj.countryCode || "+1",
           currency: obj.currency || ""
         });
         // No language field, remove any previous language reference.
       } catch {
-        setProfile({ name: '', email: '', mobile: '', currency: '' });
+        setProfile({ name: '', email: '', mobile: '', countryCode: "+1", currency: '' });
       }
     }
     // After (re)load, only switch to edit mode if name is missing (first-time), else always non-edit
@@ -330,14 +331,14 @@ function ProfileView() {
     else setEditMode(false);
   }, [profile.name]); // react to name changes only
 
-  // Handler: field change
+  // Handler: field change (including updates from dropdown)
   // PUBLIC_INTERFACE
   function handleChange(e) {
     const { name, value } = e.target;
     setProfile(p => ({ ...p, [name]: value }));
   }
 
-  // Handler: Save (with validation, including mobile)
+  // Handler: Save (with validation, including mobile and country code)
   // PUBLIC_INTERFACE
   function handleSave(e) {
     e.preventDefault && e.preventDefault();
@@ -349,12 +350,26 @@ function ProfileView() {
       setError("Invalid email address.");
       return;
     }
-    if (profile.mobile && !/^(\\+?\\d[\\d\\-\\s()]{5,17})$/.test(profile.mobile.trim())) {
-      setError("Enter a valid mobile number. It should be at least 6 digits and can include +, -, spaces or parentheses.");
-      return;
+    // Mobile and country code validation (optional field)
+    if (profile.mobile || profile.countryCode) {
+      if (
+        !profile.mobile ||
+        !/^[0-9]{10}$/.test(profile.mobile.trim())
+      ) {
+        setError("Mobile number must be exactly 10 digits.");
+        return;
+      }
+      if (!profile.countryCode || profile.countryCode === "") {
+        setError("Please select your country code.");
+        return;
+      }
     }
     setError('');
-    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+    // Save country code & mobile as separate fields
+    localStorage.setItem(
+      PROFILE_STORAGE_KEY,
+      JSON.stringify({ ...profile, mobile: profile.mobile, countryCode: profile.countryCode || "+1" })
+    );
     setEditMode(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 1300);
@@ -409,7 +424,12 @@ function ProfileView() {
             <strong>Name:</strong> {profile.name}
           </p>
           {profile.email && <p style={{margin: "7px 0 0"}}><strong>Email:</strong> {profile.email}</p>}
-          {profile.mobile && <p style={{margin: "7px 0 0"}}><strong>Mobile:</strong> {profile.mobile}</p>}
+          {profile.mobile && <p style={{margin: "7px 0 0"}}>
+            <strong>Mobile:</strong>{" "}
+            <span>
+              {(profile.countryCode || "+1") + " " + profile.mobile}
+            </span>
+          </p>}
           {profile.currency && <p style={{margin: "7px 0 0"}}><strong>Currency:</strong> {profile.currency}</p>}
           <button
             type="button"

@@ -126,7 +126,7 @@ function Dashboard({
 
   const { currencySymbol } = usePreferences();
 
-  // ========== Render - revert to "classic", loosely stacked layout ================
+  // ========== Render ================
   return (
     <section className="dashboard">
       <div className="container" style={{
@@ -140,7 +140,6 @@ function Dashboard({
         marginRight: "auto",
         padding: "0 0 44px 0"
       }}>
-        {/* Old Layout: NO dashboard heading/title at top */}
         <div className="dashboard-layout" style={{ paddingTop: 4, gap: 34 }}>
           {/* Visualizations */}
           <div className="dashboard-visuals-grid" style={{ marginTop: 0, marginBottom: 0 }}>

@@ -47,8 +47,13 @@ function BudgetPlanner() {
 
   // Save budgets to localStorage on change
   useEffect(() => {
-    // Never overwrite budgets key with null or undefined.
-    if (budgets && typeof budgets === 'object') {
+    // Never overwrite budgets key with null or undefined or a non-object.
+    if (
+      budgets &&
+      typeof budgets === 'object' &&
+      !Array.isArray(budgets) &&
+      Object.keys(budgets).length >= 0
+    ) {
       localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(budgets));
     }
   }, [budgets]);

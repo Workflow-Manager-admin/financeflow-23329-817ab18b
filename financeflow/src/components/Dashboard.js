@@ -62,8 +62,8 @@ function Dashboard({ showToast }) {
   }, []);
 
   useEffect(() => {
-    // Only persist legitimate transaction arrays; never overwrite with null/undefined.
-    if (Array.isArray(transactions)) {
+    // Only persist legitimate transaction arrays; never overwrite with null/undefined or corrupted (non-array) values.
+    if (Array.isArray(transactions) && transactions !== null && transactions !== undefined) {
       localStorage.setItem(STORAGE_TRANSACTIONS, JSON.stringify(transactions));
     }
     setFiltered(applyFilters(transactions, filters));
@@ -76,8 +76,8 @@ function Dashboard({ showToast }) {
   }, [filters, transactions]);
 
   useEffect(() => {
-    // Prevent accidental destructive write: only commit goal if not null/undefined.
-    if (goal && typeof goal === 'object') {
+    // Prevent accidental destructive write: only commit goal if not null/undefined and is object.
+    if (goal && typeof goal === 'object' && Object.keys(goal).length > 0) {
       localStorage.setItem(STORAGE_GOAL, JSON.stringify(goal));
     }
     // eslint-disable-next-line

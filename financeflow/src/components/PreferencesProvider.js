@@ -55,7 +55,10 @@ export function PreferencesProvider({ children }) {
   // Write to localStorage whenever updated (for language, currency)
   useEffect(() => {
     // Never persist empty/null settings, only valid updates.
-    if (language && currency) {
+    if (
+      typeof language === 'string' && language &&
+      typeof currency === 'string' && currency
+    ) {
       localStorage.setItem(
         STORAGE_SETTINGS,
         JSON.stringify({ language, currency })

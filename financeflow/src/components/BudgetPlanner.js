@@ -311,7 +311,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                               onClick={e => {
                                 e.preventDefault();
                                 setEditingRow(cat);
-                                setEditError('');
+  
                               }}
                               aria-label={`Edit budget for ${cat}`}
                               title="Edit"
@@ -367,7 +367,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                             onClick={e => {
                               e.preventDefault();
                               setEditingRow(cat);
-                              setEditError('');
+
                             }}
                             aria-label={`Edit budget for ${cat}`}
                             disabled={editingRow !== null}

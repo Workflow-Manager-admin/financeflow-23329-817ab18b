@@ -801,11 +801,11 @@ function SettingsView() {
           background: "var(--surface,#fff)",
           borderRadius: 13,
           boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
-          padding: "34px 17px",
-          marginTop: 30
+          padding: "0 0 34px 0",
+          marginTop: 30,
         }}
       >
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 0, marginBottom: 8 }}>
+        <div style={{ padding: "34px 17px 0 17px", display: "flex", alignItems: "flex-end", gap: 0 }}>
           <h1
             style={{
               margin: 0,
@@ -814,16 +814,17 @@ function SettingsView() {
               fontWeight: 700,
               letterSpacing: "0.01em",
               textAlign: "left",
-              flex: '1 1 auto'
+              flex: "1 1 auto",
             }}
           >
             Settings
           </h1>
         </div>
-        {/* Form with currency selector at top, then toggles */}
-        <form onSubmit={handleSave} aria-label="Preferences">
-          <div style={{ marginBottom: 20 }}>
-            <label style={{ fontWeight: 500, display: 'block', marginBottom: 6 }}>
+        <div style={{ padding: "0 17px" }}>
+          {/* Form with currency selector at top, then toggles */}
+          <form onSubmit={handleSave} aria-label="Preferences">
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ fontWeight: 500, display: 'block', marginBottom: 6 }}>
               Preferred Currency
               <select
                 value={currency}

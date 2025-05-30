@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+eftmimport React, { useState, useEffect } from 'react';
 import { usePreferences } from './PreferencesProvider';
 
 // Expense categories (matching TransactionFormModal minus 'Investment' & 'Salary')
@@ -82,11 +82,11 @@ function BudgetPlanner() {
           background: "var(--surface,#fff)",
           borderRadius: 13,
           boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
-          padding: "34px 17px",
-          marginTop: 30
+          padding: "0 0 34px 0",
+          marginTop: 30,
         }}
       >
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 0, marginBottom: 8 }}>
+        <div style={{ padding: "34px 17px 0 17px", display: "flex", alignItems: "flex-end", gap: 0 }}>
           <h1
             style={{
               margin: 0,
@@ -95,23 +95,24 @@ function BudgetPlanner() {
               fontWeight: 700,
               letterSpacing: "0.01em",
               textAlign: "left",
-              flex: '1 1 auto'
+              flex: "1 1 auto",
             }}
           >
             Budget Planner
           </h1>
         </div>
-        <table style={{ width: '100%', background: 'var(--surface,#fff)', borderRadius: 13, boxShadow: '0 2px 16px rgba(60,42,150,0.07)', overflow: 'hidden', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ background: 'var(--secondary,#F5F6FA)', color: 'var(--primary,#6C2EBE)' }}>
-              <th style={{ textAlign: 'left', padding: '12px', fontWeight: 600, fontSize: '1.05em' }}>Category</th>
-              <th style={{ textAlign: 'right', padding: '12px' }}>Budget</th>
-              <th style={{ textAlign: 'right', padding: '12px' }}>Actual</th>
-              <th style={{ textAlign: 'right', padding: '12px' }}>Variance</th>
-              <th style={{ textAlign: 'center', padding: '12px' }}></th>
-            </tr>
-          </thead>
-          <tbody>
+        <div style={{ padding: "0 17px" }}>
+          <table style={{ width: '100%', background: 'var(--surface,#fff)', borderRadius: 13, boxShadow: '0 2px 16px rgba(60,42,150,0.07)', overflow: 'hidden', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ background: 'var(--secondary,#F5F6FA)', color: 'var(--primary,#6C2EBE)' }}>
+                <th style={{ textAlign: 'left', padding: '12px', fontWeight: 600, fontSize: '1.05em' }}>Category</th>
+                <th style={{ textAlign: 'right', padding: '12px' }}>Budget</th>
+                <th style={{ textAlign: 'right', padding: '12px' }}>Actual</th>
+                <th style={{ textAlign: 'right', padding: '12px' }}>Variance</th>
+                <th style={{ textAlign: 'center', padding: '12px' }}></th>
+              </tr>
+            </thead>
+            <tbody>
             {EXPENSE_CATEGORIES.map((cat) => {
               const budgetPrev = Number(budgets[cat] || 0);
               const rowDraft = rowDrafts[cat] ?? budgetPrev;
@@ -219,3 +220,4 @@ function BudgetPlanner() {
 }
 
 export default BudgetPlanner;
+ l

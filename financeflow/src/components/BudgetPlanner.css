@@ -31,8 +31,9 @@
   background: var(--secondary, #F5F6FA);
   color: var(--primary, #6C2EBE);
   font-weight: 800;
-  font-size: 1.23em;
-  border-bottom: 3px solid var(--primary, #6C2EBE, #cbb5ef);
+  font-size: 1.29em;
+  border-bottom: 4px solid var(--primary, #6C2EBE, #cbb5ef);
+  letter-spacing: 0.01em;
 }
 
 .budgetplanner-table tr {
@@ -41,7 +42,7 @@
 }
 
 .budgetplanner-table tr:nth-child(even) td {
-  background: #faf9fc;
+  background: #f8f7fa;
 }
 
 .budgetplanner-table tr:hover td {

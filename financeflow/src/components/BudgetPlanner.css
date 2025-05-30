@@ -114,14 +114,15 @@
   padding-right: 7px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .budgetplanner-table {
-    min-width: 600px;
+    min-width: 660px;
     font-size: 1em;
   }
   .budgetplanner-summary-row {
     flex-direction: column;
-    gap: 8px;
+    gap: 15px;
+    font-size: 1.07em;
   }
 }
 

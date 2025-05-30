@@ -29,8 +29,8 @@ const STORAGE_BUDGETS_KEY = 'fflow-budgets-v1';
  * BudgetPlanner displays and edits monthly budgets per expense category (excl. investments).
  * Shows: Category, Budget (editable), Actual (current month), Variance (color-coded).
  * Persists budgets in localStorage; reads currency symbol from preferences.
- * Robustly loads budgets on component mount and navigation change,
- * and always saves changes to both state and localStorage.
+ * Always loads budgets from localStorage on mount and whenever navigation/tab changes,
+ * and always saves to both state and localStorage on budget save.
  */
 function BudgetPlanner({ transactions = [], showToast }) {
   const { currencySymbol } = usePreferences() || { currencySymbol: '$' };
@@ -43,7 +43,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
   const navLocation = useNavLocation();
   const lastLocationRef = useRef(navLocation && navLocation.pathname);
 
-  // Loads budgets from localStorage
+  // Loads budgets from localStorage and updates state
   const loadBudgets = useCallback(() => {
     try {
       const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
@@ -53,7 +53,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
     }
   }, []);
 
-  // On mount & tab visibility (when page is brought to foreground)
+  // On mount and tab visibility, always load budgets from localStorage
   useEffect(() => {
     loadBudgets();
     // Reload on tab focus/visibility
@@ -68,27 +68,27 @@ function BudgetPlanner({ transactions = [], showToast }) {
     };
   }, [loadBudgets]);
 
-  // On hash navigation change
+  // Reload budgets when navigation (tab/view) changes
   useEffect(() => {
     if (navLocation && navLocation.pathname !== lastLocationRef.current) {
       loadBudgets();
       lastLocationRef.current = navLocation.pathname;
     }
-    // first mount fallback: ensure sync if blank
+    // On first mount (or if budgets is empty), ensure in-sync with localStorage
     if (budgets && typeof budgets === 'object' && Object.keys(budgets).length === 0) {
       loadBudgets();
     }
     // eslint-disable-next-line
   }, [navLocation]);
 
-  // Update the rowDraft if budgets or editingRow changes
+  // Keep rowDraft synced with state on edit
   useEffect(() => {
     if (editingRow) {
       setRowDraft({ value: Number(budgets[editingRow] || 0) });
     }
   }, [editingRow, budgets]);
 
-  // Whenever budgets state updates, persist to localStorage immediately
+  // Always write budgets state to localStorage on change (redundant/defensive)
   useEffect(() => {
     if (
       budgets &&
@@ -129,15 +129,15 @@ function BudgetPlanner({ transactions = [], showToast }) {
     return out;
   }, [transactions, monthStr]);
 
-  // Save logic: Always persist any value unconditionally and silent, updating both state and localStorage
+  // PUBLIC_INTERFACE
+  // Always persist any value to both state and localStorage for robust persistence/reload
   const handleSaveBudget = (cat, rawValue) => {
     let val = parseFloat(String(rawValue).replace(/[^0-9.]/g, ''));
     if (!Number.isFinite(val) || val < 0) val = 0;
-    const currentBudgets = { ...budgets };
-    const newBudgets = { ...currentBudgets, [cat]: val };
+    const newBudgets = { ...budgets, [cat]: val };
     setBudgets(newBudgets);
-    // Immediately persist to localStorage, in case state batching delays writing.
     try {
+      // Always update localStorage with the latest value directly on save
       localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(newBudgets));
     } catch {}
     setEditingRow(null);

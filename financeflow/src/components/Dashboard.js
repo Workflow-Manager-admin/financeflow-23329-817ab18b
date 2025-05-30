@@ -19,30 +19,24 @@ const STORAGE_GOAL = 'fflow-savings-goal-v1';
  * 
  * Layout reverted: No dashboard title/grouping—all content blocks follow original, "stacked" loose container layout.
  */
-function Dashboard({ showToast, transactions = [], setTransactions }) {
+function Dashboard({
+  showToast,
+  transactions = [],
+  setTransactions,
+  goal,
+  setGoal,
+}) {
   const [filtered, setFiltered] = useState([]);
   const [filters, setFilters] = useState({ category: 'All', from: '', to: '' });
   const [showTxModal, setShowTxModal] = useState(false);
   const [editTx, setEditTx] = useState(null);
-
-  // Savings goal is still only device-local
-  const [goal, setGoal] = useState(() => {
-    return JSON.parse(localStorage.getItem(STORAGE_GOAL)) || null;
-  });
   const [showGoalModal, setShowGoalModal] = useState(false);
 
-  // --- Filtering, calculation, local goal ---
+  // --- Filtering logic ONLY - goal is managed at top-level now ---
   useEffect(() => {
     setFiltered(applyFilters(transactions, filters));
     // eslint-disable-next-line
   }, [filters, transactions]);
-
-  useEffect(() => {
-    if (goal && typeof goal === 'object' && Object.keys(goal).length > 0) {
-      localStorage.setItem(STORAGE_GOAL, JSON.stringify(goal));
-    }
-    // eslint-disable-next-line
-  }, [goal]);
 
   // ========== Actions ==============
   function handleSaveTransaction(tx) {
@@ -82,7 +76,7 @@ function Dashboard({ showToast, transactions = [], setTransactions }) {
       , 0
     );
     if (target && sum >= target && !goal.achieved) {
-      setGoal(g => ({ ...g, achieved: true }));
+      setGoal({ ...goal, achieved: true });
       showToast && showToast('Congratulations! You have reached your savings goal!', 'success');
     }
     // eslint-disable-next-line

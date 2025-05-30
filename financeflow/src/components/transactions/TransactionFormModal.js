@@ -15,12 +15,18 @@ const categories = [
   'Salary', 'Investment', 'Gift', 'Healthcare', 'Other'
 ];
 
+import { usePreferences } from '../PreferencesProvider';
+
 // PUBLIC_INTERFACE
-function TransactionFormModal({ onSave, onClose, initial }) {
+function TransactionFormModal({ onSave, onClose, initial, currencySymbol }) {
   const [form, setForm] = useState(initial || defaultForm);
   const [error, setError] = useState('');
   const ref = useRef();
   useEffect(() => { if (ref.current) ref.current.focus(); }, []);
+
+  // For fallback if not passed as prop
+  const preferences = usePreferences ? usePreferences() : {};
+  const liveCurrencySymbol = currencySymbol || preferences.currencySymbol || '$';
 
   function validate() {
     if (form.type === 'expense' && !form.category) return 'Category required.';
@@ -69,15 +75,25 @@ function TransactionFormModal({ onSave, onClose, initial }) {
             )}
           </select>
         )}
-        <input
-          type="number"
-          min="0.01"
-          step="0.01"
-          aria-label="Amount"
-          placeholder="Amount"
-          value={form.amount}
-          onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
-        />
+        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+          <span style={{
+              color: "var(--primary,#6C2EBE)",
+              fontWeight: 600,
+              fontSize: "1.10em"
+            }}>
+            {liveCurrencySymbol}
+          </span>
+          <input
+            type="number"
+            min="0.01"
+            step="0.01"
+            aria-label="Amount"
+            placeholder="Amount"
+            value={form.amount}
+            onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
+            style={{ flex: 1 }}
+          />
+        </div>
         <input
           type="date"
           aria-label="Date"

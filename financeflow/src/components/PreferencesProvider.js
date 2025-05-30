@@ -18,8 +18,13 @@ export function PreferencesProvider({ children }) {
   // Notifications preference (default to true if no setting present)
   const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
     try {
-      const val = JSON.parse(localStorage.getItem(STORAGE_SETTINGS_TAB));
-      return val?.notificationsEnabled ?? true;
+      // PATCH: Accept both tab and global settings for migration/robustness
+      // Prefer STORAGE_SETTINGS_TAB, but fallback to STORAGE_SETTINGS for legacy support
+      const tabVal = JSON.parse(localStorage.getItem(STORAGE_SETTINGS_TAB));
+      if (typeof tabVal?.notificationsEnabled === "boolean") return tabVal.notificationsEnabled;
+      const globalVal = JSON.parse(localStorage.getItem(STORAGE_SETTINGS));
+      if (typeof globalVal?.notificationsEnabled === "boolean") return globalVal.notificationsEnabled;
+      return true;
     } catch {
       return true;
     }

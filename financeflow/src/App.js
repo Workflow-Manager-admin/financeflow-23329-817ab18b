@@ -756,26 +756,15 @@ function SettingsView() {
 
   return (
     <section className="placeholder-view">
-      <div style={{display: 'flex', alignItems: 'center', gap: 11, marginBottom: 8}}>
-        {/* Minimalistic modern SVG gear icon, matching Sidebar visual style */}
-        <svg
-          width="29"
-          height="29"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="var(--primary,#6C2EBE)"
-          strokeWidth="1.65"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          style={{ verticalAlign: "middle" }}
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="3.5" />
-          <path d="M19.4 15a2 2 0 0 0 .4 2.1l.02.02a1 1 0 0 1-1.41 1.41l-.02-.02a2 2 0 0 0-2.1-.41c-.6.29-1.25.47-1.88.52-.13.01-.27.01-.41.01-.14 0-.28 0-.41-.01a7.2 7.2 0 0 1-1.88-.52 2 2 0 0 0-2.1.41l-.02.02a1 1 0 0 1-1.41-1.41l.02-.02a2 2 0 0 0 .41-2.1c-.29-.6-.47-1.25-.52-1.88a2.3 2.3 0 0 1-.01-.41c0-.14 0-.28.01-.41.05-.63.23-1.28.52-1.88a2 2 0 0 0-.41-2.1l-.02-.02A1 1 0 0 1 6.03 5.45l.02.02a2 2 0 0 0 2.1.41c.6-.29 1.25-.47 1.88-.52.13-.01.27-.01.41-.01.14 0 .28 0 .41.01.63.05 1.28.23 1.88.52a2 2 0 0 0 2.1-.41l.02-.02a1 1 0 1 1 1.41 1.41l-.02.02a2 2 0 0 0-.41 2.1c.29.6.47 1.25.52 1.88.01.13.01.27.01.41 0 .14 0 .28-.01.41-.05.63-.23 1.28-.52 1.88z" />
-        </svg>
-        <h1 style={{margin: 0, fontSize: '1.34em', color: "var(--primary,#6C2EBE)", letterSpacing: 0.1}}>Settings</h1>
-      </div>
       <div className="container" style={{maxWidth: 410}}>
+        <h1 style={{
+          margin: "0 0 18px 0",
+          fontSize: "2rem",
+          color: "var(--primary,#6C2EBE)",
+          fontWeight: 700,
+          letterSpacing: "0.01em",
+          textAlign: "left"
+        }}>Settings</h1>
         {/* Form with currency selector at top, then toggles */}
         <form onSubmit={handleSave} aria-label="Preferences">
           <div style={{marginBottom: 20}}>

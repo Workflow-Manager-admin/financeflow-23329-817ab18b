@@ -65,14 +65,17 @@ function ExpensesView() {
           padding: "0 0 32px 0"
         }}
       >
-        {/* Heading directly above main content, minimal spacing */}
-        <div style={{
-          padding: "26px 17px 0 17px",
-          display: "flex",
-          alignItems: "flex-end",
-          gap: 0,
-          marginBottom: 0
-        }}>
+        {/* Heading visually grouped with content, minimal vertical gap */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            padding: "32px 17px 0 17px",
+            minHeight: 0,
+            marginBottom: "-3px",
+            gap: 0
+          }}
+        >
           <h1
             style={{
               margin: 0,
@@ -81,7 +84,8 @@ function ExpensesView() {
               fontWeight: 700,
               letterSpacing: "0.01em",
               textAlign: "left",
-              flex: "1 1 auto"
+              flex: "1 1 auto",
+              lineHeight: 1.13
             }}
           >
             Expenses
@@ -659,13 +663,16 @@ function ProfileView() {
           padding: "0 0 32px 0"
         }}
       >
-        <div style={{
-          padding: "24px 17px 0 17px",
-          display: "flex",
-          alignItems: "flex-end",
-          gap: 0,
-          marginBottom: 0
-        }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            padding: "28px 17px 0 17px",
+            minHeight: 0,
+            marginBottom: "-3px",
+            gap: 0
+          }}
+        >
           <h1
             style={{
               margin: 0,
@@ -674,7 +681,8 @@ function ProfileView() {
               fontWeight: 700,
               letterSpacing: "0.01em",
               textAlign: "left",
-              flex: "1 1 auto"
+              flex: "1 1 auto",
+              lineHeight: 1.13
             }}
           >
             Profile

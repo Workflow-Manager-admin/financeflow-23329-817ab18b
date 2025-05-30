@@ -724,6 +724,11 @@ function App() {
   // Toast notification: { message, type } or null
   const [toast, setToast] = useState(null);
 
+  // Notification preference: get from PreferencesProvider context
+  const {
+    notificationsEnabled = true,
+  } = usePreferences?.() || {};
+
   // Simple in-app router (hash-based for SPA)
   const initialRoute = window.location.hash.replace('#', '') || '/';
   const [route, setRoute] = useState(initialRoute);
@@ -754,11 +759,16 @@ function App() {
     }
   };
 
-  // Toast utility for child components
-  const notify = useCallback((message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  }, []);
+  // Toast utility for child components, honors notificationsEnabled
+  const notify = useCallback(
+    (message, type = 'success') => {
+      if (notificationsEnabled) {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 3000);
+      }
+    },
+    [notificationsEnabled]
+  );
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(
     window.innerWidth < 650

@@ -1,0 +1,39 @@
+{
+  "steps": [
+    {
+      "description": "Analyze current Profile input logic for mobile and plan country code dropdown integration.",
+      "details": "Review current Profile component logic for storing mobile number, determine UI and storage model for (country code + mobile), and ensure clean separation in state and saving logic.",
+      "files_to_modify": ["financeflow/src/App.js"],
+      "expected_changes": "Full enhancement plan for country code dropdown, validation, and feedback for the Profile tab."
+    },
+    {
+      "description": "Add/configure a CountryCodeDropdown as reusable React component with flag icons.",
+      "details": "Create or update the CountryCodeDropdown inline component rendering flag + code in dropdown, using emoji-flags for visual consistency.",
+      "files_to_modify": ["financeflow/src/App.js"],
+      "expected_changes": "Create/adjust a country code selector with flag icons for use inside the Profile edit form."
+    },
+    {
+      "description": "Enforce validation: Require exactly 10-digit mobile, ensure coupling of country code and mobile field if either is set.",
+      "details": "Update Profile state management, ensure clear error messaging if invalid, and update input to restrict to [0-9] and 10 digits only.",
+      "files_to_modify": ["financeflow/src/App.js"],
+      "expected_changes": "Enforce digit restriction, update profile save validation, and show feedback if user enters an incorrect number or does not select code."
+    },
+    {
+      "description": "Change storage model: Save country code + mobile as separate fields, and always display both if present.",
+      "details": "Update save (localStorage) and load logic to ensure the two fields persist correctly, and update display.",
+      "files_to_modify": ["financeflow/src/App.js"],
+      "expected_changes": "Persist and restore both fields, using the new model."
+    },
+    {
+      "description": "Polish: Accessibility, feedback, placeholder, and usage instructions.",
+      "details": "Update ARIA labels, add instructive placeholder, ensure feedback is easily visible.",
+      "files_to_modify": ["financeflow/src/App.js"],
+      "expected_changes": "Accessibility and UX tweaks as part of edit form logic."
+    }
+  ],
+  "assumptions": [
+    "Only App.js needs modifications for Profile tab logic and rendering; styling is handled inline or by main stylesheet.",
+    "No changes needed to preferences or provider logic as mobile/country code are for profile only.",
+    "A limited, curated set of country codes/flags will be used for UX simplicity."
+  ]
+}

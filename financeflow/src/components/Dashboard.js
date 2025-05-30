@@ -162,6 +162,7 @@ function Dashboard({
               setFilters={setFilters}
               categories={categories}
             />
+            {/* Container now controls scroll/height */}
             <TransactionList
               transactions={filtered}
               onEdit={handleEditTransaction}

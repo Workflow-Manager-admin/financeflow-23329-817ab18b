@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+tyimport React, { useEffect, useState, useCallback } from 'react';
 import './App.css';
 import ThemeProvider from './components/ThemeProvider';
 import Sidebar from './components/Sidebar';
@@ -6,10 +6,6 @@ import OnboardingModal from './components/OnboardingModal';
 import Dashboard from './components/Dashboard';
 import ToastNotification from './components/ToastNotification';
 import PreferencesProvider, { usePreferences } from './components/PreferencesProvider';
-import {
-  onUserAuthChanged, getCurrentUser, signInWithGoogle, logout
-} from './firebase';
-import { loadAppState, syncLocalStateToCloud, syncCloudStateToLocal, shouldSyncCloud } from './cloudSync';
 // Placeholder views
 import TransactionList from './components/transactions/TransactionList';
 import FilterBar from './components/transactions/FilterBar';

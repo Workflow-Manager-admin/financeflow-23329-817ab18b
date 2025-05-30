@@ -13,7 +13,7 @@ import FilterBar from './components/transactions/FilterBar';
 
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
 
-import { usePreferences } from './components/PreferencesProvider';
+/* Removed duplicate: import { usePreferences } from './components/PreferencesProvider'; */
 
 // PUBLIC_INTERFACE
 function ExpensesView() {

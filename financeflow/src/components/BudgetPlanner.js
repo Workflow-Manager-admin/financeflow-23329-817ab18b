@@ -12,6 +12,7 @@ const EXPENSE_CATEGORIES = [
 
 const STORAGE_BUDGETS_KEY = 'fflow-budgets-v1';
 
+
 // PUBLIC_INTERFACE
 /**
  * BudgetPlanner displays and edits monthly budgets per expense category (excl. investments).
@@ -27,7 +28,11 @@ function BudgetPlanner({ transactions = [], showToast }) {
   const [justSavedCat, setJustSavedCat] = useState(null);
   const mountedRef = useRef(false);
 
-  // Load budgets from localStorage on component mount & tab switch/view
+  // Determine location (route) for navigation-based reload (both react-router and hash-based apps)
+  const navLocation = useNavLocation();
+  const lastLocationRef = useRef(navLocation && navLocation.pathname);
+
+  // Load budgets from localStorage on mount, tab switch/view, and navigation event
   useEffect(() => {
     const loadBudgets = () => {
       try {
@@ -37,8 +42,9 @@ function BudgetPlanner({ transactions = [], showToast }) {
         setBudgets({});
       }
     };
+    // Initial mount
     loadBudgets();
-    // Listen for tab/view changes to reload budgets
+    // Listen for tab/view (browser visibility or navigation) to reload budgets
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
         loadBudgets();
@@ -50,14 +56,25 @@ function BudgetPlanner({ transactions = [], showToast }) {
     };
   }, []);
 
-  // Reload budgets on mount (in case of e.g., navigation between tabs--ensure it's always up to date)
+  // RELOAD budgets from localStorage on every navigation (route) change.
   useEffect(() => {
+    // Only fire on genuine location/route change
     if (!mountedRef.current) {
+      // First mount (already handled in initial effect, but ensure budgets are in sync)
       const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
       setBudgets(lsBudgets ? JSON.parse(lsBudgets) : {});
       mountedRef.current = true;
+    } else if (
+      navLocation &&
+      navLocation.pathname !== lastLocationRef.current
+    ) {
+      // On location/route change, force reload
+      const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
+      setBudgets(lsBudgets ? JSON.parse(lsBudgets) : {});
+      lastLocationRef.current = navLocation.pathname;
     }
-  }, []);
+  }, [navLocation]);
+
 
   // Update the rowDraft if budgets or editingRow changes
   useEffect(() => {

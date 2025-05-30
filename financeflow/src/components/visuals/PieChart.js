@@ -104,7 +104,7 @@ function PieChart({ transactions, currencySymbol = '$' }) {
             <div key={d.category} className="piechart-legitem">
               <span className="piechart-colorball" style={{ background: d.color }} />
               <span>{d.category}</span>
-              <span className="piechart-legamt">${d.value.toFixed(2)}</span>
+              <span className="piechart-legamt">{currencySymbol}{d.value.toFixed(2)}</span>
             </div>
           )}
         </div>

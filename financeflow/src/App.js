@@ -553,45 +553,93 @@ function ProfileView() {
 }
 
 function SettingsView() {
+  // Remove language selector; only keep and move Currency selector to top
   const {
-    language,
     currency,
-    setLanguage,
     setCurrency,
-    languageOptions,
     currencyOptions,
   } = usePreferences();
 
+  // For toggles/persistent settings, use local state and localStorage.
+  // Notifications and sync are just toggles for demo. Data reset is an action.
+  const STORAGE_SETTINGS = 'fflow-settings-tab-v1';
+
+  // Load toggles from localStorage, default to on
+  const [notificationsEnabled, setNotificationsEnabled] = React.useState(() => {
+    try {
+      const val = JSON.parse(localStorage.getItem(STORAGE_SETTINGS));
+      return val?.notificationsEnabled ?? true;
+    } catch {
+      return true;
+    }
+  });
+  const [syncEnabled, setSyncEnabled] = React.useState(() => {
+    try {
+      const val = JSON.parse(localStorage.getItem(STORAGE_SETTINGS));
+      return val?.syncEnabled ?? false;
+    } catch {
+      return false;
+    }
+  });
   const [saved, setSaved] = React.useState(false);
+  const [resetConfirm, setResetConfirm] = React.useState(false);
+  const [resetDone, setResetDone] = React.useState(false);
+
+  // Persist toggles when changed
+  React.useEffect(() => {
+    localStorage.setItem(STORAGE_SETTINGS, JSON.stringify({
+      notificationsEnabled,
+      syncEnabled,
+    }));
+  }, [notificationsEnabled, syncEnabled]);
 
   function handleSave(e) {
     e.preventDefault();
     setSaved(true);
     setTimeout(() => setSaved(false), 1200);
-    // localStorage is updated in PreferencesProvider; don't handle here
+    // Currency goes through PreferencesProvider; toggles update localStorage here
+  }
+
+  function handleDataReset() {
+    // Clear all major FinanceFlow data keys (profile, transactions, savings, preferences, settings tab-specific)
+    localStorage.removeItem('fflow-profile-v1');
+    localStorage.removeItem('fflow-transactions-v1');
+    localStorage.removeItem('fflow-savings-goal-v1');
+    localStorage.removeItem('fflow-settings-v1');
+    localStorage.removeItem(STORAGE_SETTINGS);
+    setResetDone(true);
+    setTimeout(() => setResetDone(false), 1700);
+    // Optionally reload to force app to re-initialize
+    window.location.reload();
   }
 
   return (
     <section className="placeholder-view">
-      <h1>Settings</h1>
+      <div style={{display: 'flex', alignItems: 'center', gap: 11, marginBottom: 8}}>
+        {/* Minimalistic modern SVG gear icon, matching Sidebar visual style */}
+        <svg
+          width="29"
+          height="29"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="var(--primary,#6C2EBE)"
+          strokeWidth="1.65"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ verticalAlign: "middle" }}
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="3.5" />
+          <path d="M19.4 15a2 2 0 0 0 .4 2.1l.02.02a1 1 0 0 1-1.41 1.41l-.02-.02a2 2 0 0 0-2.1-.41c-.6.29-1.25.47-1.88.52-.13.01-.27.01-.41.01-.14 0-.28 0-.41-.01a7.2 7.2 0 0 1-1.88-.52 2 2 0 0 0-2.1.41l-.02.02a1 1 0 0 1-1.41-1.41l.02-.02a2 2 0 0 0 .41-2.1c-.29-.6-.47-1.25-.52-1.88a2.3 2.3 0 0 1-.01-.41c0-.14 0-.28.01-.41.05-.63.23-1.28.52-1.88a2 2 0 0 0-.41-2.1l-.02-.02A1 1 0 0 1 6.03 5.45l.02.02a2 2 0 0 0 2.1.41c.6-.29 1.25-.47 1.88-.52.13-.01.27-.01.41-.01.14 0 .28 0 .41.01.63.05 1.28.23 1.88.52a2 2 0 0 0 2.1-.41l.02-.02a1 1 0 1 1 1.41 1.41l-.02.02a2 2 0 0 0-.41 2.1c.29.6.47 1.25.52 1.88.01.13.01.27.01.41 0 .14 0 .28-.01.41-.05.63-.23 1.28-.52 1.88z" />
+        </svg>
+        <h1 style={{margin: 0, fontSize: '1.34em', color: "var(--primary,#6C2EBE)", letterSpacing: 0.1}}>Settings</h1>
+      </div>
       <div className="container" style={{maxWidth: 410}}>
+        {/* Form with currency selector at top, then toggles */}
         <form onSubmit={handleSave} aria-label="Preferences">
-          <div style={{marginBottom: 23}}>
-            <label style={{ fontWeight: 500, display: 'block', marginBottom: 5 }}>
-              Language
-              <select
-                value={language}
-                onChange={e => setLanguage(e.target.value)}
-                style={{ width: '100%', padding: '9px 10px', marginTop: 7 }}
-                aria-label="Language Selector"
-              >
-                {languageOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-              </select>
-            </label>
-          </div>
-          <div style={{marginBottom: 27}}>
-            <label style={{ fontWeight: 500, display: 'block', marginBottom: 5 }}>
-              Currency
+          <div style={{marginBottom: 20}}>
+            <label style={{ fontWeight: 500, display: 'block', marginBottom: 6 }}>
+              Preferred Currency
               <select
                 value={currency}
                 onChange={e => setCurrency(e.target.value)}
@@ -602,13 +650,67 @@ function SettingsView() {
               </select>
             </label>
           </div>
-          <button type="submit" className="btn btn-large" style={{width: 160}}>Save Preferences</button>
+          <div style={{marginBottom: 18}}>
+            <label style={{ fontWeight: 500, display: 'flex', alignItems: 'center', gap: 9 }}>
+              <input
+                type="checkbox"
+                checked={notificationsEnabled}
+                onChange={e => setNotificationsEnabled(e.target.checked)}
+                style={{width: 18, height: 18}}
+                aria-checked={notificationsEnabled}
+              />
+              Enable Notifications
+            </label>
+            <div style={{color: 'var(--text-secondary,#8A889A)', fontSize: "0.98em", marginLeft: 2}}>
+              Receive in-app milestone notifications (savings goal, etc).
+            </div>
+          </div>
+          <div style={{marginBottom: 18}}>
+            <label style={{ fontWeight: 500, display: 'flex', alignItems: 'center', gap: 9 }}>
+              <input
+                type="checkbox"
+                checked={syncEnabled}
+                onChange={e => setSyncEnabled(e.target.checked)}
+                style={{width: 18, height: 18}}
+                aria-checked={syncEnabled}
+              />
+              Enable Data Sync
+            </label>
+            <div style={{color: 'var(--text-secondary,#8A889A)', fontSize: "0.98em", marginLeft: 2}}>
+              (Demo only) Sync data to cloud when connected (requires upgrade).
+            </div>
+          </div>
+          <button type="submit" className="btn btn-large" style={{width: 160, marginTop: 8}}>Save Preferences</button>
           {saved && <span style={{color: 'var(--income,#22C55E)', marginLeft: 14, fontWeight: 500}}>Saved!</span>}
         </form>
-        <div style={{ marginTop: 34, padding: '17px 16px', background: 'var(--secondary,#f8f8fa)', borderRadius: 10 }}>
-          <h3 style={{margin: '0 0 10px 0', fontSize: '1.09em', color: 'var(--primary,#6C2EBE)'}}>Current Preferences</h3>
-          <p style={{margin: 0}}><strong>Language:</strong> <span data-testid="current-language">{language}</span></p>
-          <p style={{margin: 0}}><strong>Currency:</strong> <span data-testid="current-currency">{currency}</span></p>
+        <div style={{marginTop: 32, padding: '13px 13px 13px 17px', background: 'var(--surface,#fff)', borderRadius: 10, boxShadow: "0 2px 11px rgba(60,42,150,0.06)"}}>
+          <h3 style={{margin: '0 0 8px 0', fontSize: '1.10em', color: 'var(--primary,#6C2EBE)'}}>Danger Zone</h3>
+          <button
+            onClick={() => setResetConfirm(v => !v)}
+            className="btn btn-cancel"
+            style={{marginTop: 0}}
+            aria-label="Clear & Reset Data"
+          >Reset All Data</button>
+          {resetConfirm && !resetDone && (
+            <div style={{marginTop: 8, color: 'var(--expense,#E74C3C)', fontWeight: 500, fontSize: "1.05em"}}>
+              This removes <b>all</b> data (profile, transactions, goals, preferences). Are you sure?
+              <button
+                className="btn btn-large"
+                style={{marginLeft: 13, background:'#E74C3C', color:'#fff'}}
+                onClick={handleDataReset}
+              >Confirm Reset</button>
+              <button
+                className="btn"
+                style={{marginLeft: 8}}
+                onClick={() => setResetConfirm(false)}
+              >Cancel</button>
+            </div>
+          )}
+          {resetDone && (
+            <div style={{marginTop: 8, color: 'var(--income,#22C55E)', fontWeight: 500}}>
+              All data has been cleared! Reloading...
+            </div>
+          )}
         </div>
       </div>
     </section>

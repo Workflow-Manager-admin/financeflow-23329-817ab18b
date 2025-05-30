@@ -23,27 +23,29 @@ function BudgetPlanner({ transactions = [], showToast }) {
   const [rowDraft, setRowDraft] = useState({});
   const [justSavedCat, setJustSavedCat] = useState(null);
 
-  // Load budgets from localStorage on mount
+  // Load budgets from localStorage on mount and every navigation (across tab switches)
   useEffect(() => {
-    try {
-      setBudgets(JSON.parse(localStorage.getItem(STORAGE_BUDGETS_KEY)) || {});
-    } catch {
-      setBudgets({});
-    }
-  }, []);
-
-  // When component remounts due to navigation, rehydrate state from localStorage
-  useEffect(() => {
-    const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
-    if (lsBudgets) {
+    const loadBudgets = () => {
       try {
-        const parsed = JSON.parse(lsBudgets);
-        if (JSON.stringify(parsed) !== JSON.stringify(budgets)) {
-          setBudgets(parsed);
-        }
-      } catch {}
-    }
-    // eslint-disable-next-line
+        const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
+        setBudgets(lsBudgets ? JSON.parse(lsBudgets) : {});
+      } catch {
+        setBudgets({});
+      }
+    };
+
+    loadBudgets();
+
+    // Listen for page visibility change to reload budgets on navigation/tab switch
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        loadBudgets();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, []);
 
   // Update the rowDraft if budgets or editingRow changes

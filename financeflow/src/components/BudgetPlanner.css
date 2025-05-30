@@ -1,208 +1,177 @@
-/* Visually expand and improve BudgetPlanner table for clarity and width */
+/* Shrink BudgetPlanner table, reduce paddings/font size, and compress cell layouts for a balanced, modern look */
 
 .budgetplanner-table {
   background: none;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(70,50,180,0.06);
+  border-radius: 11px;
+  box-shadow: 0 2px 9px rgba(70,50,180,0.03);
   overflow: hidden;
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
-  min-width: 1080px;
-  max-width: 99vw;
-  margin-bottom: 42px;
-  margin-top: 20px;
+  min-width: 310px;
+  max-width: 700px;
+  margin-bottom: 27px;
+  margin-top: 8px;
   table-layout: fixed;
-  font-size: 1.17em;
+  font-size: 1em;
 }
 
 .budgetplanner-table th,
 .budgetplanner-table td {
-  padding: 22px 32px 22px 28px;
-  font-size: 1.23em;
+  padding: 8px 7px;
+  font-size: 1em;
   background: none;
   vertical-align: middle;
-  word-break: keep-all;
-  min-width: 110px;
+  word-break: break-word;
+  min-width: 42px;
   box-sizing: border-box;
 }
 
 .budgetplanner-table th {
   background: var(--secondary, #F5F6FA);
   color: var(--primary, #6C2EBE);
-  font-weight: 800;
-  font-size: 1.29em;
-  border-bottom: 4px solid var(--primary, #6C2EBE, #cbb5ef);
+  font-weight: 700;
+  font-size: 1.08em;
+  border-bottom: 2px solid var(--primary, #6C2EBE, #cbb5ef);
   letter-spacing: 0.01em;
+  padding: 9px 6px;
 }
 
 .budgetplanner-table tr {
-  border-bottom: 1.5px solid var(--secondary, #ede9f7);
+  border-bottom: 1px solid var(--secondary, #ede9f7);
   background: none;
 }
 
 .budgetplanner-table tr:nth-child(even) td {
-  background: #f8f7fa;
+  background: #fbfbfc;
 }
 
 .budgetplanner-table tr:hover td {
-  background: var(--secondary, #f2f2fe) !important;
+  background: var(--secondary, #f4f4fa) !important;
 }
 
 .budgetplanner-category-cell {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-color, #402060);
   letter-spacing: 0.01em;
-  font-size: 1.33em;
-  padding-left: 37px;
-  padding-right: 15px;
+  font-size: 1.05em;
+  padding-left: 13px;
+  padding-right: 6px;
   text-align: left;
-  max-width: 340px;
-  min-width: 165px;
+  max-width: 175px;
+  min-width: 70px;
+  white-space: normal;
 }
 
 .budgetplanner-budget-cell,
 .budgetplanner-actual-cell,
 .budgetplanner-variance-cell {
   font-family: inherit;
-  font-size: 1.27em;
-  letter-spacing: 0.03em;
+  font-size: 1em;
+  letter-spacing: 0.02em;
   white-space: nowrap;
   text-align: right;
   font-variant-numeric: tabular-nums;
-  min-width: 130px;
-  max-width: 225px;
-  padding-right: 36px !important;
-  padding-left: 13px !important;
+  min-width: 50px;
+  max-width: 120px;
+  padding-right: 7px !important;
+  padding-left: 5px !important;
   vertical-align: middle;
 }
 
 .budgetplanner-input {
-  width: 185px;
-  font-size: 1.18em;
+  width: 70px !important;
+  font-size: 1em;
   text-align: right;
-  padding: 13px 23px 13px 11px;
-  border-radius: 8px;
-  border: 1.7px solid var(--secondary, #bbbbbf);
+  padding: 4px 7px !important;
+  border-radius: 6px;
+  border: 1.3px solid var(--secondary, #bbbbbf);
   background: var(--surface,#fff);
-  box-shadow: 0 1.7px 6px rgba(104,84,206,0.10);
+  box-shadow: 0 1px 3px rgba(80,80,160,0.05);
   outline: none;
-  transition: border 0.22s;
+  transition: border 0.17s;
 }
 
 .budgetplanner-input:focus {
-  border: 1.5px solid var(--primary,#6C2EBE);
+  border: 1.2px solid var(--primary,#6C2EBE);
   background: #fafaff;
 }
 
 .budgetplanner-edit-span {
   display: inline-block;
-  min-width: 120px;
-  width: 166px;
-  font-size: 1.19em;
+  min-width: 35px;
+  width: 52px;
+  font-size: 1em;
   text-align: right;
   cursor: pointer;
-  padding: 8px 15px 8px 11px;
-  border-radius: 7px;
-  background: rgba(240,240,255,0.07);
-  transition: background 0.18s;
-}
-
-.budgetplanner-summary-row {
-  font-weight: 800;
-  font-size: 1.25em;
-  margin-top: 28px;
-  border-radius: 10px;
-  background: none;
-  gap: 58px;
-  letter-spacing: 0.01em;
+  padding: 3px 5px 3px 2px;
+  border-radius: 5px;
+  background: rgba(240,240,255,0.05);
+  transition: background 0.13s;
 }
 
 .budgetplanner-actions-cell {
   display: flex;
   flex-direction: row;
-  gap: 22px;
+  gap: 7px;
   justify-content: center;
   align-items: center;
-  min-width: 144px;
-  padding-left: 14px;
-  padding-right: 12px;
+  min-width: 54px;
+  padding-left: 0;
+  padding-right: 2px;
 }
 
-@media (max-width: 1200px) {
-  .budgetplanner-table {
-    min-width: 720px;
-    font-size: 1em;
-  }
-  .budgetplanner-summary-row {
-    flex-direction: column;
-    gap: 17px;
-    font-size: 1.11em;
-  }
-  .budgetplanner-category-cell {
-    font-size: 1.13em;
-    padding-left: 16px;
-    padding-right: 7px;
-    min-width: 110px;
-  }
-}
-
+/* Responsive: further compress on mobile */
 @media (max-width: 900px) {
   .budgetplanner-table {
-    min-width: 520px;
+    min-width: 210px;
     font-size: 0.97em;
   }
   .budgetplanner-table th,
   .budgetplanner-table td {
-    padding: 11px 5px;
+    padding: 6px 2px;
+    font-size: 0.97em;
   }
   .budgetplanner-actual-cell,
   .budgetplanner-budget-cell,
   .budgetplanner-variance-cell {
-    padding-right: 7px !important;
+    padding-right: 4px !important;
+    font-size: 0.97em;
   }
-  .budgetplanner-summary-row {
-    flex-direction: column;
-    gap: 9px;
-    font-size: 0.99em;
-  }
-  .budgetplanner-input,
-  .budgetplanner-edit-span {
-    width: 100px !important;
-    font-size: 1em;
-    min-width: 56px;
+  .budgetplanner-category-cell {
+    padding-left: 3px;
+    padding-right: 2px;
   }
 }
-
 @media (max-width: 540px) {
   .budgetplanner-table {
-    min-width: 310px;
+    min-width: 80px;
     font-size: 0.95em;
   }
   .budgetplanner-category-cell,
   .budgetplanner-budget-cell,
   .budgetplanner-actual-cell,
   .budgetplanner-variance-cell {
-    font-size: 0.97em;
-    padding-left: 2px;
-    padding-right: 3px;
+    font-size: 0.95em;
+    padding-left: 1px;
+    padding-right: 1.5px;
     min-width: unset;
   }
   .budgetplanner-edit-span {
-    min-width: 50px;
-    width: 68px;
-    font-size: 1em;
-    padding: 1.5px 3px;
+    min-width: 22px;
+    width: 33px;
+    font-size: 0.97em;
+    padding: 1px 2px;
   }
   .budgetplanner-input {
-    width: 60px;
-    font-size: 0.97em;
-    padding: 7px 7px 7px 3px;
+    width: 38px !important;
+    font-size: 0.95em;
+    padding: 3px 5px 3px 1px !important;
   }
 }
 
 .budgetplanner-table::-webkit-scrollbar {
-  height: 12px;
+  height: 9px;
 }
 .budgetplanner-table::-webkit-scrollbar-thumb {
   background: var(--primary, #6C2EBE, #b5a2f0);

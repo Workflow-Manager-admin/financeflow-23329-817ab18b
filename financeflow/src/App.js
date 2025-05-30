@@ -785,18 +785,35 @@ function SettingsView() {
 
   return (
     <section className="placeholder-view">
-      <div className="container" style={{maxWidth: 410}}>
-        <h1 style={{
-          margin: "0 0 18px 0",
-          fontSize: "2rem",
-          color: "var(--primary,#6C2EBE)",
-          fontWeight: 700,
-          letterSpacing: "0.01em",
-          textAlign: "left"
-        }}>Settings</h1>
+      <div
+        className="container"
+        style={{
+          maxWidth: 410,
+          background: "var(--surface,#fff)",
+          borderRadius: 13,
+          boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
+          padding: "34px 17px",
+          marginTop: 30
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 0, marginBottom: 8 }}>
+          <h1
+            style={{
+              margin: 0,
+              fontSize: "2rem",
+              color: "var(--primary,#6C2EBE)",
+              fontWeight: 700,
+              letterSpacing: "0.01em",
+              textAlign: "left",
+              flex: '1 1 auto'
+            }}
+          >
+            Settings
+          </h1>
+        </div>
         {/* Form with currency selector at top, then toggles */}
         <form onSubmit={handleSave} aria-label="Preferences">
-          <div style={{marginBottom: 20}}>
+          <div style={{ marginBottom: 20 }}>
             <label style={{ fontWeight: 500, display: 'block', marginBottom: 6 }}>
               Preferred Currency
               <select
@@ -805,68 +822,86 @@ function SettingsView() {
                 style={{ width: '100%', padding: '9px 10px', marginTop: 7 }}
                 aria-label="Currency Selector"
               >
-                {currencyOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                {currencyOptions.map(opt => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
               </select>
             </label>
           </div>
-          <div style={{marginBottom: 18}}>
+          <div style={{ marginBottom: 18 }}>
             <label style={{ fontWeight: 500, display: 'flex', alignItems: 'center', gap: 9 }}>
               <input
                 type="checkbox"
                 checked={notificationsEnabled}
                 onChange={e => setNotificationsEnabled(e.target.checked)}
-                style={{width: 18, height: 18}}
+                style={{ width: 18, height: 18 }}
                 aria-checked={notificationsEnabled}
               />
               Enable Notifications
             </label>
-            <div style={{color: 'var(--text-secondary,#8A889A)', fontSize: "0.98em", marginLeft: 2}}>
+            <div style={{ color: 'var(--text-secondary,#8A889A)', fontSize: "0.98em", marginLeft: 2 }}>
               Receive in-app milestone notifications (savings goal, etc).
             </div>
           </div>
-          <div style={{marginBottom: 18}}>
+          <div style={{ marginBottom: 18 }}>
             <label style={{ fontWeight: 500, display: 'flex', alignItems: 'center', gap: 9 }}>
               <input
                 type="checkbox"
                 checked={syncEnabled}
                 onChange={e => setSyncEnabled(e.target.checked)}
-                style={{width: 18, height: 18}}
+                style={{ width: 18, height: 18 }}
                 aria-checked={syncEnabled}
               />
               Enable Data Sync
             </label>
-            <div style={{color: 'var(--text-secondary,#8A889A)', fontSize: "0.98em", marginLeft: 2}}>
+            <div style={{ color: 'var(--text-secondary,#8A889A)', fontSize: "0.98em", marginLeft: 2 }}>
               (Demo only) Sync data to cloud when connected (requires upgrade).
             </div>
           </div>
-          <button type="submit" className="btn btn-large" style={{width: 160, marginTop: 8}}>Save Preferences</button>
-          {saved && <span style={{color: 'var(--income,#22C55E)', marginLeft: 14, fontWeight: 500}}>Saved!</span>}
+          <button type="submit" className="btn btn-large" style={{ width: 160, marginTop: 8 }}>
+            Save Preferences
+          </button>
+          {saved && (<span style={{ color: 'var(--income,#22C55E)', marginLeft: 14, fontWeight: 500 }}>Saved!</span>)}
         </form>
-        <div style={{marginTop: 32, padding: '13px 13px 13px 17px', background: 'var(--surface,#fff)', borderRadius: 10, boxShadow: "0 2px 11px rgba(60,42,150,0.06)"}}>
-          <h3 style={{margin: '0 0 8px 0', fontSize: '1.10em', color: 'var(--primary,#6C2EBE)'}}>Danger Zone</h3>
+        <div
+          style={{
+            marginTop: 32,
+            padding: '13px 13px 13px 17px',
+            background: 'var(--background,#fff)',
+            borderRadius: 10,
+            boxShadow: "0 2px 11px rgba(60,42,150,0.06)"
+          }}
+        >
+          <h3 style={{ margin: '0 0 8px 0', fontSize: '1.10em', color: 'var(--primary,#6C2EBE)' }}>Danger Zone</h3>
           <button
             onClick={() => setResetConfirm(v => !v)}
             className="btn btn-cancel"
-            style={{marginTop: 0}}
+            style={{ marginTop: 0 }}
             aria-label="Clear & Reset Data"
-          >Reset All Data</button>
+          >
+            Reset All Data
+          </button>
           {resetConfirm && !resetDone && (
-            <div style={{marginTop: 8, color: 'var(--expense,#E74C3C)', fontWeight: 500, fontSize: "1.05em"}}>
+            <div style={{ marginTop: 8, color: 'var(--expense,#E74C3C)', fontWeight: 500, fontSize: "1.05em" }}>
               This removes <b>all</b> data (profile, transactions, goals, preferences). Are you sure?
               <button
                 className="btn btn-large"
-                style={{marginLeft: 13, background:'#E74C3C', color:'#fff'}}
+                style={{ marginLeft: 13, background: '#E74C3C', color: '#fff' }}
                 onClick={handleDataReset}
-              >Confirm Reset</button>
+              >
+                Confirm Reset
+              </button>
               <button
                 className="btn"
-                style={{marginLeft: 8}}
+                style={{ marginLeft: 8 }}
                 onClick={() => setResetConfirm(false)}
-              >Cancel</button>
+              >
+                Cancel
+              </button>
             </div>
           )}
           {resetDone && (
-            <div style={{marginTop: 8, color: 'var(--income,#22C55E)', fontWeight: 500}}>
+            <div style={{ marginTop: 8, color: 'var(--income,#22C55E)', fontWeight: 500 }}>
               All data has been cleared! Reloading...
             </div>
           )}

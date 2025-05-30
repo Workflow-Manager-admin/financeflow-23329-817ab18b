@@ -1,18 +1,23 @@
 .transaction-list {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
 }
 .tx-row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   background: var(--secondary, #F5F6FA);
-  border-radius: 8px;
-  padding: 14px 15px;
-  margin-bottom: 4px;
-  box-shadow: 0 0.7px 2.2px rgba(60,42,150,0.05);
-  transition: background 0.14s;
+  border-radius: 11px;
+  padding: 16px 19px 15px 18px;
+  margin-bottom: 0;
+  box-shadow: 0 1px 2px rgba(60,42,150,0.06);
+  transition: background 0.15s;
+}
+.tx-row + .tx-row {
+  margin-top: 7px;
 }
 .tx-row.tx-income { border-left: 5px solid var(--income,#22C55E);}
 .tx-row.tx-expense{ border-left: 5px solid var(--expense,#E74C3C);}
@@ -24,7 +29,7 @@
 }
 .tx-title {
   font-weight: 600;
-  font-size: 1.07rem;
+  font-size: 1.09rem;
 }
 .tx-date {
   font-size: 0.98rem;
@@ -37,12 +42,12 @@
 .tx-amtpart {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
 }
 .tx-amt {
   font-weight: 700;
   font-size: 1.13rem;
-  min-width: 84px;
+  min-width: 82px;
   text-align: right;
 }
 .tx-amt.income { color: var(--income, #22C55E);}
@@ -50,14 +55,15 @@
 .tx-edit-btn, .tx-delete-btn {
   border: none;
   background: none;
-  font-size: 1.18rem;
+  font-size: 1.16rem;
   cursor: pointer;
   color: var(--primary, #6C2EBE);
 }
 .tx-delete-btn:hover { color: var(--expense, #E74C3C); }
 .txlist-empty {
-  padding: 23px;
+  padding: 27px 0;
   text-align: center;
   color: var(--text-secondary, #B5B9C9);
   font-size: 1.13rem;
+  margin: 0;
 }

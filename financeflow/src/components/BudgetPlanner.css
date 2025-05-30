@@ -65,18 +65,23 @@
 .budgetplanner-actual-cell,
 .budgetplanner-variance-cell {
   font-family: inherit;
-  font-size: 1.24em;
+  font-size: 1.27em;
   letter-spacing: 0.03em;
   white-space: nowrap;
   text-align: right;
   font-variant-numeric: tabular-nums;
+  min-width: 130px;
+  max-width: 225px;
+  padding-right: 36px !important;
+  padding-left: 13px !important;
+  vertical-align: middle;
 }
 
 .budgetplanner-input {
-  width: 160px;
-  font-size: 1.17em;
+  width: 185px;
+  font-size: 1.18em;
   text-align: right;
-  padding: 11px 18px;
+  padding: 13px 23px 13px 11px;
   border-radius: 8px;
   border: 1.7px solid var(--secondary, #bbbbbf);
   background: var(--surface,#fff);

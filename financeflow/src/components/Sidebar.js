@@ -40,11 +40,8 @@ const icons = {
     </svg>
   ),
   settings: (
-    // Modern, minimal outlined gear/cog SVG (visually balanced at 22x22)
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="3.3" />
-      <path d="M19.2 14.3a2 2 0 0 0 .3 2.1l.05.05a2.1 2.1 0 1 1-3 3l-.05-.05a2 2 0 0 0-2.1-.3c-.7.3-1.5.5-2.4.5s-1.7-.2-2.4-.5a2 2 0 0 0-2.1.3l-.05.05a2.1 2.1 0 1 1-3-3l.05-.05a2 2 0 0 0 .3-2.1c-.3-.7-.5-1.5-.5-2.4s.2-1.7.5-2.4a2 2 0 0 0-.3-2.1l-.05-.05a2.1 2.1 0 0 1 3-3l.05.05a2 2 0 0 0 2.1.3c.7-.3 1.5-.5 2.4-.5s1.7.2 2.4.5a2 2 0 0 0 2.1-.3l.05-.05a2.1 2.1 0 1 1 3 3l-.05.05a2 2 0 0 0-.3 2.1c.3.7.5 1.5.5 2.4s-.2 1.7-.5 2.4z"/>
-    </svg>
+    // Gear emoji for improved clarity and recognizability
+    <span role="img" aria-label="Settings" style={{ fontSize: 21, display: 'inline-block', verticalAlign: 'middle', marginTop: -1, lineHeight: 1 }}>⚙️</span>
   ),
 };
 

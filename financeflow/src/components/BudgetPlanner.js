@@ -22,6 +22,8 @@ function BudgetPlanner({ transactions = [], showToast }) {
   const [editingRow, setEditingRow] = useState(null); // Category string or null
   const [rowDraft, setRowDraft] = useState({});
   const [justSavedCat, setJustSavedCat] = useState(null);
+  // For error feedback if budget increase exceeds income
+  const [editError, setEditError] = useState('');
 
   // Load budgets from localStorage on mount and every navigation (across tab switches)
   useEffect(() => {
@@ -52,6 +54,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
   useEffect(() => {
     if (editingRow) {
       setRowDraft({ value: Number(budgets[editingRow] || 0) });
+      setEditError('');
     }
   }, [editingRow, budgets]);
 
@@ -112,6 +115,57 @@ function BudgetPlanner({ transactions = [], showToast }) {
 
   // Determine if there's an income warning
   const overBudget = budgetedTotal > monthIncome && monthIncome !== 0;
+
+  // Budget vs income summary value
+  const budgetVsIncome = monthIncome - budgetedTotal;
+
+  // Max budget allowed for this category given total income and others
+  const computeMaxBudget = (cat) => {
+    if (monthIncome === 0) return undefined; // No income: do not block increases until income is present
+    const otherSum = EXPENSE_CATEGORIES.reduce(
+      (sum, c) => c === cat ? sum : sum + Number(budgets[c] || 0),
+      0
+    );
+    return Math.max(monthIncome - otherSum, 0);
+  };
+
+  // When saving, block increases that would push over income (but always allow lowering)
+  const handleSaveBudget = (cat, rawValue) => {
+    let val = parseFloat(String(rawValue).replace(/[^0-9.]/g, ''));
+    if (!Number.isFinite(val) || val < 0) val = 0;
+
+    // Check intent: if setting budget up, don't allow above income
+    const otherTotal = EXPENSE_CATEGORIES.reduce(
+      (sum, c) => c === cat ? sum : sum + Number(budgets[c] || 0),
+      0
+    );
+    const newTotal = otherTotal + val;
+    if (
+      monthIncome > 0 &&
+      newTotal > monthIncome &&
+      val > Number(budgets[cat] || 0)
+    ) {
+      setEditError(
+        `Cannot set this budget: your total expenses would exceed this month's income (${currencySymbol}${monthIncome.toFixed(2)}).`
+      );
+      return false;
+    }
+    setBudgets(prev => {
+      const updated = { ...prev, [cat]: val };
+      try {
+        localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+    setEditingRow(null);
+    setRowDraft({});
+    setJustSavedCat(cat);
+    setEditError('');
+    if (typeof showToast === 'function') {
+      showToast('budget saved!', 'success');
+    }
+    return true;
+  };
 
   return (
     <section className="placeholder-view">
@@ -175,44 +229,65 @@ function BudgetPlanner({ transactions = [], showToast }) {
                 const actual = Number(actuals[cat] || 0);
                 const isEditing = editingRow === cat;
 
-                // Variance column: Clamp each category's "remaining" based on user's income for the month
-                // Compute share of income allocated to this category, only if budgetedTotal > 0 and monthIncome > 0
                 let incomeAwareVariance = budgetPrev - actual;
                 let allowable = budgetPrev;
                 if (monthIncome > 0 && budgetedTotal > monthIncome) {
-                  // Adjusted proportional max for this category: (budgetPrev / budgetedTotal) * monthIncome
-                  allowable = (budgetPrev / budgetedTotal) * monthIncome;
+                  allowable = (budgetedTotal > 0) ? (budgetPrev / budgetedTotal) * monthIncome : 0;
                   incomeAwareVariance = allowable - actual;
                 }
                 const varColor = incomeAwareVariance >= 0 ? 'var(--income,#22C55E)' : 'var(--expense,#E74C3C)';
 
+                let inputMax = undefined;
+                if (isEditing) {
+                  inputMax = computeMaxBudget(cat);
+                }
+
                 return (
-                  <tr key={cat} style={{}}>
+                  <tr key={cat}>
                     <td className="budgetplanner-category-cell">{cat}</td>
                     <td className="budgetplanner-budget-cell" style={{ textAlign: 'right' }}>
                       {isEditing ? (
-                        <input
-                          className="budgetplanner-input"
-                          type="number"
-                          min={0}
-                          step="0.01"
-                          autoFocus
-                          value={
-                            typeof rowDraft.value === 'number'
-                              && rowDraft.value !== 0
-                                ? rowDraft.value
-                                : rowDraft.value === 0
-                                ? ''
-                                : rowDraft.value || ''
+                        <>
+                          <input
+                            className="budgetplanner-input"
+                            type="number"
+                            min={0}
+                            step="0.01"
+                            autoFocus
+                            value={
+                              typeof rowDraft.value === 'number'
+                                && rowDraft.value !== 0
+                                  ? rowDraft.value
+                                  : rowDraft.value === 0
+                                  ? ''
+                                  : rowDraft.value || ''
+                            }
+                            onChange={e => {
+                              let candidateValue = e.target.value === '' ? '' : parseFloat(e.target.value);
+                              if (
+                                monthIncome > 0 &&
+                                candidateValue &&
+                                inputMax !== undefined &&
+                                candidateValue > inputMax
+                              ) {
+                                setRowDraft({ value: inputMax });
+                                setEditError(
+                                  `Cannot set budget above your available income. Max: ${currencySymbol}${inputMax.toFixed(2)}`
+                                );
+                              } else {
+                                setRowDraft({ value: candidateValue });
+                                setEditError('');
+                              }
+                            }}
+                            aria-label={`Budget for ${cat}`}
+                            max={inputMax !== undefined && inputMax < 1e12 ? inputMax : undefined}
+                          />
+                          {editError &&
+                            <div style={{ color: 'var(--expense,#E74C3C)', fontWeight: 600, marginTop: 6, fontSize: '1em' }}>{editError}</div>
                           }
-                          onChange={e => setRowDraft({ value: e.target.value })}
-                          aria-label={`Budget for ${cat}`}
-                        />
+                        </>
                       ) : (
-                        <span
-                          tabIndex={0}
-                          className="budgetplanner-edit-span"
-                        >
+                        <span tabIndex={0} className="budgetplanner-edit-span">
                           {currencySymbol}{Number(budgetPrev || 0).toFixed(2)}
                         </span>
                       )}
@@ -238,12 +313,12 @@ function BudgetPlanner({ transactions = [], showToast }) {
                       {currencySymbol}{actual.toFixed(2)}
                     </td>
                     <td className="budgetplanner-variance-cell" style={{
-                          textAlign: 'right',
-                          fontWeight: 800,
-                          color: varColor,
-                          fontSize: "1.21em",
-                          letterSpacing: "0.01em"
-                        }}>
+                        textAlign: 'right',
+                        fontWeight: 800,
+                        color: varColor,
+                        fontSize: "1.21em",
+                        letterSpacing: "0.01em"
+                      }}>
                       {incomeAwareVariance >= 0 ? '+' : ''}
                       {currencySymbol}{incomeAwareVariance.toFixed(2)}
                       {(monthIncome > 0 && budgetedTotal > monthIncome && allowable < budgetPrev && !isEditing) && (
@@ -267,21 +342,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                             style={{ minWidth: 44, padding: "9px 18px", fontSize: "1em" }}
                             onClick={e => {
                               e.preventDefault();
-                              let val = parseFloat(String(rowDraft.value).replace(/[^0-9.]/g, ''));
-                              if (!Number.isFinite(val) || val < 0) val = 0;
-                              setBudgets(prev => {
-                                const updated = { ...prev, [cat]: val };
-                                try {
-                                  localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(updated));
-                                } catch {}
-                                return updated;
-                              });
-                              setEditingRow(null);
-                              setRowDraft({});
-                              setJustSavedCat(cat);
-                              if (typeof showToast === 'function') {
-                                showToast('budget saved!', 'success');
-                              }
+                              handleSaveBudget(cat, rowDraft.value);
                             }}
                             aria-label={`Save budget for ${cat}`}
                           >Save</button>
@@ -292,6 +353,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                               e.preventDefault();
                               setEditingRow(null);
                               setRowDraft({});
+                              setEditError('');
                             }}
                             aria-label={`Cancel editing budget for ${cat}`}
                           >Cancel</button>
@@ -304,6 +366,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                             onClick={e => {
                               e.preventDefault();
                               setEditingRow(cat);
+                              setEditError('');
                             }}
                             aria-label={`Edit budget for ${cat}`}
                             disabled={editingRow !== null}
@@ -322,63 +385,91 @@ function BudgetPlanner({ transactions = [], showToast }) {
             </tbody>
           </table>
         </div>
-        {monthIncome > 0 && overBudget && (
-          <div
-            style={{
-              marginTop: 3,
-              marginBottom: 12,
-              background: "#ffecec",
-              borderRadius: 12,
-              border: "1.5px solid #e74c3c",
-              color: "#e74c3c",
-              padding: "15px 20px 13px 26px",
-              fontWeight: 600,
-              fontSize: "1.15em",
-              display: "flex",
-              alignItems: "center",
-              gap: 12
-            }}
-            aria-live="polite"
-          >
-            <span style={{ fontSize: "1.33em", marginRight: 6 }}>⚠️</span>
-            Your total expense budgets exceed your income for this month. Each category's variance is now adjusted (see red cells and 'exceeds' labels).
-          </div>
-        )}
-        <div className="budgetplanner-summary-row"
+        {/* New summary row below table for strong visibility */}
+        <div
+          className="budgetplanner-summary-row"
           style={{
             display: 'flex',
             flexWrap: 'wrap',
-            marginTop: 2,
+            marginTop: 14,
             gap: '54px 27px',
             alignItems: 'center',
             justifyContent: 'flex-start',
-            fontSize: '1.18em',
-            color: 'var(--primary,#6C2EBE)'
-          }}>
+            fontSize: '1.19em',
+            color: 'var(--primary,#6C2EBE)',
+            borderRadius: 12,
+            background: overBudget ? '#ffecec' : undefined,
+            border: overBudget ? '1.7px solid #e74c3c' : undefined,
+            boxShadow: overBudget ? "0 2px 10px rgba(231,76,60,0.03)" : undefined,
+            padding: overBudget ? '13px 23px' : 0,
+            fontWeight: 700,
+          }}
+          aria-live={overBudget ? 'assertive' : undefined}
+        >
           <div>
             <span style={{ fontWeight: 700 }}>Total Budgeted:</span> {currencySymbol}{budgetedTotal.toFixed(2)}
           </div>
           <div>
             <span style={{ fontWeight: 700 }}>Income this Month:</span> {currencySymbol}{monthIncome.toFixed(2)}
           </div>
+          <div>
+            <span style={{ fontWeight: 700 }}>Budget vs Income:</span>{' '}
+            <span style={{
+              fontWeight: 800,
+              color:
+                budgetVsIncome >= 0
+                  ? 'var(--income,#22C55E)'
+                  : 'var(--expense,#E74C3C)',
+              fontSize: '1.08em'
+            }}>
+              {budgetVsIncome >= 0 ? '+' : '-'}
+              {currencySymbol}{Math.abs(budgetVsIncome).toFixed(2)}
+            </span>
+          </div>
           {monthIncome > 0 && (
             <div style={{
               fontWeight: 800,
               color: overBudget ? 'var(--expense,#E74C3C)' : 'var(--income,#22C55E)',
-              fontSize: "1.10em"
+              fontSize: "1.15em"
             }}>
               {overBudget
-                ? '⚠️ Over Budget! Your expense budgets exceed your income this month.'
-                : '✓ Budgets are within your income.'}
+                ? <><span style={{ fontSize: "1.07em" }}>⚠️</span> Over Budget! Your expense budgets exceed your income this month.</>
+                : <><span style={{ fontSize: "1.03em" }}>✓</span> Budgets are within your income.</>}
             </div>
           )}
         </div>
+        {/* Inline warning for over-budget, for accessibility and clarity */}
+        {monthIncome > 0 && overBudget && (
+          <div
+            style={{
+              marginTop: 8,
+              marginBottom: 8,
+              background: "#ffecec",
+              borderRadius: 12,
+              border: "1.5px solid #e74c3c",
+              color: "#e74c3c",
+              padding: "15px 20px 13px 26px",
+              fontWeight: 600,
+              fontSize: "1.11em",
+              display: "flex",
+              alignItems: "center",
+              gap: 12
+            }}
+            aria-live="polite"
+          >
+            <span style={{ fontSize: "1.19em", marginRight: 6 }}>⚠️</span>
+            Your total expense budgets ({currencySymbol}{budgetedTotal.toFixed(2)}) exceed your income ({currencySymbol}{monthIncome.toFixed(2)}) for this month. Variances show proportional feasibility.
+          </div>
+        )}
         <div style={{ color: 'var(--text-secondary)', fontSize: '1.08em', marginTop: 23 }}>
           <ul style={{ marginLeft: 28, paddingLeft: 0, listStyle: 'circle', color: 'var(--primary)', fontSize: '1em' }}>
-            <li>Visually expanded table for clear, non-scrunched overview and easier editing.</li>
+            <li>Summary below: See your total budgeted expenses, monthly income, and whether your budgets are feasible.</li>
             <li>Edit the budget for each category by clicking Edit. Only one row can be in edit mode at a time.</li>
-            <li>Variance is <span style={{ color: 'var(--income,#22C55E)' }}>green</span> if under budget (with income-awareness), <span style={{ color: 'var(--expense,#E74C3C)' }}>red</span> if over.</li>
-            <li>Variance now factors in your monthly income: you cannot allocate >100% of your income to expenses.</li>
+            <li>
+              Variance remains <span style={{ color: 'var(--income,#22C55E)' }}>green</span> if under budget, <span style={{ color: 'var(--expense,#E74C3C)' }}>red</span> if over. 
+              Budgets are now income-aware—excess allocation is flagged per-row.
+            </li>
+            <li>If budgets exceed income, increases are prevented per category.</li>
             <li>Month: {monthStr}</li>
             <li>Currencies are shown in your preferred symbol from Preferences.</li>
           </ul>

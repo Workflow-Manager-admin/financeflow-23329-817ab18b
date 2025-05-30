@@ -279,6 +279,45 @@ function CalendarView() {
 
 const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 
+// Inline CountryCodeDropdown with flag emoji for compact mobile select
+function CountryCodeDropdown({ countryCode, onChange }) {
+  const COUNTRY_OPTIONS = [
+    { code: "+1", flag: "🇺🇸", label: "USA" },
+    { code: "+91", flag: "🇮🇳", label: "India" },
+    { code: "+44", flag: "🇬🇧", label: "UK" },
+    { code: "+61", flag: "🇦🇺", label: "Australia" },
+    { code: "+81", flag: "🇯🇵", label: "Japan" },
+    { code: "+86", flag: "🇨🇳", label: "China" },
+    { code: "+49", flag: "🇩🇪", label: "Germany" },
+    { code: "+33", flag: "🇫🇷", label: "France" },
+    { code: "+971", flag: "🇦🇪", label: "UAE" },
+    { code: "+234", flag: "🇳🇬", label: "Nigeria" },
+    { code: "+7", flag: "🇷🇺", label: "Russia" },
+  ];
+  return (
+    <select
+      value={countryCode}
+      onChange={e => onChange(e.target.value)}
+      style={{
+        fontWeight: 500,
+        padding: "7px 8px",
+        borderRadius: 6,
+        border: "1px solid var(--secondary, #ececec)",
+        fontSize: "1em",
+        background: "var(--secondary, #F5F6FA)",
+        minWidth: 72,
+      }}
+      aria-label="Country code"
+    >
+      {COUNTRY_OPTIONS.map(opt => (
+        <option key={opt.code} value={opt.code}>
+          {opt.flag} {opt.code}
+        </option>
+      ))}
+    </select>
+  );
+}
+
 /*
   PUBLIC_INTERFACE
   ProfileView:
@@ -290,7 +329,7 @@ const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 */
 function ProfileView() {
   // Profile state and edit mode.
-  const [profile, setProfile] = React.useState({ name: '', email: '', mobile: '', currency: '' });
+  const [profile, setProfile] = React.useState({ name: '', email: '', mobile: '', countryCode: "+1", currency: '' });
   // editMode is true ONLY if: (a) first-time setup (no name) (b) user clicks edit.
   const [editMode, setEditMode] = React.useState(false);
   const [error, setError] = React.useState('');
@@ -331,7 +370,7 @@ function ProfileView() {
     else setEditMode(false);
   }, [profile.name]); // react to name changes only
 
-  // Handler: field change (including updates from dropdown)
+  // Handler: field change
   // PUBLIC_INTERFACE
   function handleChange(e) {
     const { name, value } = e.target;
@@ -394,6 +433,7 @@ function ProfileView() {
           name: obj.name || "",
           email: obj.email || "",
           mobile: obj.mobile || "",
+          countryCode: obj.countryCode || "+1",
           currency: obj.currency || ""
         });
       } catch {}

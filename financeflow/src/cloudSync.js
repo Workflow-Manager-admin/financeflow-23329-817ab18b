@@ -7,14 +7,17 @@ import {
   loadCloudProfile, saveCloudProfile,
   loadCloudSettings, saveCloudSettings,
   loadCloudTransactions, saveCloudTransactions,
+  loadCloudGoal, saveCloudGoal,
+  loadCloudBudgets, saveCloudBudgets,
 } from './firebase';
 
 // --- LocalStorage keys used by app ---
 const LS_PROFILE = 'fflow-profile-v1';
 const LS_SETTINGS = 'fflow-settings-v1';
 const LS_TRANSACTIONS = 'fflow-transactions-v1';
+const LS_GOAL = 'fflow-savings-goal-v1';
+const LS_BUDGETS = 'fflow-budgets-v1';
 
-// PUBLIC_INTERFACE
 /**
  * Loads ALL user data from the best available source (cloud or local).
  * Tries Firebase, falls back to localStorage.
@@ -24,16 +27,20 @@ export async function loadAppState() {
   if (user) {
     // Cloud state
     try {
-      const [profile, settings, transactions] = await Promise.all([
+      const [profile, settings, transactions, goal, budgets] = await Promise.all([
         loadCloudProfile(user.uid),
         loadCloudSettings(user.uid),
         loadCloudTransactions(user.uid),
+        loadCloudGoal(user.uid),
+        loadCloudBudgets(user.uid),
       ]);
       return {
         cloudMode: true,
         profile: profile || loadLocalProfile(),
         settings: settings || loadLocalSettings(),
         transactions: transactions || loadLocalTransactions(),
+        goal: goal || loadLocalGoal(),
+        budgets: budgets || loadLocalBudgets(),
       };
     } catch (err) {
       // Network error, fallback local
@@ -42,6 +49,8 @@ export async function loadAppState() {
         profile: loadLocalProfile(),
         settings: loadLocalSettings(),
         transactions: loadLocalTransactions(),
+        goal: loadLocalGoal(),
+        budgets: loadLocalBudgets(),
       };
     }
   }
@@ -51,6 +60,8 @@ export async function loadAppState() {
     profile: loadLocalProfile(),
     settings: loadLocalSettings(),
     transactions: loadLocalTransactions(),
+    goal: loadLocalGoal(),
+    budgets: loadLocalBudgets(),
   };
 }
 

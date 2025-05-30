@@ -1,4 +1,4 @@
-tyimport React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './App.css';
 import ThemeProvider from './components/ThemeProvider';
 import Sidebar from './components/Sidebar';

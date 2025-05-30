@@ -321,18 +321,33 @@ function CountryCodeDropdown({ countryCode, onChange }) {
 
 // PUBLIC_INTERFACE
 function ProfileView() {
-  // Profile state and edit mode
+  // Profile state and edit mode, decoupling country code & mobile as two fields
   const [profile, setProfile] = React.useState({ name: '', email: '', mobile: '', countryCode: "+1", currency: '' });
   const [editMode, setEditMode] = React.useState(false);
   const [error, setError] = React.useState('');
   const [saved, setSaved] = React.useState(false);
 
+  // Country code list with emoji flags for dropdown (limited set for focus/UX)
+  const COUNTRY_OPTIONS = [
+    { code: "+1", flag: "🇺🇸", label: "USA" },
+    { code: "+91", flag: "🇮🇳", label: "India" },
+    { code: "+44", flag: "🇬🇧", label: "UK" },
+    { code: "+61", flag: "🇦🇺", label: "Australia" },
+    { code: "+81", flag: "🇯🇵", label: "Japan" },
+    { code: "+86", flag: "🇨🇳", label: "China" },
+    { code: "+49", flag: "🇩🇪", label: "Germany" },
+    { code: "+33", flag: "🇫🇷", label: "France" },
+    { code: "+971", flag: "🇦🇪", label: "UAE" },
+    { code: "+234", flag: "🇳🇬", label: "Nigeria" },
+    { code: "+7", flag: "🇷🇺", label: "Russia" },
+  ];
   const currencyOptions = ['USD', 'EUR', 'GBP', 'INR', 'CNY'];
 
   // Used for first-run flow
   const isFirstRender = React.useRef(true);
 
   // -- Initialization: load profile
+  // Support separate storage/restore of countryCode and mobile
   React.useEffect(() => {
     const savedProfile = localStorage.getItem(PROFILE_STORAGE_KEY);
     if (savedProfile) {
@@ -343,7 +358,7 @@ function ProfileView() {
           email: obj.email || "",
           mobile: obj.mobile || "",
           countryCode: obj.countryCode || "+1",
-          currency: obj.currency || ""
+          currency: obj.currency || "",
         });
       } catch {
         setProfile({ name: '', email: '', mobile: '', countryCode: "+1", currency: '' });
@@ -362,15 +377,15 @@ function ProfileView() {
   // PUBLIC_INTERFACE
   function handleChange(e) {
     const { name, value } = e.target;
-    // Only allow numbers in mobile input
     if (name === 'mobile') {
-      // Strip non-numeric before update
+      // Only accept 0-9 and max 10 digits in state
       setProfile(p => ({ ...p, mobile: value.replace(/[^0-9]/g, '').slice(0, 10) }));
     } else {
       setProfile(p => ({ ...p, [name]: value }));
     }
   }
 
+  // PUBLIC_INTERFACE
   function handleCountryCodeChange(newVal) {
     setProfile(p => ({ ...p, countryCode: newVal }));
   }
@@ -386,7 +401,7 @@ function ProfileView() {
       setError("Invalid email address.");
       return;
     }
-    // Mobile and country code validation (optional)
+    // If either mobile or code is set, both must be valid
     if (profile.mobile || profile.countryCode) {
       if (!profile.mobile || !/^[0-9]{10}$/.test(profile.mobile.trim())) {
         setError("Mobile number must be exactly 10 digits.");
@@ -398,6 +413,7 @@ function ProfileView() {
       }
     }
     setError('');
+    // Save as separate fields for code/mobile
     localStorage.setItem(
       PROFILE_STORAGE_KEY,
       JSON.stringify({

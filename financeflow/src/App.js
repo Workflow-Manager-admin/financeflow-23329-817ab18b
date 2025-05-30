@@ -269,10 +269,225 @@ function CalendarView() {
   );
 }
 
+const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
+
+// PUBLIC_INTERFACE
 function ProfileView() {
+  // State for profile fields and edit mode
+  const [profile, setProfile] = React.useState({ name: '', email: '', currency: '', language: '' });
+  const [editMode, setEditMode] = React.useState(false);
+  const [error, setError] = React.useState('');
+  const [saved, setSaved] = React.useState(false);
+
+  // Options for data entry (should match what's in Settings for consistency)
+  const languageOptions = ['English', 'Spanish', 'French', 'German', 'Chinese'];
+  const currencyOptions = ['USD', 'EUR', 'GBP', 'INR', 'CNY'];
+
+  // Load profile from localStorage on mount
+  React.useEffect(() => {
+    const savedProfile = localStorage.getItem(PROFILE_STORAGE_KEY);
+    if (savedProfile) {
+      try {
+        const obj = JSON.parse(savedProfile);
+        setProfile({
+          name: obj.name || "",
+          email: obj.email || "",
+          currency: obj.currency || "",
+          language: obj.language || ""
+        });
+      } catch {
+        // On error, fallback to blank
+        setProfile({ name: '', email: '', currency: '', language: '' });
+      }
+    }
+  }, []);
+
+  // PUBLIC_INTERFACE
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setProfile(p => ({ ...p, [name]: value }));
+  }
+
+  // PUBLIC_INTERFACE
+  function handleSave(e) {
+    e.preventDefault && e.preventDefault();
+    // Validate: name required, email optional but if set must be reasonable
+    if (!profile.name.trim()) {
+      setError("Please enter your name.");
+      return;
+    }
+    if (profile.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(profile.email)) {
+      setError("Invalid email address.");
+      return;
+    }
+    setError('');
+    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+    setSaved(true);
+    setEditMode(false);
+    setTimeout(() => setSaved(false), 1400);
+  }
+
+  function handleEdit() {
+    setEditMode(true);
+  }
+
+  function handleCancel() {
+    setEditMode(false);
+    // Reload from localStorage to revert any unsaved changes
+    const savedProfile = localStorage.getItem(PROFILE_STORAGE_KEY);
+    if (savedProfile) {
+      try {
+        const obj = JSON.parse(savedProfile);
+        setProfile({
+          name: obj.name || "",
+          email: obj.email || "",
+          currency: obj.currency || "",
+          language: obj.language || ""
+        });
+      } catch {}
+    }
+    setError('');
+  }
+
+  // If no profile data, force edit mode (first-time flow)
+  React.useEffect(() => {
+    if (!profile.name) setEditMode(true);
+  }, [profile.name]);
+
+  // UI for display mode (profile present and not editing)
+  function renderProfileCard() {
+    return (
+      <div className="container" style={{ maxWidth: 420 }}>
+        <div style={{background: "var(--surface,#fff)", borderRadius: 13, boxShadow: "0 2px 16px rgba(60,42,150,0.07)", padding: 28, marginTop: 25, marginBottom: 25}}>
+          <h2 style={{margin: "0 0 13px 0", fontSize: "1.21em", color: "var(--primary,#6C2EBE)", fontWeight: 600}}>
+            Profile
+          </h2>
+          <p style={{margin: "7px 0 0", fontSize: "1.05em", color: "var(--text-secondary)"}}>
+            <strong>Name:</strong> {profile.name}
+          </p>
+          {profile.email && <p style={{margin: "7px 0 0"}}><strong>Email:</strong> {profile.email}</p>}
+          {profile.currency && <p style={{margin: "7px 0 0"}}><strong>Currency:</strong> {profile.currency}</p>}
+          {profile.language && <p style={{margin: "7px 0 0"}}><strong>Language:</strong> {profile.language}</p>}
+          <button className="btn btn-large" style={{marginTop: 19}} onClick={handleEdit}>Edit Profile</button>
+        </div>
+      </div>
+    );
+  }
+
+  // UI for edit mode/first-run data input
+  function renderProfileEditForm() {
+    return (
+      <div className="container" style={{ maxWidth: 420 }}>
+        <form
+          onSubmit={handleSave}
+          style={{
+            background: "var(--surface,#fff)",
+            borderRadius: 13,
+            boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
+            padding: 28,
+            marginTop: 25,
+            marginBottom: 25
+          }}
+          aria-label="Profile Edit"
+        >
+          <h2 style={{margin: "0 0 13px 0", fontSize: "1.21em", color: "var(--primary,#6C2EBE)", fontWeight: 600}}>
+            {profile.name ? "Edit Profile" : "Set Up Your Profile"}
+          </h2>
+          <div style={{ marginBottom: 17 }}>
+            <label style={{ fontWeight: 500, display: "block", marginBottom: 7 }}>Name<span style={{ color: "#E74C3C" }}>*</span>
+              <input
+                type="text"
+                name="name"
+                value={profile.name}
+                onChange={handleChange}
+                required
+                placeholder="Enter your name"
+                style={{ width: "100%", padding: "9px 10px", marginTop: 5 }}
+                autoFocus
+                aria-required="true"
+                aria-label="Name"
+              />
+            </label>
+          </div>
+          <div style={{ marginBottom: 17 }}>
+            <label style={{ fontWeight: 500, display: "block", marginBottom: 7 }}>
+              Email (optional)
+              <input
+                type="email"
+                name="email"
+                value={profile.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                style={{ width: "100%", padding: "9px 10px", marginTop: 5 }}
+                aria-label="Email address"
+              />
+            </label>
+          </div>
+          <div style={{ marginBottom: 17 }}>
+            <label style={{ fontWeight: 500, display: "block", marginBottom: 7 }}>
+              Preferred Language (optional)
+              <select
+                name="language"
+                value={profile.language}
+                onChange={handleChange}
+                style={{ width: "100%", padding: "9px 10px", marginTop: 5 }}
+                aria-label="Language"
+              >
+                <option value="">Select Language</option>
+                {languageOptions.map(opt => (
+                  <option value={opt} key={opt}>{opt}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+          <div style={{ marginBottom: 19 }}>
+            <label style={{ fontWeight: 500, display: "block", marginBottom: 7 }}>
+              Preferred Currency (optional)
+              <select
+                name="currency"
+                value={profile.currency}
+                onChange={handleChange}
+                style={{ width: "100%", padding: "9px 10px", marginTop: 5 }}
+                aria-label="Currency"
+              >
+                <option value="">Select Currency</option>
+                {currencyOptions.map(opt => (
+                  <option value={opt} key={opt}>{opt}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+          {error && <div style={{ color: "var(--expense,#E74C3C)", marginBottom: 10 }}>{error}</div>}
+          <div style={{display:"flex", gap: 13}}>
+            <button type="submit" className="btn btn-large" style={{ minWidth: 120 }}>
+              Save
+            </button>
+            {profile.name && (
+              <button
+                type="button"
+                className="btn btn-cancel"
+                style={{ minWidth: 100 }}
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+            )}
+            {saved && <span style={{color:'var(--income,#22C55E)',marginLeft:15,fontWeight:500}}>Saved!</span>}
+          </div>
+          <div style={{marginTop: 17, color:'var(--text-secondary)', fontSize: "0.99em"}}>
+            {profile.name
+              ? "Update your profile information anytime. Your profile is stored securely in your browser only."
+              : "Enter your name to complete setup. You can add email, language, and currency preferences for a personalized experience (all optional)."}
+          </div>
+        </form>
+      </div>
+    );
+  }
+
   return (
-    <section className="placeholder-view"><h1>Profile</h1>
-      <div className="container"><p>User profile management coming soon.</p></div>
+    <section className="placeholder-view">
+      <h1>Profile</h1>
+      {editMode ? renderProfileEditForm() : renderProfileCard()}
     </section>
   );
 }

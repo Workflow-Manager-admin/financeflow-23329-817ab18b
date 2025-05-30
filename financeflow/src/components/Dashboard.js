@@ -16,14 +16,8 @@ const STORAGE_GOAL = 'fflow-savings-goal-v1';
 /**
  * Dashboard component for managing transactions, savings goals,
  * and visualizations.
- *
- * Root cause analysis (developer note): If dashboard data is lost only between
- * tab navigations, not on browser refresh, data should always reload from localStorage.
- * If you see data loss, it likely means:
- *  - Storage keys are cleared or overwritten elsewhere (not expected in this codebase).
- *  - Your browser/extensions clear localStorage or operate in private mode.
- *  - Storage corruption/quota.
- * For cross-device sync, add a backend/Firebase adapter to this state model.
+ * 
+ * Layout reverted: No dashboard title/grouping—all content blocks follow original, "stacked" loose container layout.
  */
 function Dashboard({ showToast }) {
   // ============ Data State ===============
@@ -37,7 +31,6 @@ function Dashboard({ showToast }) {
   const [showGoalModal, setShowGoalModal] = useState(false);
 
   // ========== Storage Sync & Boot =========
-  // Enhanced: rehydrate from storage on first render AND on route changes (hashchange) or storage events (sync between tabs/windows)
   useEffect(() => {
     function rehydrateFromStorage() {
       const lsRaw = localStorage.getItem(STORAGE_TRANSACTIONS);
@@ -46,74 +39,55 @@ function Dashboard({ showToast }) {
 
       const storedGoal = JSON.parse(localStorage.getItem(STORAGE_GOAL)) || null;
       setGoal(storedGoal);
-
-      if (lsRaw && storedTx.length === 0) {
-        // eslint-disable-next-line
-        console.warn(
-          "[FinanceFlow] Dashboard: localStorage['fflow-transactions-v1'] previously set but empty after parse. " +
-          "If you experience data loss, check for clearing/corruption/multiple tabs/extensions."
-        );
-      }
     }
 
-    // Initial hydration
     rehydrateFromStorage();
 
-    // Listen for navigation changes (in-app route/hashes)
     function onHashChange() {
       if (window.location.hash.replace('#', '') === '' || window.location.hash.replace('#', '') === '/') {
-        // Navigated to dashboard, always refresh from storage
         rehydrateFromStorage();
       }
     }
-
-    // Listen for changes in other tabs
     function onStorage(e) {
       if (e.key === STORAGE_TRANSACTIONS || e.key === STORAGE_GOAL) {
         rehydrateFromStorage();
       }
     }
-
     window.addEventListener('hashchange', onHashChange);
     window.addEventListener('storage', onStorage);
-
     return () => {
       window.removeEventListener('hashchange', onHashChange);
       window.removeEventListener('storage', onStorage);
     };
   }, []);
 
-  // Save transactions to localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_TRANSACTIONS, JSON.stringify(transactions));
     setFiltered(applyFilters(transactions, filters));
     // eslint-disable-next-line
   }, [transactions]);
 
-  // Apply filters when filters or transactions change
   useEffect(() => {
     setFiltered(applyFilters(transactions, filters));
     // eslint-disable-next-line
   }, [filters, transactions]);
 
-  // Save goal to localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_GOAL, JSON.stringify(goal));
     // eslint-disable-next-line
   }, [goal]);
 
   // ========== Actions ==============
-  // Add or Edit transaction
   function handleSaveTransaction(tx) {
     setTransactions(prev => {
       let arr;
       if (tx.id) {
         arr = prev.map(t => (t.id === tx.id ? tx : t));
-        showToast('Transaction updated!', 'success');
+        showToast && showToast('Transaction updated!', 'success');
       } else {
         const id = 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
         arr = [{ ...tx, id }, ...prev];
-        showToast('Transaction added!', 'success');
+        showToast && showToast('Transaction added!', 'success');
       }
       return arr;
     });
@@ -123,12 +97,12 @@ function Dashboard({ showToast }) {
 
   function handleDeleteTransaction(id) {
     setTransactions(prev => prev.filter(t => t.id !== id));
-    showToast('Transaction deleted!', 'success');
+    showToast && showToast('Transaction deleted!', 'success');
   }
 
   function handleSaveGoal(goalData) {
     setGoal(goalData);
-    showToast('Savings goal set!', 'success');
+    showToast && showToast('Savings goal set!', 'success');
     setShowGoalModal(false);
   }
 
@@ -144,20 +118,17 @@ function Dashboard({ showToast }) {
     );
     if (target && sum >= target && !goal.achieved) {
       setGoal(g => ({ ...g, achieved: true }));
-      showToast('Congratulations! You have reached your savings goal!', 'success');
+      showToast && showToast('Congratulations! You have reached your savings goal!', 'success');
     }
     // eslint-disable-next-line
   }, [goal, transactions]);
 
-  // Filtering logic
   function applyFilters(data, filtersArg) {
     const { category = 'All', from = '', to = '' } = filtersArg || {};
     let arr = data;
-    // Only filter by category for expenses; skip filter for incomes
     if (category && category !== 'All') {
       arr = arr.filter(t =>
         t.type === 'expense' &&
-        // Match category, mapping legacy Salary to Rent/House
         ((t.category === 'Salary' && category === 'Rent/House') || t.category === category)
       );
     }
@@ -178,7 +149,6 @@ function Dashboard({ showToast }) {
     return ['All', ...Array.from(set).filter(Boolean)];
   }, [transactions]);
 
-  // Amount stats
   const stats = useMemo(() => {
     const income = transactions
       .filter(t => t.type === 'income')
@@ -190,54 +160,36 @@ function Dashboard({ showToast }) {
     return { income, expense, balance };
   }, [transactions]);
 
-  // Handler for editing a transaction
   function handleEditTransaction(tx) {
     setEditTx(tx);
     setShowTxModal(true);
   }
 
-  // Get currencySymbol from preferences
   const { currencySymbol } = usePreferences();
 
-  // ========== Render ================
+  // ========== Render - revert to "classic", loosely stacked layout ================
   return (
     <section className="dashboard">
-      {/* Title: visually grouped within dashboard's main grid content */}
-      <div
-        className="container"
-        style={{
-          maxWidth: 950,
-          background: "var(--surface, #fff)",
-          borderRadius: 13,
-          boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
-          marginTop: 22,
-          marginBottom: 0,
-          marginLeft: "auto",
-          marginRight: "auto",
-          padding: "0 0 40px 0"
-        }}
-      >
-        {/* Title aligned and tightly grouped with dashboard content */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "35px 21px 0 21px",
-            minHeight: 0,
-            marginBottom: "-3px",
-            gap: 0
-          }}
-        >
-          {/* Dashboard title intentionally removed as per requirements */}
-        </div>
-        <div className="dashboard-layout" style={{ paddingTop: 4 }}>
+      <div className="container" style={{
+        maxWidth: 950,
+        background: "var(--surface, #fff)",
+        borderRadius: 13,
+        boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
+        marginTop: 32,
+        marginBottom: 0,
+        marginLeft: "auto",
+        marginRight: "auto",
+        padding: "0 0 44px 0"
+      }}>
+        {/* Old Layout: NO dashboard heading/title at top */}
+        <div className="dashboard-layout" style={{ paddingTop: 4, gap: 34 }}>
           {/* Visualizations */}
-          <div className="dashboard-visuals-grid" style={{ marginBottom: 0, marginTop: '6px' }}>
+          <div className="dashboard-visuals-grid" style={{ marginTop: 0, marginBottom: 0 }}>
             <PieChart transactions={transactions} currencySymbol={currencySymbol} />
             <LineChart transactions={transactions} currencySymbol={currencySymbol} />
           </div>
           {/* Savings ring */}
-          <div className="dashboard-upper" style={{ marginTop: '20px', marginBottom: 0 }}>
+          <div className="dashboard-upper">
             <SavingsRing
               goal={goal}
               stats={stats}
@@ -246,7 +198,7 @@ function Dashboard({ showToast }) {
             />
           </div>
           {/* Transactions list */}
-          <div className="dashboard-txlist-outer" style={{ marginTop: '24px' }}>
+          <div className="dashboard-txlist-outer">
             <FilterBar
               filters={filters}
               setFilters={setFilters}

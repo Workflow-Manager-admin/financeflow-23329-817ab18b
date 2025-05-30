@@ -40,8 +40,11 @@ const icons = {
     </svg>
   ),
   settings: (
-    // Gear emoji for improved clarity and recognizability
-    <span role="img" aria-label="Settings" style={{ fontSize: 21, display: 'inline-block', verticalAlign: 'middle', marginTop: -1, lineHeight: 1 }}>⚙️</span>
+    // Modern minimal SVG gear icon matching the visual style of sidebar icons
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.5" />
+      <path d="M19.4 15a2 2 0 0 0 .4 2.1l.02.02a1 1 0 0 1-1.41 1.41l-.02-.02a2 2 0 0 0-2.1-.41c-.6.29-1.25.47-1.88.52-.13.01-.27.01-.41.01-.14 0-.28 0-.41-.01a7.2 7.2 0 0 1-1.88-.52 2 2 0 0 0-2.1.41l-.02.02a1 1 0 0 1-1.41-1.41l.02-.02a2 2 0 0 0 .41-2.1c-.29-.6-.47-1.25-.52-1.88a2.3 2.3 0 0 1-.01-.41c0-.14 0-.28.01-.41.05-.63.23-1.28.52-1.88a2 2 0 0 0-.41-2.1l-.02-.02A1 1 0 0 1 6.03 5.45l.02.02a2 2 0 0 0 2.1.41c.6-.29 1.25-.47 1.88-.52.13-.01.27-.01.41-.01.14 0 .28 0 .41.01.63.05 1.28.23 1.88.52a2 2 0 0 0 2.1-.41l.02-.02a1 1 0 1 1 1.41 1.41l-.02.02a2 2 0 0 0-.41 2.1c.29.6.47 1.25.52 1.88.01.13.01.27.01.41 0 .14 0 .28-.01.41-.05.63-.23 1.28-.52 1.88z" />
+    </svg>
   ),
 };
 

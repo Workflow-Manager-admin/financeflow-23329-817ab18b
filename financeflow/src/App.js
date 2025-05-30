@@ -507,37 +507,26 @@ function ProfileView() {
   );
 }
 
+import { usePreferences } from './components/PreferencesProvider';
+
 // PUBLIC_INTERFACE
 function SettingsView() {
-  const languageOptions = ['English', 'Spanish', 'French', 'German', 'Chinese'];
-  const currencyOptions = ['USD', 'EUR', 'GBP', 'INR', 'CNY'];
+  const {
+    language,
+    currency,
+    setLanguage,
+    setCurrency,
+    languageOptions,
+    currencyOptions,
+  } = usePreferences();
 
-  const STORAGE_SETTINGS = 'fflow-settings-v1';
-
-  const [language, setLanguage] = React.useState(languageOptions[0]);
-  const [currency, setCurrency] = React.useState(currencyOptions[0]);
   const [saved, setSaved] = React.useState(false);
-
-  React.useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_SETTINGS);
-    if (stored) {
-      try {
-        const obj = JSON.parse(stored);
-        if (obj.language && languageOptions.includes(obj.language)) setLanguage(obj.language);
-        if (obj.currency && currencyOptions.includes(obj.currency)) setCurrency(obj.currency);
-      } catch {
-        // Ignore parse errors - use default
-      }
-    }
-    // eslint-disable-next-line
-  }, []);
 
   function handleSave(e) {
     e.preventDefault();
-    const obj = { language, currency };
-    localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(obj));
     setSaved(true);
     setTimeout(() => setSaved(false), 1200);
+    // localStorage is updated in PreferencesProvider; don't handle here
   }
 
   return (

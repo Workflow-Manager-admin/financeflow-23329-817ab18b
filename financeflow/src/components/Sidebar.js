@@ -69,19 +69,17 @@ const navItems = [
  * PUBLIC_INTERFACE
  * Sidebar layout for FinanceFlow with logo, nav, and settings.
  */
-function Sidebar({ currentRoute, onNavigate, collapsed, onToggle }) {
+function Sidebar({ currentRoute, onNavigate }) {
   const { theme, toggleTheme } = useContext(ThemeContext);
-  // Responsive toggle state (if controlled at Sidebar level)
-  const [internalCollapsed, setInternalCollapsed] = useState(false);
-
-  const sidebarCollapsed = typeof collapsed === "boolean" ? collapsed : internalCollapsed;
-  const setSidebarCollapsed = typeof onToggle === 'function' ? onToggle : setInternalCollapsed;
 
   // For current nav highlight, accept currentRoute (e.g. "/expenses"), fallback home "/"
   const routeMatch = r => (r === "/" && currentRoute === "/") || (r !== "/" && currentRoute?.startsWith(r));
 
+  // Sidebar is always expanded and open (never collapsed or auto-closing)
+  const sidebarCollapsed = false;
+
   return (
-    <aside className={`sidebar${sidebarCollapsed ? ' collapsed' : ''}`}>
+    <aside className="sidebar">
       <div className="sidebar-upper">
         <div className="sidebar-logo-row">
           {/* Minimal, beautiful SVG logo */}
@@ -98,16 +96,8 @@ function Sidebar({ currentRoute, onNavigate, collapsed, onToggle }) {
               <circle cx="16" cy="16" r="14" fill="none" stroke="#fff" strokeWidth=".8" opacity=".12"/>
             </svg>
           </span>
-          {!sidebarCollapsed && (
-            <span className="sidebar-title">Finance<span className="flow-accent">Flow</span></span>
-          )}
-          <button
-            className="sidebar-toggle-btn"
-            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            title={sidebarCollapsed ? "Show menu" : "Hide menu"}>
-            <span>{sidebarCollapsed ? "☰" : "×"}</span>
-          </button>
+          <span className="sidebar-title">Finance<span className="flow-accent">Flow</span></span>
+          {/* Toggle button removed since sidebar cannot be collapsed */}
         </div>
         <nav className="sidebar-nav">
           {navItems.map(item =>
@@ -118,7 +108,7 @@ function Sidebar({ currentRoute, onNavigate, collapsed, onToggle }) {
               aria-label={item.label}
               tabIndex={0}>
               <span className="sidebar-nav-icon">{icons[item.icon]}</span>
-              {!sidebarCollapsed && <span className="sidebar-nav-label">{item.label}</span>}
+              <span className="sidebar-nav-label">{item.label}</span>
             </button>
           )}
         </nav>
@@ -130,34 +120,32 @@ function Sidebar({ currentRoute, onNavigate, collapsed, onToggle }) {
           aria-label="Settings"
           tabIndex={0}>
           <span className="sidebar-nav-icon">{icons.settings}</span>
-          {!sidebarCollapsed && <span className="sidebar-nav-label">Settings</span>}
+          <span className="sidebar-nav-label">Settings</span>
         </button>
-        {!sidebarCollapsed && (
-          <button
-            className="theme-toggle-btn"
-            onClick={toggleTheme}
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
-            {theme === 'dark' ? (
-              // Modern outlined sun icon for light mode (heroicons style)
-              <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="5" />
-                <line x1="12" y1="1" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <line x1="1" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23" y2="12" />
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-              </svg>
-            ) : (
-              // Modern outlined crescent-moon for dark mode (heroicons style)
-              <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z" />
-              </svg>
-            )}
-          </button>
-        )}
+        <button
+          className="theme-toggle-btn"
+          onClick={toggleTheme}
+          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
+          {theme === 'dark' ? (
+            // Modern outlined sun icon for light mode (heroicons style)
+            <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+          ) : (
+            // Modern outlined crescent-moon for dark mode (heroicons style)
+            <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z" />
+            </svg>
+          )}
+        </button>
       </div>
     </aside>
   );

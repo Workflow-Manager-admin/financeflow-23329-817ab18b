@@ -920,8 +920,6 @@ function App() {
           <Sidebar
             currentRoute={route}
             onNavigate={handleNavigate}
-            collapsed={sidebarCollapsed}
-            onToggle={setSidebarCollapsed}
           />
           <main className="main-content" tabIndex={-1} aria-live="polite">
             {View}

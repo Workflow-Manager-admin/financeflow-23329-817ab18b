@@ -55,9 +55,16 @@ function ExpensesView() {
     <section className="placeholder-view">
       <div
         className="container"
-        style={{ maxWidth: 650, background: "var(--surface,#fff)", borderRadius: 13, boxShadow: "0 2px 16px rgba(60,42,150,0.07)", padding: "34px 17px", marginTop: 30 }}
+        style={{
+          maxWidth: 650,
+          background: "var(--surface,#fff)",
+          borderRadius: 13,
+          boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
+          padding: "0 0 34px 0",
+          marginTop: 30,
+        }}
       >
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 0, marginBottom: 8 }}>
+        <div style={{ padding: "34px 17px 0 17px", display: "flex", alignItems: "flex-end", gap: 0 }}>
           <h1
             style={{
               margin: 0,
@@ -66,16 +73,16 @@ function ExpensesView() {
               fontWeight: 700,
               letterSpacing: "0.01em",
               textAlign: "left",
-              flex: '1 1 auto'
+              flex: "1 1 auto",
             }}
           >
             Expenses
           </h1>
         </div>
-        <div>
+        <div style={{ padding: "0 17px" }}>
           <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
         </div>
-        <div>
+        <div style={{ padding: "0 17px" }}>
           <TransactionList
             transactions={filtered}
             onEdit={() => {}}
@@ -85,9 +92,9 @@ function ExpensesView() {
           />
         </div>
         {filtered.length === 0 && (
-          <p style={{ color: "var(--text-secondary)" }}>No expenses for current filters.</p>
+          <p style={{ color: "var(--text-secondary)", paddingLeft: 17 }}>No expenses for current filters.</p>
         )}
-        <p style={{ color: "var(--text-secondary)", marginTop: 15, fontSize: "1.05em" }}>
+        <p style={{ color: "var(--text-secondary)", marginTop: 15, fontSize: "1.05em", paddingLeft: 17 }}>
           Amounts shown in <span style={{ fontWeight: 600 }}>{currencySymbol}</span>
         </p>
       </div>
@@ -692,11 +699,11 @@ function ProfileView() {
           background: "var(--surface,#fff)",
           borderRadius: 13,
           boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
-          padding: "34px 17px",
-          marginTop: 30
+          padding: "0 0 34px 0",
+          marginTop: 30,
         }}
       >
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 0, marginBottom: 8 }}>
+        <div style={{ padding: "34px 17px 0 17px", display: "flex", alignItems: "flex-end", gap: 0 }}>
           <h1
             style={{
               margin: 0,
@@ -705,13 +712,15 @@ function ProfileView() {
               fontWeight: 700,
               letterSpacing: "0.01em",
               textAlign: "left",
-              flex: '1 1 auto'
+              flex: "1 1 auto",
             }}
           >
             Profile
           </h1>
         </div>
-        {editMode ? renderProfileEditForm() : renderProfileCard()}
+        <div style={{ padding: "0 17px" }}>
+          {editMode ? renderProfileEditForm() : renderProfileCard()}
+        </div>
       </div>
     </section>
   );

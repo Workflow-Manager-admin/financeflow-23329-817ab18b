@@ -7,6 +7,7 @@ import LineChart from './visuals/LineChart';
 import SavingsRing from './savings/SavingsRing';
 import SavingsGoalModal from './savings/SavingsGoalModal';
 import './Dashboard.css';
+import { usePreferences } from './PreferencesProvider';
 
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
 const STORAGE_GOAL = 'fflow-savings-goal-v1';

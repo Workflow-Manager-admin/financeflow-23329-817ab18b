@@ -14,8 +14,7 @@ const STORAGE_BUDGETS_KEY = 'fflow-budgets-v1';
  * BudgetPlanner displays and edits monthly budgets per expense category (excl. investments).
  * Shows: Category, Budget (editable), Actual (current month), Variance (color-coded).
  * Persists budgets in localStorage; reads currency symbol from preferences.
- * Triggers a "budget saved!" notification on save and persists entered budgets between tab switches using localStorage.
- * Now: variance per-category is simply (budget set - actual expense), with no budget/income summary or warnings.
+ * Editing and saving is silent and unconditional (no warnings, popups, or error validation).
  */
 function BudgetPlanner({ transactions = [], showToast }) {
   const { currencySymbol } = usePreferences() || { currencySymbol: '$' };
@@ -23,10 +22,9 @@ function BudgetPlanner({ transactions = [], showToast }) {
   const [editingRow, setEditingRow] = useState(null); // Category string or null
   const [rowDraft, setRowDraft] = useState({});
   const [justSavedCat, setJustSavedCat] = useState(null);
-  // Remove error feedback: validation is gone
   const mountedRef = useRef(false);
 
-  // Robust: Load budgets from localStorage on component mount & tab switch/view
+  // Load budgets from localStorage on component mount & tab switch/view
   useEffect(() => {
     const loadBudgets = () => {
       try {
@@ -62,7 +60,6 @@ function BudgetPlanner({ transactions = [], showToast }) {
   useEffect(() => {
     if (editingRow) {
       setRowDraft({ value: Number(budgets[editingRow] || 0) });
-      setEditError('');
     }
   }, [editingRow, budgets]);
 
@@ -311,7 +308,6 @@ function BudgetPlanner({ transactions = [], showToast }) {
                               onClick={e => {
                                 e.preventDefault();
                                 setEditingRow(cat);
-  
                               }}
                               aria-label={`Edit budget for ${cat}`}
                               title="Edit"
@@ -367,12 +363,10 @@ function BudgetPlanner({ transactions = [], showToast }) {
                             onClick={e => {
                               e.preventDefault();
                               setEditingRow(cat);
-
                             }}
                             aria-label={`Edit budget for ${cat}`}
                             disabled={editingRow !== null}
                           >Edit</button>
-                          {/* No budget saved! inline message */}
                         </span>
                       )}
                     </td>

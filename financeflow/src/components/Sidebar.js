@@ -1,11 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import './Sidebar.css';
 import { ThemeContext } from './ThemeProvider';
 
 /**
  * Minimal, modern, and visually consistent SVG icon set for Sidebar navigation.
- * Each icon is outlined, has rounded corners or endpoints, and defaults to "none" fill
- * except where visually intended. The settings (gear) icon is a clean, accessible SVG.
  */
 const icons = {
   dashboard: (
@@ -21,13 +19,6 @@ const icons = {
       <rect x="3" y="5" width="18" height="14" rx="2" />
       <path d="M16 9.5A2.5 2.5 0 1016 14.5" />
       <path d="M3 7l11.5 0" />
-    </svg>
-  ),
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <rect x="3" y="3" width="7" height="9" rx="2" />
-      <rect x="14" y="3" width="7" height="5" rx="2" />
-      <rect x="14" y="10" width="7" height="11" rx="2" />
-      <rect x="3" y="13" width="7" height="8" rx="2" />
     </svg>
   ),
   list: (
@@ -54,7 +45,7 @@ const icons = {
     </svg>
   ),
   settings: (
-    // Visually minimal, modern gear SVG – circular, simple, consistent with sidebar's outline style
+    // Visually minimal, modern gear SVG
     <svg
       viewBox="0 0 24 24"
       width="22"
@@ -99,13 +90,11 @@ function Sidebar({ currentRoute, onNavigate }) {
   // For current nav highlight, accept currentRoute (e.g. "/expenses"), fallback home "/"
   const routeMatch = r => (r === "/" && currentRoute === "/") || (r !== "/" && currentRoute?.startsWith(r));
 
-  // Auto-close/collapse logic removed; sidebar is always open/persistent.
-
   return (
     <aside className="sidebar">
       <div className="sidebar-upper">
         <div className="sidebar-logo-row">
-          {/* Minimal, beautiful SVG logo */}
+          {/* Minimal SVG logo */}
           <span className="sidebar-logo-svg" aria-label="FinanceFlow logo">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{display: 'block'}}>
               <defs>
@@ -120,7 +109,6 @@ function Sidebar({ currentRoute, onNavigate }) {
             </svg>
           </span>
           <span className="sidebar-title">Finance<span className="flow-accent">Flow</span></span>
-          {/* Toggle button removed since sidebar cannot be collapsed */}
         </div>
         <nav className="sidebar-nav">
           {navItems.map(item =>
@@ -150,7 +138,6 @@ function Sidebar({ currentRoute, onNavigate }) {
           onClick={toggleTheme}
           aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
           {theme === 'dark' ? (
-            // Modern outlined sun icon for light mode (heroicons style)
             <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="5" />
               <line x1="12" y1="1" x2="12" y2="3" />
@@ -163,7 +150,6 @@ function Sidebar({ currentRoute, onNavigate }) {
               <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
             </svg>
           ) : (
-            // Modern outlined crescent-moon for dark mode (heroicons style)
             <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z" />
             </svg>

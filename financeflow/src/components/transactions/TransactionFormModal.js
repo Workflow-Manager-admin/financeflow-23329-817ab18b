@@ -11,8 +11,8 @@ const defaultForm = {
 };
 
 /*
- * Categories: Updated to replace 'Salary' (which is not an expense) with 'Rent/House'
- * (Also: 'Investment' is present as category, which may be used, but not touched here per requirements)
+ * Categories: "Salary" removed from expense categories and replaced by "Rent/House".
+ * (Also: 'Investment' is present as category but not touched here per requirements)
  */
 const categories = [
   'Food', 'Transport', 'Shopping', 'Utilities', 'Subscriptions',

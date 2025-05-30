@@ -1,4 +1,9 @@
-// Sample Firebase config for FinanceFlow. Replace with your own Firebase project settings!
+/*
+  Sample Firebase config file for FinanceFlow.
+  DO NOT commit your real credentials here!
+  Copy this file to 'firebase.config.js' and fill in your Firebase project settings.
+  .gitignore firebase.config.js to avoid leaking your keys.
+*/
 export default {
   apiKey: 'YOUR_API_KEY',
   authDomain: 'YOUR_AUTH_DOMAIN',

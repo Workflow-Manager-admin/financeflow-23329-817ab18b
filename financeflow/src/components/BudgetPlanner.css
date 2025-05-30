@@ -1,23 +1,25 @@
+/* Align BudgetPlanner card visually with Dashboard for modern rhythm */
 .budgetplanner-table {
-  background: var(--surface,#fff);
-  border-radius: 13px;
-  box-shadow: 0 2px 16px rgba(60,42,150,0.07);
+  background: none; /* remove redundant bg, outer card already present */
+  border-radius: 12px;
+  box-shadow: 0 1.5px 8px rgba(60,42,150,0.04);
   overflow: hidden;
   border-collapse: collapse;
   width: 100%;
-  margin-bottom: 18px;
+  margin-bottom: 23px;
+  margin-top: 8px;
 }
 
 .budgetplanner-table th,
 .budgetplanner-table td {
-  padding: 12px;
+  padding: 13px 16px;
 }
 
 .budgetplanner-table th {
   background: var(--secondary,#F5F6FA);
   color: var(--primary,#6C2EBE);
   font-weight: 600;
-  font-size: 1.06em;
+  font-size: 1.07em;
 }
 
 .budgetplanner-table tr:nth-child(even) {
@@ -29,7 +31,7 @@
 }
 
 .budgetplanner-input {
-  width: 78px;
+  width: 82px;
   font-size: 1em;
   text-align: right;
   padding: 5px 5px;
@@ -39,9 +41,24 @@
 
 .budgetplanner-edit-span {
   display: inline-block;
-  width: 78px;
+  width: 82px;
   text-align: right;
   cursor: pointer;
   padding: 2px 5px;
   background: none;
+}
+
+/* Modern align Save/Cancel in table cells */
+.budgetplanner-actions-cell {
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+}
+
+/* Make sure heading and container align nicely */
+@media (max-width: 650px) {
+  .budgetplanner-table th,
+  .budgetplanner-table td {
+    padding: 8px 4px;
+  }
 }

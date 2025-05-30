@@ -748,13 +748,11 @@ function SettingsView() {
           padding: "0 0 32px 0"
         }}
       >
-        {/* Heading above preferences card, slight right shift */}
+        {/* ORIGINAL Settings heading, flush/left, classic spacing */}
         <h1
-          className="view-heading-shift"
           style={{
             marginTop: 20,
-            marginBottom: 13,
-            marginLeft: 17,
+            marginBottom: 20,
             fontSize: "2rem",
             color: "var(--primary,#6C2EBE)",
             fontWeight: 700,
@@ -765,7 +763,7 @@ function SettingsView() {
         >
           Settings
         </h1>
-        <div style={{ padding: "0 17px" }}>
+        <div>
           {/* Form with currency selector at top, then toggles */}
           <form onSubmit={handleSave} aria-label="Preferences">
             <div style={{ marginBottom: 20 }}>

@@ -15,7 +15,7 @@ const STORAGE_TRANSACTIONS_KEY = 'fflow-transactions-v1';
  * BudgetPlanner displays and edits monthly budgets per expense category (excl. investments).
  * Shows: Category, Budget (editable), Actual (current month), Variance (color-coded).
  * Persists budgets in localStorage; reads currency symbol from preferences.
- * Now supports per-row editing: only one row can be edited at a time.
+ * Reverted: Category heading restored to classic, no margin shift/grouping with content.
  */
 function BudgetPlanner() {
   const { currencySymbol } = usePreferences() || { currencySymbol: '$' };
@@ -82,12 +82,11 @@ function BudgetPlanner() {
           padding: "0 0 32px 0"
         }}
       >
-        {/* Heading above content, shifted right */}
+        {/* ORIGINAL Budget heading, no margin/shift */}
         <h1
-          className="view-heading-shift"
           style={{
-            marginTop: 23,
-            marginBottom: 12,
+            marginTop: 20,
+            marginBottom: 20,
             fontSize: "2rem",
             color: "var(--primary,#6C2EBE)",
             fontWeight: 700,
@@ -98,7 +97,7 @@ function BudgetPlanner() {
         >
           Budget Planner
         </h1>
-        <div style={{ padding: "0 17px" }}>
+        <div>
           <table style={{ width: '100%', background: 'var(--surface,#fff)', borderRadius: 13, boxShadow: '0 2px 16px rgba(60,42,150,0.07)', overflow: 'hidden', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: 'var(--secondary,#F5F6FA)', color: 'var(--primary,#6C2EBE)' }}>

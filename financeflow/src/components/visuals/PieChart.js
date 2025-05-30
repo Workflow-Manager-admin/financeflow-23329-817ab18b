@@ -30,7 +30,7 @@ function getPieData(transactions) {
  * PUBLIC_INTERFACE
  * PieChart displays a pie of expenses by category, with total expense value shown next to chart.
  */
-function PieChart({ transactions }) {
+function PieChart({ transactions, currencySymbol = '$' }) {
   const pie = getPieData(transactions);
   const pieData = pie.slices || [];
   const total = pie.total !== undefined ? pie.total : 0;
@@ -94,7 +94,7 @@ function PieChart({ transactions }) {
             Total Expense
           </span>
           <span data-testid="expense-total" style={{fontSize:"1.21rem"}}>
-            ${total.toFixed(2)}
+            {currencySymbol}{total.toFixed(2)}
           </span>
         </div>
       </div>

@@ -1,8 +1,11 @@
 import React from 'react';
 import './TransactionList.css';
 
-// PUBLIC_INTERFACE
-function TransactionList({ transactions, onEdit, onDelete, emptyMsg }) {
+/**
+ * PUBLIC_INTERFACE
+ * TransactionList: Displays a list of transactions. Amounts use currencySymbol prop.
+ */
+function TransactionList({ transactions, onEdit, onDelete, emptyMsg, currencySymbol = '$' }) {
   if (!transactions.length) {
     return <div className="txlist-empty">{emptyMsg}</div>;
   }
@@ -19,7 +22,11 @@ function TransactionList({ transactions, onEdit, onDelete, emptyMsg }) {
             <span className="tx-desc">{tx.description}</span>
           </div>
           <div className="tx-amtpart">
-            <span className={`tx-amt ${tx.type}`}>{tx.type === 'income' ? '+' : '-'}${Number(tx.amount).toFixed(2)}</span>
+            <span className={`tx-amt ${tx.type}`}>
+              {tx.type === 'income' ? '+' : '-'}
+              {currencySymbol}
+              {Number(tx.amount).toFixed(2)}
+            </span>
             <button onClick={() => onEdit(tx)} className="tx-edit-btn" aria-label="Edit">
               {/* Simple pencil/edit SVG */}
               <svg width="18" height="18" viewBox="0 0 20 20" fill="none">

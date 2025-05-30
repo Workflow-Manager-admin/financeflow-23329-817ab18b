@@ -53,8 +53,15 @@ function ExpensesView() {
 
   return (
     <section className="placeholder-view">
-      <h1>Expenses</h1>
-      <div className="container">
+      <div className="container" style={{maxWidth: 650}}>
+        <h1 style={{
+          margin: "0 0 18px 0",
+          fontSize: "2rem",
+          color: "var(--primary,#6C2EBE)",
+          fontWeight: 700,
+          letterSpacing: "0.01em",
+          textAlign: "left"
+        }}>Expenses</h1>
         <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
         <TransactionList
           transactions={filtered}
@@ -145,8 +152,15 @@ function CalendarView() {
 
   return (
     <section className="placeholder-view calendar-view">
-      <h1>Transaction Calendar</h1>
-      <div className="container">
+      <div className="container" style={{maxWidth: 480}}>
+        <h1 style={{
+          margin: "0 0 18px 0",
+          fontSize: "2rem",
+          color: "var(--primary,#6C2EBE)",
+          fontWeight: 700,
+          letterSpacing: "0.01em",
+          textAlign: "left"
+        }}>Transaction Calendar</h1>
         <div style={{ maxWidth: 430, margin: "0 auto", background: "var(--surface,#fff)", borderRadius: 13, boxShadow: "0 2px 16px rgba(60,42,150,0.07)", padding: 23 }}>
           <div style={{ display: "flex", justifyContent: "center", fontWeight: 600, fontSize: "1.10rem", color: "var(--primary,#6C2EBE)", marginBottom: 3 }}>
             {today.toLocaleString(undefined, { month: "long", year: "numeric" })}
@@ -659,8 +673,17 @@ function ProfileView() {
 
   return (
     <section className="placeholder-view">
-      <h1>Profile</h1>
-      {editMode ? renderProfileEditForm() : renderProfileCard()}
+      <div className="container" style={{ maxWidth: 420 }}>
+        <h1 style={{
+          margin: "0 0 16px 0",
+          fontSize: "2rem",
+          color: "var(--primary,#6C2EBE)",
+          fontWeight: 700,
+          letterSpacing: "0.01em",
+          textAlign: "left"
+        }}>Profile</h1>
+        {editMode ? renderProfileEditForm() : renderProfileCard()}
+      </div>
     </section>
   );
 }

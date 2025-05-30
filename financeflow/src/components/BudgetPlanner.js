@@ -1,5 +1,8 @@
+// Robustly syncs budgets to localStorage and reloads them on mount and navigation
 import React, { useState, useEffect, useRef } from 'react';
 import { usePreferences } from './PreferencesProvider';
+// New import for detecting navigation (location changes)
+import { useLocation } from 'react-router-dom'; // See note below
 
 // Expense categories (matching TransactionFormModal minus 'Investment' & 'Salary')
 const EXPENSE_CATEGORIES = [

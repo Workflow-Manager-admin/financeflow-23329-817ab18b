@@ -62,7 +62,10 @@ function Dashboard({ showToast }) {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_TRANSACTIONS, JSON.stringify(transactions));
+    // Only persist legitimate transaction arrays; never overwrite with null/undefined.
+    if (Array.isArray(transactions)) {
+      localStorage.setItem(STORAGE_TRANSACTIONS, JSON.stringify(transactions));
+    }
     setFiltered(applyFilters(transactions, filters));
     // eslint-disable-next-line
   }, [transactions]);

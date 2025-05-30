@@ -709,6 +709,7 @@ function SettingsView() {
   const [resetDone, setResetDone] = React.useState(false);
 
   React.useEffect(() => {
+    // Never destructively overwrite settings; always merge with previous if found.
     const prev = (() => { try { return JSON.parse(localStorage.getItem(STORAGE_SETTINGS)) || {}; } catch { return {}; } })();
     localStorage.setItem(STORAGE_SETTINGS, JSON.stringify({
       ...prev,
@@ -724,6 +725,8 @@ function SettingsView() {
   }
 
   function handleDataReset() {
+    // WARNING: This is the ONLY place all persistent localStorage keys are destructively deleted.
+    // Data is cleared ONLY on explicit user action. Never clear data on navigation or routine component unmount.
     localStorage.removeItem('fflow-profile-v1');
     localStorage.removeItem('fflow-transactions-v1');
     localStorage.removeItem('fflow-savings-goal-v1');

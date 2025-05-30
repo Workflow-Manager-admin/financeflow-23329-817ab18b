@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './TransactionFormModal.css';
+import { usePreferences } from '../PreferencesProvider';
 
 const defaultForm = {
   type: 'expense',
@@ -15,18 +16,20 @@ const categories = [
   'Salary', 'Investment', 'Gift', 'Healthcare', 'Other'
 ];
 
-import { usePreferences } from '../PreferencesProvider';
-
 // PUBLIC_INTERFACE
+/**
+ * TransactionFormModal: Modal dialog to add/edit a transaction,
+ * taking currencySymbol from props or preferences context for live updates.
+ */
 function TransactionFormModal({ onSave, onClose, initial, currencySymbol }) {
   const [form, setForm] = useState(initial || defaultForm);
   const [error, setError] = useState('');
   const ref = useRef();
   useEffect(() => { if (ref.current) ref.current.focus(); }, []);
 
-  // For fallback if not passed as prop
-  const preferences = usePreferences ? usePreferences() : {};
-  const liveCurrencySymbol = currencySymbol || preferences.currencySymbol || '$';
+  // Always call at top-level
+  const preferences = usePreferences();
+  const liveCurrencySymbol = currencySymbol || (preferences && preferences.currencySymbol) || '$';
 
   function validate() {
     if (form.type === 'expense' && !form.category) return 'Category required.';
@@ -77,10 +80,10 @@ function TransactionFormModal({ onSave, onClose, initial, currencySymbol }) {
         )}
         <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
           <span style={{
-              color: "var(--primary,#6C2EBE)",
-              fontWeight: 600,
-              fontSize: "1.10em"
-            }}>
+            color: "var(--primary,#6C2EBE)",
+            fontWeight: 600,
+            fontSize: "1.10em"
+          }}>
             {liveCurrencySymbol}
           </span>
           <input

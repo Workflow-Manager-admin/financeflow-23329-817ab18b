@@ -8,14 +8,12 @@ const EXPENSE_CATEGORIES = [
 ];
 
 const STORAGE_BUDGETS_KEY = 'fflow-budgets-v1';
-const STORAGE_TRANSACTIONS_KEY = 'fflow-transactions-v1';
 
 // PUBLIC_INTERFACE
 /**
  * BudgetPlanner displays and edits monthly budgets per expense category (excl. investments).
  * Shows: Category, Budget (editable), Actual (current month), Variance (color-coded).
  * Persists budgets in localStorage; reads currency symbol from preferences.
- * Reverted: Category heading restored to classic, no margin shift/grouping with content.
  * Now triggers a "budget saved!" notification on save and persists entered budgets between tab switches using localStorage.
  */
 function BudgetPlanner({ transactions = [], showToast }) {
@@ -25,7 +23,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
   const [rowDraft, setRowDraft] = useState({});
   const [justSavedCat, setJustSavedCat] = useState(null);
 
-  // Only load budgets from localStorage (transactions now come from props/cloud/local sync)
+  // Load budgets from localStorage on mount
   useEffect(() => {
     try {
       setBudgets(JSON.parse(localStorage.getItem(STORAGE_BUDGETS_KEY)) || {});
@@ -34,7 +32,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
     }
   }, []);
 
-  // When this component remounts due to navigation, rehydrate state from localStorage
+  // When component remounts due to navigation, rehydrate state from localStorage
   useEffect(() => {
     const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
     if (lsBudgets) {
@@ -57,7 +55,6 @@ function BudgetPlanner({ transactions = [], showToast }) {
 
   // Save budgets to localStorage on change
   useEffect(() => {
-    // Never overwrite budgets key with null or undefined or a non-object.
     if (
       budgets &&
       typeof budgets === 'object' &&
@@ -86,11 +83,10 @@ function BudgetPlanner({ transactions = [], showToast }) {
     return out;
   }, [transactions, monthStr]);
 
-  // Notify 'budget saved!' if a budget was just saved (used for inline feedback if showToast not provided)
+  // Show toast notification on save if available
   useEffect(() => {
     if (justSavedCat) {
       if (typeof showToast === 'function') {
-        // Always show the toast notification on budget save
         showToast('budget saved!', 'success');
       }
       // Reset after showing
@@ -198,16 +194,23 @@ function BudgetPlanner({ transactions = [], showToast }) {
                             style={{ minWidth: 34, padding: "4px 11px", fontSize: "0.99em" }}
                             onClick={e => {
                               e.preventDefault();
+                              // Parse and sanitize value
                               let val = parseFloat(String(rowDraft.value).replace(/[^0-9.]/g, ''));
-                              if (isNaN(val) || val < 0) val = 0;
-                              setBudgets(prev => ({ ...prev, [cat]: val }));
+                              if (!Number.isFinite(val) || val < 0) val = 0;
+                              // Save instantly for robustness
+                              setBudgets(prev => {
+                                const updated = { ...prev, [cat]: val };
+                                try {
+                                  localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(updated));
+                                } catch {}
+                                return updated;
+                              });
                               setEditingRow(null);
                               setRowDraft({});
                               setJustSavedCat(cat);
-                              // Prefer notification via showToast prop if available
-                              if (!showToast) {
-                                // Fallback: Show inline notification if no showToast passed in parent
-                                // Will be rendered in the row
+                              // Always show notification using showToast if provided
+                              if (typeof showToast === 'function') {
+                                showToast('budget saved!', 'success');
                               }
                             }}
                             aria-label={`Save budget for ${cat}`}

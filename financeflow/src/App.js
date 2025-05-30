@@ -554,14 +554,32 @@ function ProfileView() {
               />
             </label>
           </div>
+
           <div style={{ marginBottom: 17 }}>
             <label style={{ fontWeight: 500, display: "block", marginBottom: 7 }}>
               Mobile (optional)
               <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 5 }}>
-                <CountryCodeDropdown
-                  countryCode={profile.countryCode || "+1"}
-                  onChange={handleCountryCodeChange}
-                />
+                <select
+                  value={profile.countryCode || "+1"}
+                  onChange={e => handleCountryCodeChange(e.target.value)}
+                  aria-label="Country code"
+                  style={{
+                    fontWeight: 500,
+                    padding: "7px 8px",
+                    borderRadius: 6,
+                    border: "1px solid var(--secondary, #ececec)",
+                    fontSize: "1em",
+                    background: "var(--secondary, #F5F6FA)",
+                    minWidth: 70,
+                  }}
+                  required={!!profile.mobile}
+                >
+                  {COUNTRY_OPTIONS.map(opt => (
+                    <option key={opt.code} value={opt.code}>
+                      {opt.flag} {opt.code}
+                    </option>
+                  ))}
+                </select>
                 <input
                   type="tel"
                   name="mobile"
@@ -573,16 +591,17 @@ function ProfileView() {
                   maxLength={10}
                   pattern="[0-9]{10}"
                   inputMode="numeric"
-                  // not required, optional field
+                  autoComplete="tel"
                 />
               </div>
               <div style={{ fontSize: "0.9em", color: "var(--text-secondary)", marginTop: 2 }}>
                 <span>
-                  Enter 10 digits (numbers only). Select your country code from the dropdown. Mobile is optional, but if set, it must be valid.
+                  Must be 10 digits (numbers only). Choose your country code. Mobile number is optional, but if entered, both fields are required and validated.
                 </span>
               </div>
             </label>
           </div>
+
           <div style={{ marginBottom: 19 }}>
             <label style={{ fontWeight: 500, display: "block", marginBottom: 7 }}>
               Preferred Currency (optional)
@@ -619,7 +638,7 @@ function ProfileView() {
           <div style={{marginTop: 17, color:'var(--text-secondary)', fontSize: "0.99em"}}>
             {profile.name
               ? "Update your profile information anytime. Your profile is stored securely in your browser only."
-              : "Enter your name to complete setup. Add email, mobile, or currency for personalization. Mobile is optional, but if provided, must be a valid 10-digit number."}
+              : "Enter your name to complete setup. Email, mobile, and preferred currency are optional. If you add a mobile, you must enter a valid country code and a 10-digit number."}
           </div>
         </form>
       </div>

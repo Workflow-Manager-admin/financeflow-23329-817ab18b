@@ -116,14 +116,10 @@ function BudgetPlanner() {
           <tbody>
             {EXPENSE_CATEGORIES.map((cat) => {
               const budgetPrev = Number(budgets[cat] || 0);
-              const [rowDraft, setRowDraft] = React.useState(budgetPrev);
+              const rowDraft = rowDrafts[cat] ?? budgetPrev;
               const actual = Number(actuals[cat] || 0);
               const variance = budgetPrev - actual;
               const varColor = variance >= 0 ? 'var(--income,#22C55E)' : 'var(--expense,#E74C3C)';
-              // Store draft value while editing
-              React.useEffect(() => {
-                if (!editing[cat]) setRowDraft(budgetPrev);
-              }, [editing[cat], budgetPrev]);
               return (
                 <tr key={cat} style={{borderBottom: '1px solid var(--secondary,#eee)'}}>
                   <td style={{padding: '11px 12px', fontWeight: 500}}>{cat}</td>
@@ -136,7 +132,7 @@ function BudgetPlanner() {
                           step="0.01"
                           autoFocus
                           value={rowDraft === 0 ? '' : rowDraft}
-                          onChange={e => setRowDraft(e.target.value)}
+                          onChange={e => setRowDrafts(prev => ({ ...prev, [cat]: e.target.value }))}
                           style={{
                             width: 82, fontSize: '1em', textAlign: 'right',
                             padding: '5px 5px', borderRadius: 5,
@@ -188,6 +184,7 @@ function BudgetPlanner() {
                           onClick={e => {
                             e.preventDefault();
                             setEditing(prev => ({ ...prev, [cat]: false }));
+                            setRowDrafts(prev => ({ ...prev, [cat]: Number(budgets[cat] || 0) }));
                           }}
                           aria-label={`Cancel editing budget for ${cat}`}
                         >Cancel</button>
@@ -199,6 +196,7 @@ function BudgetPlanner() {
                         onClick={e => {
                           e.preventDefault();
                           setEditing(prev => ({ ...prev, [cat]: true }));
+                          setRowDrafts(prev => ({ ...prev, [cat]: Number(budgets[cat] || 0) }));
                         }}
                         aria-label={`Edit budget for ${cat}`}
                       >Edit</button>

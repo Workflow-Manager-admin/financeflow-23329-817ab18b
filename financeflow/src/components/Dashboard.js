@@ -228,7 +228,7 @@ function Dashboard({ showToast }) {
             gap: 0
           }}
         >
-          <h1
+          {/* <h1
             style={{
               margin: 0,
               fontSize: "2.15rem",
@@ -241,7 +241,7 @@ function Dashboard({ showToast }) {
             }}
           >
             Dashboard
-          </h1>
+          </h1> */}
         </div>
         <div className="dashboard-layout" style={{ paddingTop: 4 }}>
           {/* Visualizations */}

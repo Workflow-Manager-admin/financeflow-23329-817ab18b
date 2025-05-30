@@ -45,11 +45,12 @@
 }
 
 .budgetplanner-category-cell {
-  font-weight: 600;
-  color: var(--text-color, #505070);
+  font-weight: 700;
+  color: var(--text-color, #402060);
   letter-spacing: 0.01em;
-  font-size: 1.13em;
-  padding-left: 16px;
+  font-size: 1.27em;
+  padding-left: 26px;
+  text-align: left;
 }
 
 .budgetplanner-budget-cell,

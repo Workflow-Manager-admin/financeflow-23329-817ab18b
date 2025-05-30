@@ -294,7 +294,7 @@ const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 */
 function ProfileView() {
   // State for profile fields and edit mode
-  const [profile, setProfile] = React.useState({ name: '', email: '', currency: '', language: '' });
+  const [profile, setProfile] = React.useState({ name: '', email: '', mobile: '', currency: '' });
   // By default, show non-edit (display) mode after mount or after a Save,
   // except for first-time setup (no name), in which case force edit.
   const [editMode, setEditMode] = React.useState(false);
@@ -302,10 +302,9 @@ function ProfileView() {
   const [saved, setSaved] = React.useState(false);
 
   // Options for data entry (should match what's in Settings for consistency)
-  const languageOptions = ['English', 'Spanish', 'French', 'German', 'Chinese'];
   const currencyOptions = ['USD', 'EUR', 'GBP', 'INR', 'CNY'];
 
-  // Load profile from localStorage on mount
+  // Load profile from localStorage on mount AND return to non-edit display if profile exists (and after save, after nav/refresh)
   React.useEffect(() => {
     const savedProfile = localStorage.getItem(PROFILE_STORAGE_KEY);
     if (savedProfile) {
@@ -314,12 +313,12 @@ function ProfileView() {
         setProfile({
           name: obj.name || "",
           email: obj.email || "",
-          currency: obj.currency || "",
-          language: obj.language || ""
+          mobile: obj.mobile || "",
+          currency: obj.currency || ""
         });
       } catch {
         // On error, fallback to blank
-        setProfile({ name: '', email: '', currency: '', language: '' });
+        setProfile({ name: '', email: '', mobile: '', currency: '' });
       }
     }
   }, []);

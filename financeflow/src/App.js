@@ -753,27 +753,23 @@ function SettingsView() {
           padding: "0 0 32px 0"
         }}
       >
-        <div
+        {/* Heading above preferences card, slight right shift */}
+        <h1
+          className="view-heading-shift"
           style={{
-            padding: "25px 17px 0 17px",
-            minHeight: 0,
-            marginBottom: "-3px"
+            marginTop: 20,
+            marginBottom: 13,
+            marginLeft: 17,
+            fontSize: "2rem",
+            color: "var(--primary,#6C2EBE)",
+            fontWeight: 700,
+            letterSpacing: "0.01em",
+            textAlign: "left",
+            lineHeight: 1.13
           }}
         >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: "2rem",
-              color: "var(--primary,#6C2EBE)",
-              fontWeight: 700,
-              letterSpacing: "0.01em",
-              textAlign: "left",
-              lineHeight: 1.13
-            }}
-          >
-            Settings
-          </h1>
-        </div>
+          Settings
+        </h1>
         <div style={{ padding: "0 17px" }}>
           {/* Form with currency selector at top, then toggles */}
           <form onSubmit={handleSave} aria-label="Preferences">

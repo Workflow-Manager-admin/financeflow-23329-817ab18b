@@ -82,6 +82,12 @@ body {
   margin: 33px auto 0;
 }
 
+/* Headings in main views are shifted slightly right for visual clarity */
+.view-heading-shift {
+  margin-left: 18px !important;
+}
+
+/* ...existing styles... */
 
 .container {
   max-width: 930px;

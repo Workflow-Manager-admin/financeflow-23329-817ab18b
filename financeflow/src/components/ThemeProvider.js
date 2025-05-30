@@ -45,8 +45,10 @@ const ThemeProvider = ({ children }) => {
   // Sync CSS vars and localStorage
   useEffect(() => {
     setThemeVars(theme === 'dark' ? DARK_THEME : LIGHT_THEME);
-    localStorage.setItem('fflow-theme', theme);
-    document.body.setAttribute('data-theme', theme);
+    if (typeof theme === 'string' && theme) {
+      localStorage.setItem('fflow-theme', theme);
+      document.body.setAttribute('data-theme', theme);
+    }
   }, [theme]);
 
   const value = useMemo(

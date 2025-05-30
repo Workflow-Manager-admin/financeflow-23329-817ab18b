@@ -17,7 +17,6 @@ const icons = {
     </svg>
   ),
   budget: (
-    // Modern wallet/money SVG
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <rect x="3" y="5" width="18" height="14" rx="2" />
       <path d="M16 9.5A2.5 2.5 0 1016 14.5" />

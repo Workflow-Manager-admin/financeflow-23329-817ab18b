@@ -23,8 +23,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
   const [editingRow, setEditingRow] = useState(null); // Category string or null
   const [rowDraft, setRowDraft] = useState({});
   const [justSavedCat, setJustSavedCat] = useState(null);
-  // For error feedback, but only for negative/invalid input
-  const [editError, setEditError] = useState('');
+  // Remove error feedback: validation is gone
   const mountedRef = useRef(false);
 
   // Robust: Load budgets from localStorage on component mount & tab switch/view
@@ -108,50 +107,16 @@ function BudgetPlanner({ transactions = [], showToast }) {
     return out;
   }, [transactions, monthStr]);
 
-  // Save logic: only checks for negative/NaN, always allow changing numbers
+  // Save logic: Always persist any value unconditionally and silent
   const handleSaveBudget = (cat, rawValue) => {
     let val = parseFloat(String(rawValue).replace(/[^0-9.]/g, ''));
     if (!Number.isFinite(val) || val < 0) val = 0;
-
-    // Compute the new total - handle prevent over-budget ONLY if raising value,
-    // but always allow lowering even if already over (see test requirement).
     const currentBudgets = { ...budgets };
-    const prevVal = Number(currentBudgets[cat] || 0);
     const newBudgets = { ...currentBudgets, [cat]: val };
-
-    // Compute total budget for all categories
-    const budgetedTotal =
-      Object.keys(newBudgets)
-        .reduce((sum, c) => sum + Number(newBudgets[c] || 0), 0);
-
-    // Compute total income for current month
-    const monthStr = new Date().toISOString().slice(0, 7);
-    const totalIncome = (transactions || []).reduce(
-      (sum, t) =>
-        t.type === 'income' && t.date && t.date.startsWith(monthStr)
-          ? sum + Number(t.amount)
-          : sum,
-      0
-    );
-
-    // If trying to increase a category budget such that total budgets would now go above income for the month, block and show error
-    if (
-      val > prevVal &&
-      totalIncome > 0 &&
-      budgetedTotal > totalIncome
-    ) {
-      setEditError(
-        'Cannot set this budget: total of all budgets would exceed your income for the month.'
-      );
-      return false;
-    }
-
-    setBudgets(newBudgets); // This triggers useEffect to persist to localStorage and re-render
-
+    setBudgets(newBudgets);
     setEditingRow(null);
     setRowDraft({});
     setJustSavedCat(cat);
-    setEditError('');
     if (typeof showToast === 'function') {
       showToast('budget saved!', 'success');
     }

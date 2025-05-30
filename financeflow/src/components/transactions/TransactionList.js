@@ -11,7 +11,7 @@ function TransactionList({ transactions, onEdit, onDelete, emptyMsg, currencySym
   }
 
   return (
-    <div className="transaction-list">
+    <div className="transaction-list" tabIndex={0} aria-label="List of transactions">
       {transactions.map((tx) => (
         <div className={`tx-row tx-${tx.type}`} key={tx.id}>
           <div className="tx-main">

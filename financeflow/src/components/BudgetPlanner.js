@@ -85,6 +85,17 @@ function BudgetPlanner({ transactions = [], showToast }) {
     return out;
   }, [transactions, monthStr]);
 
+  // Calculate total income for the current month
+  const monthIncome = React.useMemo(() => {
+    let income = 0;
+    transactions.forEach(tx => {
+      if (tx.type === 'income' && tx.date && tx.date.startsWith(monthStr)) {
+        income += Number(tx.amount);
+      }
+    });
+    return income;
+  }, [transactions, monthStr]);
+
   // Show toast notification on save if available
   useEffect(() => {
     if (justSavedCat) {
@@ -96,59 +107,83 @@ function BudgetPlanner({ transactions = [], showToast }) {
     }
   }, [justSavedCat, showToast]);
 
+  // Compute the total budgeted (sum of all categories)
+  const budgetedTotal = EXPENSE_CATEGORIES.reduce((sum, cat) => sum + Number(budgets[cat] || 0), 0);
+
+  // Determine if there's an income warning
+  const overBudget = budgetedTotal > monthIncome && monthIncome !== 0;
+
   return (
     <section className="placeholder-view">
       <div
         className="container"
         style={{
-          maxWidth: 500,
+          maxWidth: 980,
+          minWidth: 310,
           background: "var(--surface,#fff)",
-          borderRadius: 13,
-          boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
-          marginTop: 24,
+          borderRadius: 17,
+          boxShadow: "0 3px 28px rgba(60,42,150,0.08)",
+          marginTop: 36,
           marginBottom: 0,
-          padding: "0 0 32px 0"
+          padding: "0 0 44px 0",
+          border: "1px solid var(--secondary, #ececec)"
         }}
       >
-        {/* ORIGINAL Budget heading, no margin/shift */}
         <h1
           style={{
-            marginTop: 20,
-            marginBottom: 20,
-            fontSize: "2rem",
+            marginTop: 27,
+            marginBottom: 26,
+            fontSize: "2.3rem",
             color: "var(--primary,#6C2EBE)",
-            fontWeight: 700,
-            letterSpacing: "0.01em",
+            fontWeight: 800,
+            letterSpacing: "0.011em",
             textAlign: "left",
             lineHeight: 1.13
           }}
         >
           Budget Planner
         </h1>
-        <div>
-          <table style={{ width: '100%', background: 'var(--surface,#fff)', borderRadius: 13, boxShadow: '0 2px 16px rgba(60,42,150,0.07)', overflow: 'hidden', borderCollapse: 'collapse' }}>
+        <div style={{ overflowX: "auto", width: "100%", marginBottom: 8 }}>
+          <table className="budgetplanner-table" style={{ minWidth: 700, width: "98%", tableLayout: "fixed" }}>
+            <colgroup>
+              <col style={{ width: "26%" }} />
+              <col style={{ width: "19%" }} />
+              <col style={{ width: "18%" }} />
+              <col style={{ width: "18%" }} />
+              <col style={{ width: "19%" }} />
+            </colgroup>
             <thead>
-              <tr style={{ background: 'var(--secondary,#F5F6FA)', color: 'var(--primary,#6C2EBE)' }}>
-                <th style={{ textAlign: 'left', padding: '12px', fontWeight: 600, fontSize: '1.05em' }}>Category</th>
-                <th style={{ textAlign: 'right', padding: '12px' }}>Budget</th>
-                <th style={{ textAlign: 'right', padding: '12px' }}>Actual</th>
-                <th style={{ textAlign: 'right', padding: '12px' }}>Variance</th>
-                <th style={{ textAlign: 'center', padding: '12px' }}></th>
+              <tr>
+                <th style={{ textAlign: 'left' }}>Category</th>
+                <th style={{ textAlign: 'right' }}>Budget</th>
+                <th style={{ textAlign: 'right' }}>Actual</th>
+                <th style={{ textAlign: 'right' }}>Variance</th>
+                <th style={{ textAlign: 'center' }}></th>
               </tr>
             </thead>
             <tbody>
               {EXPENSE_CATEGORIES.map((cat) => {
                 const budgetPrev = Number(budgets[cat] || 0);
                 const actual = Number(actuals[cat] || 0);
-                const variance = budgetPrev - actual;
-                const varColor = variance >= 0 ? 'var(--income,#22C55E)' : 'var(--expense,#E74C3C)';
                 const isEditing = editingRow === cat;
+
+                // Variance column: Clamp each category's "remaining" based on user's income for the month
+                // Compute share of income allocated to this category, only if budgetedTotal > 0 and monthIncome > 0
+                let incomeAwareVariance = budgetPrev - actual;
+                if (monthIncome > 0 && budgetedTotal > monthIncome) {
+                  // Adjusted proportional max for this category: (budgetPrev / budgetedTotal) * monthIncome
+                  const allowable = (budgetPrev / budgetedTotal) * monthIncome;
+                  incomeAwareVariance = allowable - actual;
+                }
+                const varColor = incomeAwareVariance >= 0 ? 'var(--income,#22C55E)' : 'var(--expense,#E74C3C)';
+
                 return (
-                  <tr key={cat} style={{ borderBottom: '1px solid var(--secondary,#eee)' }}>
-                    <td style={{ padding: '11px 12px', fontWeight: 500 }}>{cat}</td>
-                    <td style={{ padding: '11px 12px', textAlign: 'right' }}>
+                  <tr key={cat} style={{}}>
+                    <td className="budgetplanner-category-cell">{cat}</td>
+                    <td className="budgetplanner-budget-cell" style={{ textAlign: 'right' }}>
                       {isEditing ? (
                         <input
+                          className="budgetplanner-input"
                           type="number"
                           min={0}
                           step="0.01"
@@ -162,44 +197,34 @@ function BudgetPlanner({ transactions = [], showToast }) {
                                 : rowDraft.value || ''
                           }
                           onChange={e => setRowDraft({ value: e.target.value })}
-                          style={{
-                            width: 82, fontSize: '1em', textAlign: 'right',
-                            padding: '5px 5px', borderRadius: 5,
-                            border: '1px solid var(--secondary,#bbbbbf)'
-                          }}
                           aria-label={`Budget for ${cat}`}
                         />
                       ) : (
                         <span
                           tabIndex={0}
-                          style={{
-                            display: 'inline-block',
-                            width: 82, textAlign: 'right', padding: '2px 5px', background: 'none'
-                          }}
+                          className="budgetplanner-edit-span"
                         >
                           {currencySymbol}{Number(budgetPrev || 0).toFixed(2)}
                         </span>
                       )}
                     </td>
-                    <td style={{ padding: '11px 12px', textAlign: 'right' }}>
+                    <td className="budgetplanner-actual-cell" style={{ textAlign: 'right' }}>
                       {currencySymbol}{actual.toFixed(2)}
                     </td>
-                    <td style={{ padding: '11px 12px', textAlign: 'right', fontWeight: 600, color: varColor }}>
-                      {variance >= 0 ? '+' : ''}
-                      {currencySymbol}{variance.toFixed(2)}
+                    <td className="budgetplanner-variance-cell" style={{ textAlign: 'right', fontWeight: 700, color: varColor }}>
+                      {incomeAwareVariance >= 0 ? '+' : ''}
+                      {currencySymbol}{incomeAwareVariance.toFixed(2)}
                     </td>
-                    <td style={{ padding: '7px 8px', textAlign: 'center', width: 88 }}>
+                    <td className="budgetplanner-actions-cell">
                       {isEditing ? (
-                        <div style={{ display: "flex", gap: 7, justifyContent: "center" }}>
+                        <div>
                           <button
                             className="btn btn-large"
                             style={{ minWidth: 34, padding: "4px 11px", fontSize: "0.99em" }}
                             onClick={e => {
                               e.preventDefault();
-                              // Parse and sanitize value
                               let val = parseFloat(String(rowDraft.value).replace(/[^0-9.]/g, ''));
                               if (!Number.isFinite(val) || val < 0) val = 0;
-                              // Save instantly for robustness
                               setBudgets(prev => {
                                 const updated = { ...prev, [cat]: val };
                                 try {
@@ -210,7 +235,6 @@ function BudgetPlanner({ transactions = [], showToast }) {
                               setEditingRow(null);
                               setRowDraft({});
                               setJustSavedCat(cat);
-                              // Always show notification using showToast if provided
                               if (typeof showToast === 'function') {
                                 showToast('budget saved!', 'success');
                               }
@@ -240,7 +264,6 @@ function BudgetPlanner({ transactions = [], showToast }) {
                             aria-label={`Edit budget for ${cat}`}
                             disabled={editingRow !== null}
                           >Edit</button>
-                          {/* Inline feedback if no showToast (very rare path) */}
                           {justSavedCat === cat && !showToast && (
                             <span style={{ color: 'var(--income,#22C55E)', marginLeft: 6, fontWeight: 500, transition: 'opacity 0.18s', opacity: 0.90 }}>
                               budget saved!
@@ -254,15 +277,31 @@ function BudgetPlanner({ transactions = [], showToast }) {
               })}
             </tbody>
           </table>
-          <div style={{ color: 'var(--text-secondary)', fontSize: '1.035em', marginTop: 19 }}>
-            <ul style={{ marginLeft: 19, paddingLeft: 0, listStyle: 'circle', color: 'var(--primary)', fontSize: '0.99em' }}>
-              <li>Edit the budget for each category by clicking Edit. Only one row can be in edit mode at a time.</li>
-              <li>Save or Cancel your changes for each row as needed. Changes are persisted per-category.</li>
-              <li>Variance is green if under budget, red if over.</li>
-              <li>Month: {monthStr}</li>
-              <li>Currencies are shown in your preferred symbol from Preferences.</li>
-            </ul>
+        </div>
+        <div className="budgetplanner-summary-row" style={{ display: 'flex', flexWrap: 'wrap', marginTop: 10, gap: '44px 24px', alignItems: 'center', justifyContent: 'flex-start', fontSize: '1.08em', color: 'var(--primary)' }}>
+          <div>
+            <span style={{ fontWeight: 500 }}>Total Budgeted:</span> {currencySymbol}{budgetedTotal.toFixed(2)}
           </div>
+          <div>
+            <span style={{ fontWeight: 500 }}>Income this Month:</span> {currencySymbol}{monthIncome.toFixed(2)}
+          </div>
+          {monthIncome > 0 && (
+            <div style={{ fontWeight: 500, color: overBudget ? 'var(--expense,#E74C3C)' : 'var(--income,#22C55E)' }}>
+              {overBudget
+                ? '⚠️ Over Budget! Your expense budgets exceed your income. Variance recalculated accordingly.'
+                : '✓ Budgets are within your income.'}
+            </div>
+          )}
+        </div>
+        <div style={{ color: 'var(--text-secondary)', fontSize: '1.08em', marginTop: 23 }}>
+          <ul style={{ marginLeft: 28, paddingLeft: 0, listStyle: 'circle', color: 'var(--primary)', fontSize: '1em' }}>
+            <li>Visually expanded table for clear, non-scrunched overview and easier editing.</li>
+            <li>Edit the budget for each category by clicking Edit. Only one row can be in edit mode at a time.</li>
+            <li>Variance is <span style={{ color: 'var(--income,#22C55E)' }}>green</span> if under budget (with income-awareness), <span style={{ color: 'var(--expense,#E74C3C)' }}>red</span> if over.</li>
+            <li>Variance now factors in your monthly income: you cannot allocate >100% of your income to expenses.</li>
+            <li>Month: {monthStr}</li>
+            <li>Currencies are shown in your preferred symbol from Preferences.</li>
+          </ul>
         </div>
       </div>
     </section>

@@ -568,7 +568,9 @@ function SettingsView() {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(() => {
     try {
       const val = JSON.parse(localStorage.getItem(STORAGE_SETTINGS));
-      return val?.notificationsEnabled ?? true;
+      // Accept robust interpretation, in case settings object is malformed
+      if (val && typeof val.notificationsEnabled === "boolean") return val.notificationsEnabled;
+      return true;
     } catch {
       return true;
     }
@@ -576,7 +578,7 @@ function SettingsView() {
   const [syncEnabled, setSyncEnabled] = React.useState(() => {
     try {
       const val = JSON.parse(localStorage.getItem(STORAGE_SETTINGS));
-      return val?.syncEnabled ?? false;
+      return !!val?.syncEnabled;
     } catch {
       return false;
     }
@@ -587,7 +589,10 @@ function SettingsView() {
 
   // Persist toggles when changed
   React.useEffect(() => {
+    // PATCH: Never clear unrelated keys, only save settings here
+    const prev = (() => { try { return JSON.parse(localStorage.getItem(STORAGE_SETTINGS)) || {}; } catch { return {}; } })();
     localStorage.setItem(STORAGE_SETTINGS, JSON.stringify({
+      ...prev,
       notificationsEnabled,
       syncEnabled,
     }));
@@ -601,7 +606,7 @@ function SettingsView() {
   }
 
   function handleDataReset() {
-    // Clear all major FinanceFlow data keys (profile, transactions, savings, preferences, settings tab-specific)
+    // Only clear all data if the user confirms reset - this is the single place we clear dashboard keys.
     localStorage.removeItem('fflow-profile-v1');
     localStorage.removeItem('fflow-transactions-v1');
     localStorage.removeItem('fflow-savings-goal-v1');

@@ -65,11 +65,10 @@ export async function loadAppState() {
   };
 }
 
-// PUBLIC_INTERFACE
 /**
  * Push all local state to cloud for the current user.
  */
-export async function syncLocalStateToCloud(profile, settings, transactions) {
+export async function syncLocalStateToCloud(profile, settings, transactions, goal, budgets) {
   const user = getCurrentUser();
   if (!user) return false;
   try {
@@ -77,6 +76,8 @@ export async function syncLocalStateToCloud(profile, settings, transactions) {
       saveCloudProfile(user.uid, profile),
       saveCloudSettings(user.uid, settings),
       saveCloudTransactions(user.uid, transactions),
+      saveCloudGoal(user.uid, goal),
+      saveCloudBudgets(user.uid, budgets),
     ]);
     return true;
   } catch {
@@ -94,7 +95,6 @@ export function syncCloudStateToLocal(profile, settings, transactions) {
   if (transactions) localStorage.setItem(LS_TRANSACTIONS, JSON.stringify(transactions));
 }
 
-// --- LocalStorage accessors ---
 export function loadLocalProfile() {
   try {
     return JSON.parse(localStorage.getItem(LS_PROFILE)) || {};
@@ -114,6 +114,21 @@ export function loadLocalTransactions() {
     return JSON.parse(localStorage.getItem(LS_TRANSACTIONS)) || [];
   } catch {
     return [];
+  }
+}
+
+export function loadLocalGoal() {
+  try {
+    return JSON.parse(localStorage.getItem(LS_GOAL)) || null;
+  } catch {
+    return null;
+  }
+}
+export function loadLocalBudgets() {
+  try {
+    return JSON.parse(localStorage.getItem(LS_BUDGETS)) || {};
+  } catch {
+    return {};
   }
 }
 

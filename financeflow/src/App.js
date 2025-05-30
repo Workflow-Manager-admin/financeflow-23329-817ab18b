@@ -402,8 +402,8 @@ function ProfileView() {
             <strong>Name:</strong> {profile.name}
           </p>
           {profile.email && <p style={{margin: "7px 0 0"}}><strong>Email:</strong> {profile.email}</p>}
+          {profile.mobile && <p style={{margin: "7px 0 0"}}><strong>Mobile:</strong> {profile.mobile}</p>}
           {profile.currency && <p style={{margin: "7px 0 0"}}><strong>Currency:</strong> {profile.currency}</p>}
-          {profile.language && <p style={{margin: "7px 0 0"}}><strong>Language:</strong> {profile.language}</p>}
           <button
             type="button"
             className="btn btn-large"
@@ -480,19 +480,18 @@ function ProfileView() {
           </div>
           <div style={{ marginBottom: 17 }}>
             <label style={{ fontWeight: 500, display: "block", marginBottom: 7 }}>
-              Preferred Language (optional)
-              <select
-                name="language"
-                value={profile.language}
+              Mobile (optional)
+              <input
+                type="text"
+                name="mobile"
+                value={profile.mobile}
                 onChange={handleChange}
+                placeholder="Enter your mobile number"
                 style={{ width: "100%", padding: "9px 10px", marginTop: 5 }}
-                aria-label="Language"
-              >
-                <option value="">Select Language</option>
-                {languageOptions.map(opt => (
-                  <option value={opt} key={opt}>{opt}</option>
-                ))}
-              </select>
+                aria-label="Mobile number"
+                pattern="[\\d+\\-\\s()]{6,}"
+                maxLength={18}
+              />
             </label>
           </div>
           <div style={{ marginBottom: 19 }}>
@@ -531,7 +530,7 @@ function ProfileView() {
           <div style={{marginTop: 17, color:'var(--text-secondary)', fontSize: "0.99em"}}>
             {profile.name
               ? "Update your profile information anytime. Your profile is stored securely in your browser only."
-              : "Enter your name to complete setup. You can add email, language, and currency preferences for a personalized experience (all optional)."}
+              : "Enter your name to complete setup. You can add email, mobile, and currency preferences for a personalized experience (all optional)."}
           </div>
         </form>
       </div>

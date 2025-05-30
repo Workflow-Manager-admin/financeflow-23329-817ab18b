@@ -37,24 +37,50 @@ function Dashboard({ showToast }) {
   const [showGoalModal, setShowGoalModal] = useState(false);
 
   // ========== Storage Sync & Boot =========
+  // Enhanced: rehydrate from storage on first render AND on route changes (hashchange) or storage events (sync between tabs/windows)
   useEffect(() => {
-    // Init from storage
-    const lsRaw = localStorage.getItem(STORAGE_TRANSACTIONS);
-    const storedTx = JSON.parse(lsRaw) || [];
-    setTransactions(storedTx);
+    function rehydrateFromStorage() {
+      const lsRaw = localStorage.getItem(STORAGE_TRANSACTIONS);
+      const storedTx = JSON.parse(lsRaw) || [];
+      setTransactions(storedTx);
 
-    const storedGoal = JSON.parse(localStorage.getItem(STORAGE_GOAL)) || null;
-    setGoal(storedGoal);
+      const storedGoal = JSON.parse(localStorage.getItem(STORAGE_GOAL)) || null;
+      setGoal(storedGoal);
 
-    // Developer-facing warning: If localStorage previously held transactions but now state is empty,
-    // signal a possible bug or external clear.
-    if (lsRaw && storedTx.length === 0) {
-      // eslint-disable-next-line
-      console.warn(
-        "[FinanceFlow] Dashboard mounted: localStorage['fflow-transactions-v1'] previously set but empty after parse. " +
-        "If you experience data loss, check for corruption or clearing of localStorage by other code, manual browser actions, or extensions. For cross-device/cloud sync, use a backend."
-      );
+      if (lsRaw && storedTx.length === 0) {
+        // eslint-disable-next-line
+        console.warn(
+          "[FinanceFlow] Dashboard: localStorage['fflow-transactions-v1'] previously set but empty after parse. " +
+          "If you experience data loss, check for clearing/corruption/multiple tabs/extensions."
+        );
+      }
     }
+
+    // Initial hydration
+    rehydrateFromStorage();
+
+    // Listen for navigation changes (in-app route/hashes)
+    function onHashChange() {
+      if (window.location.hash.replace('#', '') === '' || window.location.hash.replace('#', '') === '/') {
+        // Navigated to dashboard, always refresh from storage
+        rehydrateFromStorage();
+      }
+    }
+
+    // Listen for changes in other tabs
+    function onStorage(e) {
+      if (e.key === STORAGE_TRANSACTIONS || e.key === STORAGE_GOAL) {
+        rehydrateFromStorage();
+      }
+    }
+
+    window.addEventListener('hashchange', onHashChange);
+    window.addEventListener('storage', onStorage);
+
+    return () => {
+      window.removeEventListener('hashchange', onHashChange);
+      window.removeEventListener('storage', onStorage);
+    };
   }, []);
 
   // Save transactions to localStorage

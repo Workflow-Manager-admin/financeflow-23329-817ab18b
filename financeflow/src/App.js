@@ -654,11 +654,18 @@ function ProfileView() {
           background: "var(--surface,#fff)",
           borderRadius: 13,
           boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
-          padding: "0 0 34px 0",
-          marginTop: 30,
+          marginTop: 26,
+          marginBottom: 0,
+          padding: "0 0 32px 0"
         }}
       >
-        <div style={{ padding: "34px 17px 0 17px", display: "flex", alignItems: "flex-end", gap: 0 }}>
+        <div style={{
+          padding: "24px 17px 0 17px",
+          display: "flex",
+          alignItems: "flex-end",
+          gap: 0,
+          marginBottom: 0
+        }}>
           <h1
             style={{
               margin: 0,
@@ -667,7 +674,7 @@ function ProfileView() {
               fontWeight: 700,
               letterSpacing: "0.01em",
               textAlign: "left",
-              flex: "1 1 auto",
+              flex: "1 1 auto"
             }}
           >
             Profile
@@ -749,11 +756,18 @@ function SettingsView() {
           background: "var(--surface,#fff)",
           borderRadius: 13,
           boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
-          padding: "0 0 34px 0",
-          marginTop: 30,
+          marginTop: 26,
+          marginBottom: 0,
+          padding: "0 0 32px 0"
         }}
       >
-        <div style={{ padding: "34px 17px 0 17px", display: "flex", alignItems: "flex-end", gap: 0 }}>
+        <div style={{
+          padding: "20px 17px 0 17px",
+          display: "flex",
+          alignItems: "flex-end",
+          gap: 0,
+          marginBottom: 0
+        }}>
           <h1
             style={{
               margin: 0,
@@ -762,7 +776,7 @@ function SettingsView() {
               fontWeight: 700,
               letterSpacing: "0.01em",
               textAlign: "left",
-              flex: "1 1 auto",
+              flex: "1 1 auto"
             }}
           >
             Settings

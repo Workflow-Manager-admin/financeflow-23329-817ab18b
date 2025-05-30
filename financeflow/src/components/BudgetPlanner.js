@@ -82,31 +82,22 @@ function BudgetPlanner() {
           padding: "0 0 32px 0"
         }}
       >
-        <div
+        {/* Heading above content, shifted right */}
+        <h1
+          className="view-heading-shift"
           style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "29px 17px 0 17px",
-            minHeight: 0,
-            marginBottom: "-3px",
-            gap: 0
+            marginTop: 23,
+            marginBottom: 12,
+            fontSize: "2rem",
+            color: "var(--primary,#6C2EBE)",
+            fontWeight: 700,
+            letterSpacing: "0.01em",
+            textAlign: "left",
+            lineHeight: 1.13
           }}
         >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: "2rem",
-              color: "var(--primary,#6C2EBE)",
-              fontWeight: 700,
-              letterSpacing: "0.01em",
-              textAlign: "left",
-              flex: "1 1 auto",
-              lineHeight: 1.13
-            }}
-          >
-            Budget Planner
-          </h1>
-        </div>
+          Budget Planner
+        </h1>
         <div style={{ padding: "0 17px" }}>
           <table style={{ width: '100%', background: 'var(--surface,#fff)', borderRadius: 13, boxShadow: '0 2px 16px rgba(60,42,150,0.07)', overflow: 'hidden', borderCollapse: 'collapse' }}>
             <thead>

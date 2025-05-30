@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar';
 import OnboardingModal from './components/OnboardingModal';
 import Dashboard from './components/Dashboard';
 import ToastNotification from './components/ToastNotification';
+import PreferencesProvider, { usePreferences } from './components/PreferencesProvider';
 
 // Placeholder views
 import TransactionList from './components/transactions/TransactionList';

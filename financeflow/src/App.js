@@ -279,7 +279,7 @@ function CalendarView() {
 
 const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 
-// Inline CountryCodeDropdown with flag emoji for compact mobile select
+// Robust country code dropdown with flag inlined and accessible label
 function CountryCodeDropdown({ countryCode, onChange }) {
   const COUNTRY_OPTIONS = [
     { code: "+1", flag: "🇺🇸", label: "USA" },
@@ -308,6 +308,7 @@ function CountryCodeDropdown({ countryCode, onChange }) {
         minWidth: 72,
       }}
       aria-label="Country code"
+      required
     >
       {COUNTRY_OPTIONS.map(opt => (
         <option key={opt.code} value={opt.code}>
@@ -318,29 +319,20 @@ function CountryCodeDropdown({ countryCode, onChange }) {
   );
 }
 
-/*
-  PUBLIC_INTERFACE
-  ProfileView:
-  - Removes language preference.
-  - Adds a validated (format-checked) mobile number field.
-  - Profile information is always displayed in non-edit mode by default
-    (including after saving, refresh, or navigation).
-  - Edit mode is only entered if (a) the user clicks 'Edit', or (b) for first-time setup (no name present).
-*/
+// PUBLIC_INTERFACE
 function ProfileView() {
-  // Profile state and edit mode.
+  // Profile state and edit mode
   const [profile, setProfile] = React.useState({ name: '', email: '', mobile: '', countryCode: "+1", currency: '' });
-  // editMode is true ONLY if: (a) first-time setup (no name) (b) user clicks edit.
   const [editMode, setEditMode] = React.useState(false);
   const [error, setError] = React.useState('');
   const [saved, setSaved] = React.useState(false);
 
   const currencyOptions = ['USD', 'EUR', 'GBP', 'INR', 'CNY'];
 
-  // Remember if we already saw an initial profile (for first run flow).
+  // Used for first-run flow
   const isFirstRender = React.useRef(true);
 
-  // -- Initialization: load profile (and decide on edit/display mode)
+  // -- Initialization: load profile
   React.useEffect(() => {
     const savedProfile = localStorage.getItem(PROFILE_STORAGE_KEY);
     if (savedProfile) {
@@ -353,31 +345,36 @@ function ProfileView() {
           countryCode: obj.countryCode || "+1",
           currency: obj.currency || ""
         });
-        // No language field, remove any previous language reference.
       } catch {
         setProfile({ name: '', email: '', mobile: '', countryCode: "+1", currency: '' });
       }
     }
-    // After (re)load, only switch to edit mode if name is missing (first-time), else always non-edit
     isFirstRender.current = false;
   }, []);
 
-  // When profile changes (after mount), enforce display mode unless new profile is missing name
+  // Enforce edit mode for first-time users
   React.useEffect(() => {
-    // If first mount and profile has no name, go to edit mode (forced for first setup)
-    if (isFirstRender.current) return; // skip during profile fetch
+    if (isFirstRender.current) return;
     if (!profile.name) setEditMode(true);
     else setEditMode(false);
-  }, [profile.name]); // react to name changes only
+  }, [profile.name]);
 
-  // Handler: field change
   // PUBLIC_INTERFACE
   function handleChange(e) {
     const { name, value } = e.target;
-    setProfile(p => ({ ...p, [name]: value }));
+    // Only allow numbers in mobile input
+    if (name === 'mobile') {
+      // Strip non-numeric before update
+      setProfile(p => ({ ...p, mobile: value.replace(/[^0-9]/g, '').slice(0, 10) }));
+    } else {
+      setProfile(p => ({ ...p, [name]: value }));
+    }
   }
 
-  // Handler: Save (with validation, including mobile and country code)
+  function handleCountryCodeChange(newVal) {
+    setProfile(p => ({ ...p, countryCode: newVal }));
+  }
+
   // PUBLIC_INTERFACE
   function handleSave(e) {
     e.preventDefault && e.preventDefault();
@@ -389,12 +386,9 @@ function ProfileView() {
       setError("Invalid email address.");
       return;
     }
-    // Mobile and country code validation (optional field)
+    // Mobile and country code validation (optional)
     if (profile.mobile || profile.countryCode) {
-      if (
-        !profile.mobile ||
-        !/^[0-9]{10}$/.test(profile.mobile.trim())
-      ) {
+      if (!profile.mobile || !/^[0-9]{10}$/.test(profile.mobile.trim())) {
         setError("Mobile number must be exactly 10 digits.");
         return;
       }
@@ -404,23 +398,24 @@ function ProfileView() {
       }
     }
     setError('');
-    // Save country code & mobile as separate fields
     localStorage.setItem(
       PROFILE_STORAGE_KEY,
-      JSON.stringify({ ...profile, mobile: profile.mobile, countryCode: profile.countryCode || "+1" })
+      JSON.stringify({
+        ...profile,
+        mobile: profile.mobile,
+        countryCode: profile.countryCode || "+1"
+      })
     );
     setEditMode(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 1300);
   }
 
-  // Handler: Enter edit mode manually
   // PUBLIC_INTERFACE
   function handleEdit() {
     setEditMode(true);
   }
 
-  // Handler: Cancel edits, revert to last-saved profile, always stays non-edit after cancel
   // PUBLIC_INTERFACE
   function handleCancel() {
     setEditMode(false);
@@ -441,7 +436,6 @@ function ProfileView() {
     setError('');
   }
 
-  // Display (non-edit) mode
   function renderProfileCard() {
     return (
       <div className="container" style={{ maxWidth: 420 }}>
@@ -490,7 +484,6 @@ function ProfileView() {
     );
   }
 
-  // Edit mode
   function renderProfileEditForm() {
     return (
       <div className="container" style={{ maxWidth: 420 }}>
@@ -551,9 +544,7 @@ function ProfileView() {
               <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 5 }}>
                 <CountryCodeDropdown
                   countryCode={profile.countryCode || "+1"}
-                  onChange={cc =>
-                    setProfile(p => ({ ...p, countryCode: cc }))
-                  }
+                  onChange={handleCountryCodeChange}
                 />
                 <input
                   type="tel"
@@ -565,11 +556,14 @@ function ProfileView() {
                   aria-label="Mobile number"
                   maxLength={10}
                   pattern="[0-9]{10}"
-                  required={false}
+                  inputMode="numeric"
+                  // not required, optional field
                 />
               </div>
               <div style={{ fontSize: "0.9em", color: "var(--text-secondary)", marginTop: 2 }}>
-                <span>Include 10 digits, country code selectable.</span>
+                <span>
+                  Enter 10 digits (numbers only). Select your country code from the dropdown. Mobile is optional, but if set, it must be valid.
+                </span>
               </div>
             </label>
           </div>
@@ -609,7 +603,7 @@ function ProfileView() {
           <div style={{marginTop: 17, color:'var(--text-secondary)', fontSize: "0.99em"}}>
             {profile.name
               ? "Update your profile information anytime. Your profile is stored securely in your browser only."
-              : "Enter your name to complete setup. You can add email, mobile, and currency preferences for a personalized experience (all optional)."}
+              : "Enter your name to complete setup. Add email, mobile, or currency for personalization. Mobile is optional, but if provided, must be a valid 10-digit number."}
           </div>
         </form>
       </div>

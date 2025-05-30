@@ -121,12 +121,12 @@
 .budgetplanner-actions-cell {
   display: flex;
   flex-direction: row;
-  gap: 18px;
+  gap: 22px;
   justify-content: center;
   align-items: center;
-  min-width: 124px;
-  padding-left: 7px;
-  padding-right: 7px;
+  min-width: 144px;
+  padding-left: 14px;
+  padding-right: 12px;
 }
 
 @media (max-width: 1200px) {

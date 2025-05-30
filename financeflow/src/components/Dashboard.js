@@ -206,18 +206,24 @@ function Dashboard({ showToast }) {
       <div
         className="container"
         style={{
-          paddingTop: 10,
           maxWidth: 950,
           background: "var(--surface, #fff)",
           borderRadius: 13,
           boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
-          marginTop: 26,
+          marginTop: 22,
           marginBottom: 0,
           marginLeft: "auto",
-          marginRight: "auto"
+          marginRight: "auto",
+          padding: "0 0 32px 0"
         }}
       >
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 0, marginBottom: 8 }}>
+        {/* Title closely grouped with dashboard content */}
+        <div style={{
+          display: "flex",
+          alignItems: "flex-end",
+          gap: 0,
+          marginBottom: 0
+        }}>
           <h1
             style={{
               margin: 0,
@@ -232,7 +238,7 @@ function Dashboard({ showToast }) {
             Dashboard
           </h1>
         </div>
-        <div className="dashboard-layout" style={{ paddingTop: 0 }}>
+        <div className="dashboard-layout" style={{ paddingTop: 6 }}>
           {/* Visualizations */}
           <div className="dashboard-visuals-grid" style={{ marginBottom: 0, marginTop: '6px' }}>
             <PieChart transactions={transactions} currencySymbol={currencySymbol} />

@@ -12,6 +12,7 @@ const defaultForm = {
 
 /*
  * Categories: "Salary" removed from expense categories and replaced by "Rent/House".
+ * Legacy: If editing a transaction with category "Salary", the UI should treat it as "Rent/House".
  * (Also: 'Investment' is present as category but not touched here per requirements)
  */
 const categories = [
@@ -25,7 +26,11 @@ const categories = [
  * taking currencySymbol from props or preferences context for live updates.
  */
 function TransactionFormModal({ onSave, onClose, initial, currencySymbol }) {
-  const [form, setForm] = useState(initial || defaultForm);
+  // When editing an existing transaction, if category is "Salary", map to "Rent/House"
+  const mappedInitial = initial && initial.type === 'expense' && initial.category === 'Salary'
+    ? { ...initial, category: 'Rent/House' }
+    : initial;
+  const [form, setForm] = useState(mappedInitial || defaultForm);
   const [error, setError] = useState('');
   const ref = useRef();
   useEffect(() => { if (ref.current) ref.current.focus(); }, []);

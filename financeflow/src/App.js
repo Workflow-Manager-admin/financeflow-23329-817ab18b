@@ -13,16 +13,20 @@ import FilterBar from './components/transactions/FilterBar';
 
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
 
+import { usePreferences } from './components/PreferencesProvider';
+
 // PUBLIC_INTERFACE
 function ExpensesView() {
   const [transactions, setTransactions] = React.useState(() => {
     return JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || [];
   });
+
   // Only expenses, sorted newest first
   const expenseTx = React.useMemo(
     () => transactions.filter(t => t.type === 'expense').sort((a, b) => b.date.localeCompare(a.date)),
     [transactions]
   );
+
   const [filters, setFilters] = React.useState({ category: 'All', from: '', to: '' });
   const categories = React.useMemo(() => {
     const set = new Set(expenseTx.map(t => t.category));
@@ -39,6 +43,8 @@ function ExpensesView() {
     return arr;
   }
   const filtered = React.useMemo(() => applyFilters(expenseTx, filters), [expenseTx, filters]);
+  const { currency } = usePreferences() || { currency: 'USD' };
+
   return (
     <section className="placeholder-view">
       <h1>Expenses</h1>
@@ -48,9 +54,17 @@ function ExpensesView() {
           transactions={filtered}
           onEdit={() => {}}
           onDelete={() => {}}
-          emptyMsg="No expenses found."
+          emptyMsg={`No expenses found.`}
         />
-        {filtered.length === 0 && <p style={{color: "var(--text-secondary)"}}>No expenses for current filters.</p>}
+        {filtered.length === 0 &&
+          <p style={{color: "var(--text-secondary)"}}>
+            No expenses for current filters.
+          </p>
+        }
+        {/* Currency displayed under list summary */}
+        <p style={{ color: "var(--text-secondary)", marginTop: 15, fontSize: "1.05em" }}>
+          Displayed in <span style={{fontWeight:600}}>{currency}</span>
+        </p>
       </div>
     </section>
   );

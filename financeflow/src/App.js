@@ -286,7 +286,11 @@ function CalendarView() {
 
 const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 
-// PUBLIC_INTERFACE
+/*
+  PUBLIC_INTERFACE
+  Refactored ProfileView to display user info in a non-editable mode by default.
+  Render an "Edit" button to allow switching to edit mode; on save/cancel, reverts to read-only mode.
+*/
 function ProfileView() {
   // State for profile fields and edit mode
   const [profile, setProfile] = React.useState({ name: '', email: '', currency: '', language: '' });
@@ -326,7 +330,6 @@ function ProfileView() {
   // PUBLIC_INTERFACE
   function handleSave(e) {
     e.preventDefault && e.preventDefault();
-    // Validate: name required, email optional but if set must be reasonable
     if (!profile.name.trim()) {
       setError("Please enter your name.");
       return;
@@ -342,10 +345,12 @@ function ProfileView() {
     setTimeout(() => setSaved(false), 1400);
   }
 
+  // PUBLIC_INTERFACE
   function handleEdit() {
     setEditMode(true);
   }
 
+  // PUBLIC_INTERFACE
   function handleCancel() {
     setEditMode(false);
     // Reload from localStorage to revert any unsaved changes
@@ -364,16 +369,27 @@ function ProfileView() {
     setError('');
   }
 
-  // If no profile data, force edit mode (first-time flow)
+  // If no profile data, force edit mode (first-time user)
   React.useEffect(() => {
     if (!profile.name) setEditMode(true);
   }, [profile.name]);
 
-  // UI for display mode (profile present and not editing)
+  // UI: Display (non-edit) mode
   function renderProfileCard() {
     return (
       <div className="container" style={{ maxWidth: 420 }}>
-        <div style={{background: "var(--surface,#fff)", borderRadius: 13, boxShadow: "0 2px 16px rgba(60,42,150,0.07)", padding: 28, marginTop: 25, marginBottom: 25}}>
+        <div
+          style={{
+            background: "var(--surface,#fff)",
+            borderRadius: 13,
+            boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
+            padding: 28,
+            marginTop: 25,
+            marginBottom: 25
+          }}
+          tabIndex={0}
+          aria-label="Profile"
+        >
           <h2 style={{margin: "0 0 13px 0", fontSize: "1.21em", color: "var(--primary,#6C2EBE)", fontWeight: 600}}>
             Profile
           </h2>
@@ -383,13 +399,26 @@ function ProfileView() {
           {profile.email && <p style={{margin: "7px 0 0"}}><strong>Email:</strong> {profile.email}</p>}
           {profile.currency && <p style={{margin: "7px 0 0"}}><strong>Currency:</strong> {profile.currency}</p>}
           {profile.language && <p style={{margin: "7px 0 0"}}><strong>Language:</strong> {profile.language}</p>}
-          <button className="btn btn-large" style={{marginTop: 19}} onClick={handleEdit}>Edit Profile</button>
+          <button
+            type="button"
+            className="btn btn-large"
+            style={{marginTop: 19}}
+            onClick={handleEdit}
+            aria-label="Edit Profile"
+          >
+            Edit
+          </button>
+          {saved && (
+            <span style={{color:'var(--income,#22C55E)',marginLeft:18,fontWeight:500}}>
+              Saved!
+            </span>
+          )}
         </div>
       </div>
     );
   }
 
-  // UI for edit mode/first-run data input
+  // UI: Edit mode
   function renderProfileEditForm() {
     return (
       <div className="container" style={{ maxWidth: 420 }}>
@@ -405,11 +434,17 @@ function ProfileView() {
           }}
           aria-label="Profile Edit"
         >
-          <h2 style={{margin: "0 0 13px 0", fontSize: "1.21em", color: "var(--primary,#6C2EBE)", fontWeight: 600}}>
+          <h2 style={{
+            margin: "0 0 13px 0",
+            fontSize: "1.21em",
+            color: "var(--primary,#6C2EBE)",
+            fontWeight: 600
+          }}>
             {profile.name ? "Edit Profile" : "Set Up Your Profile"}
           </h2>
           <div style={{ marginBottom: 17 }}>
-            <label style={{ fontWeight: 500, display: "block", marginBottom: 7 }}>Name<span style={{ color: "#E74C3C" }}>*</span>
+            <label style={{ fontWeight: 500, display: "block", marginBottom: 7 }}>
+              Name<span style={{ color: "#E74C3C" }}>*</span>
               <input
                 type="text"
                 name="name"
@@ -487,7 +522,6 @@ function ProfileView() {
                 Cancel
               </button>
             )}
-            {saved && <span style={{color:'var(--income,#22C55E)',marginLeft:15,fontWeight:500}}>Saved!</span>}
           </div>
           <div style={{marginTop: 17, color:'var(--text-secondary)', fontSize: "0.99em"}}>
             {profile.name

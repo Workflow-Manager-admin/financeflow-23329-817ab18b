@@ -875,19 +875,46 @@ function App() {
   // Onboarding flag
   const [showOnboarding, setShowOnboarding] = useState(false);
 
+  // --- Firebase Auth & Cloud Sync State ---
+  const [user, setUser] = useState(null); // Firebase user object
+  const [cloudMode, setCloudMode] = useState(false); // true=cloud, false=local
+  const [appState, setAppState] = useState({
+    profile: {},
+    settings: {},
+    transactions: []
+  });
+  const [syncStatus, setSyncStatus] = useState('idle'); // 'idle' | 'syncing' | 'error' | 'offline'
+
   // Toast notification: { message, type } or null
   const [toast, setToast] = useState(null);
 
-  // Notification preference: get from PreferencesProvider context
+  // Notification preference: get from PreferencesProvider context (keep logic for children)
   const {
     notificationsEnabled = true,
   } = usePreferences?.() || {};
 
-  // Simple in-app router (hash-based for SPA)
+  // Router
   const initialRoute = window.location.hash.replace('#', '') || '/';
   const [route, setRoute] = useState(initialRoute);
 
+  // Track sidebar for responsive nav
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(
+    window.innerWidth < 650
+  );
+
+  // ------ AUTH & APP-STATE LOAD ------
   useEffect(() => {
+    // On mount: Firebase Auth listener and initial data load (cloud or fallback local)
+    let unsub = onUserAuthChanged(async (fbUser) => {
+      setUser(fbUser || null);
+
+      setSyncStatus('syncing');
+      const state = await loadAppState();
+      setAppState(state);
+      setCloudMode(state.cloudMode);
+      setSyncStatus(state.cloudMode ? 'cloud' : 'local');
+    });
+
     // Show onboarding if first visit
     if (!localStorage.getItem('fflow-onboarded')) {
       setShowOnboarding(true);
@@ -897,19 +924,54 @@ function App() {
       setRoute(window.location.hash.replace('#', '') || '/');
     };
     window.addEventListener('hashchange', onHashChange);
-    return () => { window.removeEventListener('hashchange', onHashChange); };
+
+    return () => {
+      unsub && unsub();
+      window.removeEventListener('hashchange', onHashChange);
+    };
   }, []);
 
-  const handleOnboardingDismiss = () => {
-    localStorage.setItem('fflow-onboarded', '1');
-    setShowOnboarding(false);
+  // Responsive sidebar
+  useEffect(() => {
+    const handler = () => {
+      if (window.innerWidth < 650 && !sidebarCollapsed) {
+        setSidebarCollapsed(true);
+      } else if (window.innerWidth >= 650 && sidebarCollapsed) {
+        setSidebarCollapsed(false);
+      }
+    };
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+    // eslint-disable-next-line
+  }, [sidebarCollapsed]);
+
+  // ------ CLOUD SYNC/LOGIC ------
+  // Helper: Login
+  const handleLogin = async () => {
+    try {
+      setSyncStatus('syncing');
+      await signInWithGoogle();
+      setSyncStatus('cloud');
+      setToast({ message: 'Signed in! Data is synced.', type: 'success' });
+    } catch (e) {
+      setToast({ message: 'Login failed.', type: 'error' });
+      setSyncStatus('local');
+    }
   };
 
-  // Nav handler to update route
-  const handleNavigate = (to) => {
-    if (to !== route) {
-      window.location.hash = to;
-      setRoute(to);
+  // Helper: Logout
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // After logout, reload local state
+      setUser(null);
+      setCloudMode(false);
+      const state = await loadAppState();
+      setAppState(state);
+      setSyncStatus('local');
+      setToast({ message: 'Signed out. You are in offline/local mode.', type: 'info' });
+    } catch {
+      setToast({ message: 'Sign out failed.', type: 'error' });
     }
   };
 
@@ -924,45 +986,127 @@ function App() {
     [notificationsEnabled]
   );
 
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(
-    window.innerWidth < 650
-  );
-  useEffect(() => {
-    const handler = () => {
-      if (window.innerWidth < 650 && !sidebarCollapsed) {
-        setSidebarCollapsed(true);
-      } else if (window.innerWidth >= 650 && sidebarCollapsed) {
-        setSidebarCollapsed(false);
+  // Props to pass to children (profile, settings, transactions)
+  function passProfileOverrides(child) {
+    // Override ProfileView's localStorage logic with cloud-aware hooks
+    return React.cloneElement(child, {
+      profile: appState.profile,
+      setProfile: (p) => {
+        setAppState(s => ({ ...s, profile: p }));
+        // Sync to cloud if possible and settings allow
+        if (cloudMode && shouldSyncCloud(appState.settings && appState.settings.syncEnabled)) {
+          syncLocalStateToCloud(p, appState.settings, appState.transactions);
+        } else {
+          // fallback, also update in localStorage for offline
+          localStorage.setItem('fflow-profile-v1', JSON.stringify(p));
+        }
       }
-    };
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
-    // eslint-disable-next-line
-  }, [sidebarCollapsed]);
+    });
+  }
+  function passSettingsOverrides(child) {
+    // Override SettingsView's localStorage logic with cloud-aware hooks
+    return React.cloneElement(child, {
+      settings: appState.settings,
+      setSettings: (s) => {
+        setAppState(st => ({ ...st, settings: s }));
+        if (cloudMode && shouldSyncCloud(appState.settings && appState.settings.syncEnabled)) {
+          syncLocalStateToCloud(appState.profile, s, appState.transactions);
+        } else {
+          localStorage.setItem('fflow-settings-v1', JSON.stringify(s));
+        }
+      }
+    });
+  }
+  function passTransactionsOverrides(child) {
+    return React.cloneElement(child, {
+      transactions: appState.transactions || [],
+      setTransactions: (txs) => {
+        setAppState(s => ({ ...s, transactions: txs }));
+        if (cloudMode && shouldSyncCloud(appState.settings && appState.settings.syncEnabled)) {
+          syncLocalStateToCloud(appState.profile, appState.settings, txs);
+        } else {
+          localStorage.setItem('fflow-transactions-v1', JSON.stringify(txs));
+        }
+      }
+    });
+  }
 
-  let View;
+  // Child Router: Only Dashboard and children need transactions/settings/profile
+  let ViewRaw;
   switch (route) {
     case '/':
-      View = <Dashboard showToast={notify} />;
+      ViewRaw = <Dashboard showToast={notify} transactions={appState.transactions || []} setTransactions={passTransactionsOverrides} />;
       break;
     case '/expenses':
-      View = <ExpensesView />;
+      ViewRaw = <ExpensesView transactions={appState.transactions || []} />;
       break;
     case '/budget':
-      View = <BudgetPlanner />;
+      ViewRaw = <BudgetPlanner transactions={appState.transactions || []} />;
       break;
     case '/calendar':
-      View = <CalendarView />;
+      ViewRaw = <CalendarView transactions={appState.transactions || []} />;
       break;
     case '/profile':
-      View = <ProfileView />;
+      ViewRaw = <ProfileView profile={appState.profile} setProfile={passProfileOverrides} />;
       break;
     case '/settings':
-      View = <SettingsView />;
+      ViewRaw = <SettingsView settings={appState.settings} setSettings={passSettingsOverrides} />;
       break;
     default:
-      View = <section className="placeholder-view"><div className="container"><h1>Not Found</h1></div></section>;
+      ViewRaw = <section className="placeholder-view"><div className="container"><h1>Not Found</h1></div></section>;
   }
+
+  // Login/Logout Button: Shown in a floating corner or sidebar
+  function AuthStatusBar() {
+    return (
+      <div style={{
+        position: "fixed",
+        right: 24,
+        top: 12,
+        zIndex: 9999,
+        background: "var(--surface, #fff)",
+        color: "var(--primary, #6C2EBE)",
+        border: "1px solid var(--secondary, #ececec)",
+        boxShadow: "0 2px 14px rgba(108,46,190,0.09)",
+        borderRadius: 11,
+        padding: "8px 18px",
+        fontWeight: 500,
+        fontSize: "1em"
+      }}>
+        {user ? (
+          <>
+            <span style={{ marginRight: 12 }}>Signed in as <b>{user.displayName}</b></span>
+            <button className="btn btn-cancel" onClick={handleLogout} style={{ marginLeft: 7 }}>Logout</button>
+            <span style={{
+              marginLeft: 14,
+              color: syncStatus === 'cloud' ? '#22C55E' : '#6C2EBE'
+            }}>
+              {syncStatus === 'cloud' ? "Cloud Sync On" : "Local/Offline"}
+            </span>
+          </>
+        ) : (
+          <>
+            <span style={{marginRight: 10, color: "#888"}}>Offline (local-only)</span>
+            <button className="btn btn-large" onClick={handleLogin}>Login to Sync</button>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  // Onboarding dismiss
+  const handleOnboardingDismiss = () => {
+    localStorage.setItem('fflow-onboarded', '1');
+    setShowOnboarding(false);
+  };
+
+  // Nav
+  const handleNavigate = (to) => {
+    if (to !== route) {
+      window.location.hash = to;
+      setRoute(to);
+    }
+  };
 
   return (
     <PreferencesProvider>
@@ -973,8 +1117,9 @@ function App() {
             onNavigate={handleNavigate}
           />
           <main className="main-content" tabIndex={-1} aria-live="polite">
-            {View}
+            {ViewRaw}
           </main>
+          <AuthStatusBar />
           {showOnboarding && (
             <OnboardingModal onClose={handleOnboardingDismiss} />
           )}

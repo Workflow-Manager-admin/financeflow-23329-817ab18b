@@ -124,13 +124,17 @@ function BudgetPlanner({ transactions = [], showToast }) {
     return out;
   }, [transactions, monthStr]);
 
-  // Save logic: Always persist any value unconditionally and silent
+  // Save logic: Always persist any value unconditionally and silent, writing to both state and localStorage for robust sync
   const handleSaveBudget = (cat, rawValue) => {
     let val = parseFloat(String(rawValue).replace(/[^0-9.]/g, ''));
     if (!Number.isFinite(val) || val < 0) val = 0;
     const currentBudgets = { ...budgets };
     const newBudgets = { ...currentBudgets, [cat]: val };
     setBudgets(newBudgets);
+    // Immediately persist to localStorage, in case state batching delays writing.
+    try {
+      localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(newBudgets));
+    } catch {}
     setEditingRow(null);
     setRowDraft({});
     setJustSavedCat(cat);

@@ -90,6 +90,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
   useEffect(() => {
     if (justSavedCat) {
       if (typeof showToast === 'function') {
+        // Always show the toast notification on budget save
         showToast('budget saved!', 'success');
       }
       // Reset after showing

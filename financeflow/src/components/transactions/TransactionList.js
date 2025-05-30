@@ -16,7 +16,9 @@ function TransactionList({ transactions, onEdit, onDelete, emptyMsg, currencySym
         <div className={`tx-row tx-${tx.type}`} key={tx.id}>
           <div className="tx-main">
             <span className="tx-title">
-              {tx.type === 'expense' ? tx.category : (tx.description || 'Income')}
+              {tx.type === 'expense'
+                ? (tx.category === 'Salary' ? 'Rent/House' : tx.category)
+                : (tx.description || 'Income')}
             </span>
             <span className="tx-date">{tx.date}</span>
             <span className="tx-desc">{tx.description}</span>

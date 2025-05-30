@@ -239,8 +239,38 @@ function BudgetPlanner({ transactions = [], showToast }) {
                         </>
                       ) : (
                         <>
-                          <span tabIndex={0} className="budgetplanner-edit-span" style={{ minWidth: 35, width: 52, fontSize: "1em", padding: "3px 5px" }}>
+                          <span tabIndex={0} className="budgetplanner-edit-span" style={{ minWidth: 35, width: 52, fontSize: "1em", padding: "3px 5px", display: "inline-flex", alignItems: "center", gap: 6 }}>
                             {currencySymbol}{Number(budgetVal || 0).toFixed(2)}
+                            <button
+                              className="budgetplanner-edit-btn"
+                              onClick={e => {
+                                e.preventDefault();
+                                setEditingRow(cat);
+                                setEditError('');
+                              }}
+                              aria-label={`Edit budget for ${cat}`}
+                              title="Edit"
+                              disabled={editingRow !== null}
+                              style={{
+                                background: 'none',
+                                border: 'none',
+                                marginLeft: 3,
+                                padding: 0,
+                                fontSize: '1em',
+                                cursor: editingRow === null ? 'pointer' : 'not-allowed',
+                                color: 'var(--primary, #6C2EBE)',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                opacity: editingRow !== null ? 0.5 : 0.96
+                              }}
+                              tabIndex={0}
+                              type="button"
+                            >
+                              {/* Simple pencil/edit SVG matching TransactionList */}
+                              <svg width="17" height="17" viewBox="0 0 20 20" fill="none" style={{ display: 'inline', verticalAlign: 'middle' }}>
+                                <path d="M14.8 3.8l1.4-1.3a2 2 0 112.8 2.8l-1.3 1.4-2.9-2.9zM3 17l2.4-.3c.2 0 .4-.1.5-.2L16.7 6.7l-2.9-2.9L3.6 14.1c-.1.1-.2.3-.2.5L3 17z" stroke="currentColor" strokeWidth="1.15" fill="none"/>
+                              </svg>
+                            </button>
                           </span>
                         </>
                       )}

@@ -573,7 +573,6 @@ function SettingsView() {
   );
 }
 
-// PUBLIC_INTERFACE
 function App() {
   // Onboarding flag
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -654,26 +653,29 @@ function App() {
       View = <section className="placeholder-view"><div className="container"><h1>Not Found</h1></div></section>;
   }
 
+  // Wrap all in PreferencesProvider to propagate currency/lang preference updates
   return (
-    <ThemeProvider>
-      <div className="app" tabIndex="-1">
-        <Sidebar
-          currentRoute={route}
-          onNavigate={handleNavigate}
-          collapsed={sidebarCollapsed}
-          onToggle={setSidebarCollapsed}
-        />
-        <main className="main-content" tabIndex={-1} aria-live="polite">
-          {View}
-        </main>
-        {showOnboarding && (
-          <OnboardingModal onClose={handleOnboardingDismiss} />
-        )}
-        {toast && (
-          <ToastNotification message={toast.message} type={toast.type} />
-        )}
-      </div>
-    </ThemeProvider>
+    <PreferencesProvider>
+      <ThemeProvider>
+        <div className="app" tabIndex="-1">
+          <Sidebar
+            currentRoute={route}
+            onNavigate={handleNavigate}
+            collapsed={sidebarCollapsed}
+            onToggle={setSidebarCollapsed}
+          />
+          <main className="main-content" tabIndex={-1} aria-live="polite">
+            {View}
+          </main>
+          {showOnboarding && (
+            <OnboardingModal onClose={handleOnboardingDismiss} />
+          )}
+          {toast && (
+            <ToastNotification message={toast.message} type={toast.type} />
+          )}
+        </div>
+      </ThemeProvider>
+    </PreferencesProvider>
   );
 }
 

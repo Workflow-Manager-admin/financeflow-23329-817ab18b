@@ -507,7 +507,7 @@ function ProfileView() {
   );
 }
 
-import { usePreferences } from './components/PreferencesProvider';
+/* Duplicate import removed */
 
 // PUBLIC_INTERFACE
 function SettingsView() {

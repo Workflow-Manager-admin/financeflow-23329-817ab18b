@@ -10,7 +10,9 @@ function getPieData(transactions) {
   const expenses = transactions.filter((t) => t.type === 'expense');
   const data = {};
   expenses.forEach((t) => {
-    data[t.category] = (data[t.category] || 0) + Number(t.amount);
+    // Map legacy "Salary" to "Rent/House"
+    const cat = t.category === 'Salary' ? 'Rent/House' : t.category;
+    data[cat] = (data[cat] || 0) + Number(t.amount);
   });
   const total = Object.values(data).reduce((a, b) => a + b, 0);
   // Avoid division by zero for empty case

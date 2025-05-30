@@ -155,7 +155,11 @@ function Dashboard({ showToast }) {
     let arr = data;
     // Only filter by category for expenses; skip filter for incomes
     if (category && category !== 'All') {
-      arr = arr.filter(t => t.type === 'expense' && t.category === category);
+      arr = arr.filter(t =>
+        t.type === 'expense' &&
+        // Match category, mapping legacy Salary to Rent/House
+        ((t.category === 'Salary' && category === 'Rent/House') || t.category === category)
+      );
     }
     if (from) arr = arr.filter(t => t.date >= from);
     if (to) arr = arr.filter(t => t.date <= to);

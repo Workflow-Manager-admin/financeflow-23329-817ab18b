@@ -3,6 +3,7 @@
 // This file initializes Firebase app, Auth and Firestore,
 // and provides low-level helpers for cloud sync.
 //
+
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from 'firebase/firestore';
@@ -65,7 +66,6 @@ export async function loadCloudProfile(uid) {
   return docSnap.exists() ? docSnap.data().profile : null;
 }
 
-// PUBLIC_INTERFACE
 /**
  * Write user profile to Firestore.
  */
@@ -73,7 +73,6 @@ export async function saveCloudProfile(uid, profile) {
   await setDoc(userDocRef(uid), { profile }, { merge: true });
 }
 
-// PUBLIC_INTERFACE
 /**
  * Read user transactions from Firestore.
  */
@@ -82,7 +81,6 @@ export async function loadCloudTransactions(uid) {
   return docSnap.exists() ? (docSnap.data().transactions || []) : [];
 }
 
-// PUBLIC_INTERFACE
 /**
  * Write transactions to Firestore.
  */
@@ -90,7 +88,6 @@ export async function saveCloudTransactions(uid, transactions) {
   await setDoc(userDocRef(uid), { transactions }, { merge: true });
 }
 
-// PUBLIC_INTERFACE
 /**
  * Read user settings from Firestore.
  */
@@ -99,7 +96,6 @@ export async function loadCloudSettings(uid) {
   return docSnap.exists() ? (docSnap.data().settings || {}) : {};
 }
 
-// PUBLIC_INTERFACE
 /**
  * Write settings to Firestore.
  */
@@ -108,6 +104,36 @@ export async function saveCloudSettings(uid, settings) {
 }
 
 // PUBLIC_INTERFACE
+/**
+ * Read user savings goal from Firestore.
+ */
+export async function loadCloudGoal(uid) {
+  const docSnap = await getDoc(userDocRef(uid));
+  return docSnap.exists() ? (docSnap.data().goal || null) : null;
+}
+
+/**
+ * Write user savings goal to Firestore.
+ */
+export async function saveCloudGoal(uid, goal) {
+  await setDoc(userDocRef(uid), { goal }, { merge: true });
+}
+
+/**
+ * Read budgets from Firestore.
+ */
+export async function loadCloudBudgets(uid) {
+  const docSnap = await getDoc(userDocRef(uid));
+  return docSnap.exists() ? (docSnap.data().budgets || {}) : {};
+}
+
+/**
+ * Write budgets to Firestore.
+ */
+export async function saveCloudBudgets(uid, budgets) {
+  await setDoc(userDocRef(uid), { budgets }, { merge: true });
+}
+
 /**
  * Subscribe to real-time updates (cloud changes).
  * Returns unsubscribe function.

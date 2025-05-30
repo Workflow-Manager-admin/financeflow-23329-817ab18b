@@ -17,8 +17,17 @@ function ExpensesView() {
   const [transactions, setTransactions] = React.useState(() => {
     return JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || [];
   });
+  // Map any existing "salary" expense category in stored data to "Rent/House" so that filters are correct
   const expenseTx = React.useMemo(
-    () => transactions.filter(t => t.type === 'expense').sort((a, b) => b.date.localeCompare(a.date)),
+    () =>
+      transactions
+        .filter(t => t.type === 'expense')
+        .map(tx =>
+          tx.category === 'Salary'
+            ? { ...tx, category: 'Rent/House' }
+            : tx
+        )
+        .sort((a, b) => b.date.localeCompare(a.date)),
     [transactions]
   );
   const [filters, setFilters] = React.useState({ category: 'All', from: '', to: '' });

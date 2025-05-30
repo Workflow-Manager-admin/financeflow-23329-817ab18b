@@ -162,9 +162,15 @@ function Dashboard({ showToast }) {
     return arr.sort((a, b) => b.date.localeCompare(a.date));
   }
 
-  // Category choices (only from expenses, skip incomes)
+  // Category choices (only from expenses, skip incomes), normalize any "Salary" to "Rent/House" for filter UI
   const categories = useMemo(() => {
-    const set = new Set(transactions.filter(t => t.type === 'expense').map(t => t.category));
+    const set = new Set(
+      transactions
+        .filter(t => t.type === 'expense')
+        .map(t =>
+          t.category === 'Salary' ? 'Rent/House' : t.category
+        )
+    );
     return ['All', ...Array.from(set).filter(Boolean)];
   }, [transactions]);
 

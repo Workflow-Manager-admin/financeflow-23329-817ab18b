@@ -34,10 +34,21 @@ export function PreferencesProvider({ children }) {
     );
   }, [language, currency]);
 
+  // Map ISO code to symbol
+  const currencySymbolMap = {
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
+    INR: '₹',
+    CNY: '¥',
+  };
+  const currencySymbol = currencySymbolMap[currency] || '$';
+
   const value = useMemo(
     () => ({
       language,
       currency,
+      currencySymbol,
       setLanguage,
       setCurrency,
       setPreferences: ({ language, currency }) => {
@@ -48,7 +59,7 @@ export function PreferencesProvider({ children }) {
       languageOptions: ['English', 'Spanish', 'French', 'German', 'Chinese'],
       currencyOptions: ['USD', 'EUR', 'GBP', 'INR', 'CNY'],
     }),
-    [language, currency]
+    [language, currency, currencySymbol]
   );
 
   return (

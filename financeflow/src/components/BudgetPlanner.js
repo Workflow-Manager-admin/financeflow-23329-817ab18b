@@ -15,12 +15,13 @@ const STORAGE_TRANSACTIONS_KEY = 'fflow-transactions-v1';
  * BudgetPlanner displays and edits monthly budgets per expense category (excl. investments).
  * Shows: Category, Budget (editable), Actual (current month), Variance (color-coded).
  * Persists budgets in localStorage; reads currency symbol from preferences.
+ * Now supports per-row editing: only one row can be edited at a time.
  */
 function BudgetPlanner() {
   const { currencySymbol } = usePreferences() || { currencySymbol: '$' };
   const [budgets, setBudgets] = useState({});
-  const [editing, setEditing] = useState({});
-  const [rowDrafts, setRowDrafts] = useState({});
+  const [editingRow, setEditingRow] = useState(null); // Category string or null
+  const [rowDraft, setRowDraft] = useState({});
   const [transactions, setTransactions] = useState([]);
 
   // On mount, load budgets and transactions
@@ -37,17 +38,12 @@ function BudgetPlanner() {
     }
   }, []);
 
-  // Keep rowDrafts in sync with budgets for new categories/budget changes
+  // Update the rowDraft if budgets or editingRow changes
   useEffect(() => {
-    setRowDrafts((prev) => {
-      const next = { ...prev };
-      for (const cat of EXPENSE_CATEGORIES) {
-        if (!editing[cat]) next[cat] = Number(budgets[cat] || 0);
-      }
-      return next;
-    });
-    // eslint-disable-next-line
-  }, [budgets]);
+    if (editingRow) {
+      setRowDraft({ value: Number(budgets[editingRow] || 0) });
+    }
+  }, [editingRow, budgets]);
 
   // Save budgets to localStorage on change
   useEffect(() => {
@@ -125,43 +121,40 @@ function BudgetPlanner() {
             <tbody>
               {EXPENSE_CATEGORIES.map((cat) => {
                 const budgetPrev = Number(budgets[cat] || 0);
-                const rowDraft = rowDrafts[cat] ?? budgetPrev;
                 const actual = Number(actuals[cat] || 0);
                 const variance = budgetPrev - actual;
                 const varColor = variance >= 0 ? 'var(--income,#22C55E)' : 'var(--expense,#E74C3C)';
+                const isEditing = editingRow === cat;
                 return (
                   <tr key={cat} style={{ borderBottom: '1px solid var(--secondary,#eee)' }}>
                     <td style={{ padding: '11px 12px', fontWeight: 500 }}>{cat}</td>
                     <td style={{ padding: '11px 12px', textAlign: 'right' }}>
-                      {editing[cat]
-                        ? (
-                          <input
-                            type="number"
-                            min={0}
-                            step="0.01"
-                            autoFocus
-                            value={rowDraft === 0 ? '' : rowDraft}
-                            onChange={e => setRowDrafts(prev => ({ ...prev, [cat]: e.target.value }))}
-                            style={{
-                              width: 82, fontSize: '1em', textAlign: 'right',
-                              padding: '5px 5px', borderRadius: 5,
-                              border: '1px solid var(--secondary,#bbbbbf)'
-                            }}
-                            aria-label={`Budget for ${cat}`}
-                          />
-                        )
-                        : (
-                          <span
-                            tabIndex={0}
-                            style={{
-                              display: 'inline-block',
-                              width: 82, textAlign: 'right', padding: '2px 5px', background: 'none'
-                            }}
-                          >
-                            {currencySymbol}{Number(budgetPrev || 0).toFixed(2)}
-                          </span>
-                        )
-                      }
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          min={0}
+                          step="0.01"
+                          autoFocus
+                          value={typeof rowDraft.value === 'number' && rowDraft.value !== 0 ? rowDraft.value : rowDraft.value === 0 ? '' : rowDraft.value || ''}
+                          onChange={e => setRowDraft({ value: e.target.value })}
+                          style={{
+                            width: 82, fontSize: '1em', textAlign: 'right',
+                            padding: '5px 5px', borderRadius: 5,
+                            border: '1px solid var(--secondary,#bbbbbf)'
+                          }}
+                          aria-label={`Budget for ${cat}`}
+                        />
+                      ) : (
+                        <span
+                          tabIndex={0}
+                          style={{
+                            display: 'inline-block',
+                            width: 82, textAlign: 'right', padding: '2px 5px', background: 'none'
+                          }}
+                        >
+                          {currencySymbol}{Number(budgetPrev || 0).toFixed(2)}
+                        </span>
+                      )}
                     </td>
                     <td style={{ padding: '11px 12px', textAlign: 'right' }}>
                       {currencySymbol}{actual.toFixed(2)}
@@ -171,19 +164,18 @@ function BudgetPlanner() {
                       {currencySymbol}{variance.toFixed(2)}
                     </td>
                     <td style={{ padding: '7px 8px', textAlign: 'center', width: 88 }}>
-                      {editing[cat] ? (
+                      {isEditing ? (
                         <div style={{ display: "flex", gap: 7, justifyContent: "center" }}>
                           <button
                             className="btn btn-large"
                             style={{ minWidth: 34, padding: "4px 11px", fontSize: "0.99em" }}
                             onClick={e => {
                               e.preventDefault();
-                              setEditing(prev => ({ ...prev, [cat]: false }));
-                              setBudgets(prev => {
-                                let val = parseFloat(String(rowDraft).replace(/[^0-9.]/g, ''));
-                                if (isNaN(val) || val < 0) val = 0;
-                                return { ...prev, [cat]: val };
-                              });
+                              let val = parseFloat(String(rowDraft.value).replace(/[^0-9.]/g, ''));
+                              if (isNaN(val) || val < 0) val = 0;
+                              setBudgets(prev => ({ ...prev, [cat]: val }));
+                              setEditingRow(null);
+                              setRowDraft({});
                             }}
                             aria-label={`Save budget for ${cat}`}
                           >Save</button>
@@ -192,8 +184,8 @@ function BudgetPlanner() {
                             style={{ minWidth: 34, padding: "4px 11px", fontSize: "0.99em" }}
                             onClick={e => {
                               e.preventDefault();
-                              setEditing(prev => ({ ...prev, [cat]: false }));
-                              setRowDrafts(prev => ({ ...prev, [cat]: Number(budgets[cat] || 0) }));
+                              setEditingRow(null);
+                              setRowDraft({});
                             }}
                             aria-label={`Cancel editing budget for ${cat}`}
                           >Cancel</button>
@@ -204,10 +196,10 @@ function BudgetPlanner() {
                           style={{ minWidth: 34, padding: "4px 11px", fontSize: "0.97em" }}
                           onClick={e => {
                             e.preventDefault();
-                            setEditing(prev => ({ ...prev, [cat]: true }));
-                            setRowDrafts(prev => ({ ...prev, [cat]: Number(budgets[cat] || 0) }));
+                            setEditingRow(cat);
                           }}
                           aria-label={`Edit budget for ${cat}`}
+                          disabled={editingRow !== null}
                         >Edit</button>
                       )}
                     </td>
@@ -218,7 +210,8 @@ function BudgetPlanner() {
           </table>
           <div style={{ color: 'var(--text-secondary)', fontSize: '1.035em', marginTop: 19 }}>
             <ul style={{ marginLeft: 19, paddingLeft: 0, listStyle: 'circle', color: 'var(--primary)', fontSize: '0.99em' }}>
-              <li>Edit the budget for each category by clicking Edit. Save or Cancel each change independently.</li>
+              <li>Edit the budget for each category by clicking Edit. Only one row can be in edit mode at a time.</li>
+              <li>Save or Cancel your changes for each row as needed. Changes are persisted per-category.</li>
               <li>Variance is green if under budget, red if over.</li>
               <li>Month: {monthStr}</li>
               <li>Currencies are shown in your preferred symbol from Preferences.</li>

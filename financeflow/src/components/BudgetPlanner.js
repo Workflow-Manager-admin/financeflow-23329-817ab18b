@@ -1,8 +1,27 @@
-// Robustly syncs budgets to localStorage and reloads them on mount and navigation
 import React, { useState, useEffect, useRef } from 'react';
 import { usePreferences } from './PreferencesProvider';
-// New import for detecting navigation (location changes)
-import { useLocation } from 'react-router-dom'; // See note below
+
+/**
+ * Robust fallback to detect navigation for both react-router and hash-based routing.
+ * If react-router's useLocation is not present, returns a {pathname} object derived from window.location.hash.
+ */
+function useNavLocation() {
+  try {
+    // eslint-disable-next-line
+    // @ts-ignore
+    const { useLocation } = require('react-router-dom');
+    return useLocation();
+  } catch {
+    // Fallback for hash-based navigation
+    const [hash, setHash] = React.useState(window.location.hash);
+    React.useEffect(() => {
+      const handler = () => setHash(window.location.hash);
+      window.addEventListener('hashchange', handler);
+      return () => window.removeEventListener('hashchange', handler);
+    }, []);
+    return { pathname: hash || '/' };
+  }
+}
 
 // Expense categories (matching TransactionFormModal minus 'Investment' & 'Salary')
 const EXPENSE_CATEGORIES = [
@@ -12,13 +31,13 @@ const EXPENSE_CATEGORIES = [
 
 const STORAGE_BUDGETS_KEY = 'fflow-budgets-v1';
 
-
 // PUBLIC_INTERFACE
 /**
  * BudgetPlanner displays and edits monthly budgets per expense category (excl. investments).
  * Shows: Category, Budget (editable), Actual (current month), Variance (color-coded).
  * Persists budgets in localStorage; reads currency symbol from preferences.
- * Editing and saving is silent and unconditional (no warnings, popups, or error validation).
+ * Robustly loads budgets on component mount and navigation change,
+ * and always saves changes to both state and localStorage.
  */
 function BudgetPlanner({ transactions = [], showToast }) {
   const { currencySymbol } = usePreferences() || { currencySymbol: '$' };
@@ -26,25 +45,25 @@ function BudgetPlanner({ transactions = [], showToast }) {
   const [editingRow, setEditingRow] = useState(null); // Category string or null
   const [rowDraft, setRowDraft] = useState({});
   const [justSavedCat, setJustSavedCat] = useState(null);
-  const mountedRef = useRef(false);
 
-  // Determine location (route) for navigation-based reload (both react-router and hash-based apps)
+  // Track navigation/location for robust reload (supports both react-router and hash-based)
   const navLocation = useNavLocation();
   const lastLocationRef = useRef(navLocation && navLocation.pathname);
 
-  // Load budgets from localStorage on mount, tab switch/view, and navigation event
+  // Loads budgets from localStorage
+  const loadBudgets = React.useCallback(() => {
+    try {
+      const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
+      setBudgets(lsBudgets ? JSON.parse(lsBudgets) : {});
+    } catch {
+      setBudgets({});
+    }
+  }, []);
+
+  // On mount & tab visibility (when page is brought to foreground)
   useEffect(() => {
-    const loadBudgets = () => {
-      try {
-        const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
-        setBudgets(lsBudgets ? JSON.parse(lsBudgets) : {});
-      } catch {
-        setBudgets({});
-      }
-    };
-    // Initial mount
     loadBudgets();
-    // Listen for tab/view (browser visibility or navigation) to reload budgets
+    // Reload on tab focus/visibility
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
         loadBudgets();
@@ -54,27 +73,20 @@ function BudgetPlanner({ transactions = [], showToast }) {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, []);
+  }, [loadBudgets]);
 
-  // RELOAD budgets from localStorage on every navigation (route) change.
+  // On navigation/route change (react-router or hash)
   useEffect(() => {
-    // Only fire on genuine location/route change
-    if (!mountedRef.current) {
-      // First mount (already handled in initial effect, but ensure budgets are in sync)
-      const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
-      setBudgets(lsBudgets ? JSON.parse(lsBudgets) : {});
-      mountedRef.current = true;
-    } else if (
-      navLocation &&
-      navLocation.pathname !== lastLocationRef.current
-    ) {
-      // On location/route change, force reload
-      const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
-      setBudgets(lsBudgets ? JSON.parse(lsBudgets) : {});
+    if (navLocation && navLocation.pathname !== lastLocationRef.current) {
+      loadBudgets();
       lastLocationRef.current = navLocation.pathname;
     }
+    // first mount fallback: ensure sync if blank
+    if (budgets && typeof budgets === 'object' && Object.keys(budgets).length === 0) {
+      loadBudgets();
+    }
+    // eslint-disable-next-line
   }, [navLocation]);
-
 
   // Update the rowDraft if budgets or editingRow changes
   useEffect(() => {
@@ -83,7 +95,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
     }
   }, [editingRow, budgets]);
 
-  // Save budgets to localStorage on budgets change
+  // Whenever budgets state updates, persist to localStorage immediately
   useEffect(() => {
     if (
       budgets &&
@@ -124,7 +136,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
     return out;
   }, [transactions, monthStr]);
 
-  // Save logic: Always persist any value unconditionally and silent, writing to both state and localStorage for robust sync
+  // Save logic: Always persist any value unconditionally and silent, updating both state and localStorage
   const handleSaveBudget = (cat, rawValue) => {
     let val = parseFloat(String(rawValue).replace(/[^0-9.]/g, ''));
     if (!Number.isFinite(val) || val < 0) val = 0;

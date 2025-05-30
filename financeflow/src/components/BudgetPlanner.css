@@ -131,35 +131,52 @@
 
 @media (max-width: 1200px) {
   .budgetplanner-table {
-    min-width: 660px;
+    min-width: 720px;
     font-size: 1em;
   }
   .budgetplanner-summary-row {
     flex-direction: column;
-    gap: 15px;
-    font-size: 1.07em;
+    gap: 17px;
+    font-size: 1.11em;
+  }
+  .budgetplanner-category-cell {
+    font-size: 1.13em;
+    padding-left: 16px;
+    padding-right: 7px;
+    min-width: 110px;
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 900px) {
   .budgetplanner-table {
-    min-width: 470px;
+    min-width: 520px;
     font-size: 0.97em;
   }
   .budgetplanner-table th,
   .budgetplanner-table td {
-    padding: 12px 6px;
+    padding: 11px 5px;
+  }
+  .budgetplanner-actual-cell,
+  .budgetplanner-budget-cell,
+  .budgetplanner-variance-cell {
+    padding-right: 7px !important;
   }
   .budgetplanner-summary-row {
     flex-direction: column;
-    gap: 10px;
+    gap: 9px;
+    font-size: 0.99em;
+  }
+  .budgetplanner-input,
+  .budgetplanner-edit-span {
+    width: 100px !important;
     font-size: 1em;
+    min-width: 56px;
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 540px) {
   .budgetplanner-table {
-    min-width: 320px;
+    min-width: 310px;
     font-size: 0.95em;
   }
   .budgetplanner-category-cell,
@@ -167,17 +184,20 @@
   .budgetplanner-actual-cell,
   .budgetplanner-variance-cell {
     font-size: 0.97em;
-    padding-left: 4px;
-    padding-right: 4px;
+    padding-left: 2px;
+    padding-right: 3px;
+    min-width: unset;
   }
   .budgetplanner-edit-span {
-    width: 94px;
+    min-width: 50px;
+    width: 68px;
     font-size: 1em;
-    padding: 2px 4px;
+    padding: 1.5px 3px;
   }
   .budgetplanner-input {
-    width: 72px;
-    font-size: 1em;
+    width: 60px;
+    font-size: 0.97em;
+    padding: 7px 7px 7px 3px;
   }
 }
 

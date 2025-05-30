@@ -238,9 +238,11 @@ function BudgetPlanner({ transactions = [], showToast }) {
                           }
                         </>
                       ) : (
-                        <span tabIndex={0} className="budgetplanner-edit-span" style={{ minWidth: 35, width: 52, fontSize: "1em", padding: "3px 5px" }}>
-                          {currencySymbol}{Number(budgetVal || 0).toFixed(2)}
-                        </span>
+                        <>
+                          <span tabIndex={0} className="budgetplanner-edit-span" style={{ minWidth: 35, width: 52, fontSize: "1em", padding: "3px 5px" }}>
+                            {currencySymbol}{Number(budgetVal || 0).toFixed(2)}
+                          </span>
+                        </>
                       )}
                     </td>
                     <td className="budgetplanner-actual-cell"

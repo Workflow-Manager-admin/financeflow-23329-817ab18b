@@ -13,20 +13,14 @@ import FilterBar from './components/transactions/FilterBar';
 
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
 
-/* Removed duplicate: import { usePreferences } from './components/PreferencesProvider'; */
-
-// PUBLIC_INTERFACE
 function ExpensesView() {
   const [transactions, setTransactions] = React.useState(() => {
     return JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || [];
   });
-
-  // Only expenses, sorted newest first
   const expenseTx = React.useMemo(
     () => transactions.filter(t => t.type === 'expense').sort((a, b) => b.date.localeCompare(a.date)),
     [transactions]
   );
-
   const [filters, setFilters] = React.useState({ category: 'All', from: '', to: '' });
   const categories = React.useMemo(() => {
     const set = new Set(expenseTx.map(t => t.category));
@@ -62,7 +56,6 @@ function ExpensesView() {
             No expenses for current filters.
           </p>
         }
-        {/* Currency displayed under list summary */}
         <p style={{ color: "var(--text-secondary)", marginTop: 15, fontSize: "1.05em" }}>
           Amounts shown in <span style={{fontWeight:600}}>{currencySymbol}</span>
         </p>
@@ -71,7 +64,6 @@ function ExpensesView() {
   );
 }
 
-// PUBLIC_INTERFACE
 function CalendarView() {
   const [transactions] = React.useState(
     () => JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || []
@@ -291,6 +283,8 @@ const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
   PUBLIC_INTERFACE
   Refactored ProfileView to display user info in a non-editable mode by default.
   'Edit' button enables editing, and after saving, reverts to display-only mode.
+  Now WITHOUT language preference, WITH mobile field.
+  Profile always persists; after save, navigation or refresh, display mode used.
 */
 function ProfileView() {
   // State for profile fields and edit mode
@@ -301,11 +295,10 @@ function ProfileView() {
   const [error, setError] = React.useState('');
   const [saved, setSaved] = React.useState(false);
 
-  // Options for data entry (should match what's in Settings for consistency)
   const currencyOptions = ['USD', 'EUR', 'GBP', 'INR', 'CNY'];
 
-  // Load profile from localStorage on mount AND return to non-edit display if profile exists (and after save, after nav/refresh)
-  React.useEffect(() => {
+  // Load profile from localStorage on mount
+  useEffect(() => {
     const savedProfile = localStorage.getItem(PROFILE_STORAGE_KEY);
     if (savedProfile) {
       try {
@@ -317,7 +310,6 @@ function ProfileView() {
           currency: obj.currency || ""
         });
       } catch {
-        // On error, fallback to blank
         setProfile({ name: '', email: '', mobile: '', currency: '' });
       }
     }
@@ -336,8 +328,12 @@ function ProfileView() {
       setError("Please enter your name.");
       return;
     }
-    if (profile.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(profile.email)) {
+    if (profile.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email)) {
       setError("Invalid email address.");
+      return;
+    }
+    if (profile.mobile && !/^[\d+\-\s()]{6,}$/.test(profile.mobile)) {
+      setError("Enter a valid mobile number.");
       return;
     }
     setError('');
@@ -363,8 +359,8 @@ function ProfileView() {
         setProfile({
           name: obj.name || "",
           email: obj.email || "",
-          currency: obj.currency || "",
-          language: obj.language || ""
+          mobile: obj.mobile || "",
+          currency: obj.currency || ""
         });
       } catch {}
     }
@@ -372,14 +368,14 @@ function ProfileView() {
   }
 
   // Only allow edit mode if user clicked Edit, or if they do not have a name yet (first-time)
-  React.useEffect(() => {
-    // If no profile data (first time), force edit mode for initial setup
+  useEffect(() => {
     if (!profile.name) setEditMode(true);
-    else setEditMode(false); // When profile data loaded and has name, default to display mode
+    else setEditMode(false);
+    // Always defaults to display mode after navigation/refresh if profile is present
     // eslint-disable-next-line
   }, []);
 
-  // UI: Display (non-edit) mode
+  // Display (non-edit) mode
   function renderProfileCard() {
     return (
       <div className="container" style={{ maxWidth: 420 }}>
@@ -423,7 +419,7 @@ function ProfileView() {
     );
   }
 
-  // UI: Edit mode
+  // Edit mode
   function renderProfileEditForm() {
     return (
       <div className="container" style={{ maxWidth: 420 }}>
@@ -489,7 +485,7 @@ function ProfileView() {
                 placeholder="Enter your mobile number"
                 style={{ width: "100%", padding: "9px 10px", marginTop: 5 }}
                 aria-label="Mobile number"
-                pattern="[\\d+\\-\\s()]{6,}"
+                pattern="[\d+\-\s()]{6,}"
                 maxLength={18}
               />
             </label>
@@ -537,8 +533,6 @@ function ProfileView() {
     );
   }
 
-  // Render: display mode unless in edit mode
-  // Only allow edit if clicked, or during initial setup (no name)!
   return (
     <section className="placeholder-view">
       <h1>Profile</h1>
@@ -547,9 +541,6 @@ function ProfileView() {
   );
 }
 
-/* Duplicate import removed */
-
-// PUBLIC_INTERFACE
 function SettingsView() {
   const {
     language,
@@ -693,7 +684,6 @@ function App() {
       View = <section className="placeholder-view"><div className="container"><h1>Not Found</h1></div></section>;
   }
 
-  // Wrap all in PreferencesProvider to propagate currency/lang preference updates
   return (
     <PreferencesProvider>
       <ThemeProvider>

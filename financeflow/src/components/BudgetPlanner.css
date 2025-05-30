@@ -53,9 +53,12 @@
   font-weight: 700;
   color: var(--text-color, #402060);
   letter-spacing: 0.01em;
-  font-size: 1.27em;
-  padding-left: 26px;
+  font-size: 1.33em;
+  padding-left: 37px;
+  padding-right: 15px;
   text-align: left;
+  max-width: 340px;
+  min-width: 165px;
 }
 
 .budgetplanner-budget-cell,

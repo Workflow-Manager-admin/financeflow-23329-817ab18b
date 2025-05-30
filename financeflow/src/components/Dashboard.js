@@ -160,14 +160,17 @@ function Dashboard({ showToast }) {
     setShowTxModal(true);
   }
 
+  // Get currencySymbol from preferences
+  const { currencySymbol } = usePreferences();
+
   // ========== Render ================
   return (
     <section className="dashboard">
       <div className="container dashboard-layout">
         {/* Visualizations moved to top & larger */}
         <div className="dashboard-visuals-grid" style={{marginBottom: 0, marginTop: '20px'}}>
-          <PieChart transactions={transactions} />
-          <LineChart transactions={transactions} />
+          <PieChart transactions={transactions} currencySymbol={currencySymbol} />
+          <LineChart transactions={transactions} currencySymbol={currencySymbol} />
         </div>
         {/* Savings ring just below, but prominent */}
         <div className="dashboard-upper" style={{marginTop: '20px', marginBottom: 0}}>
@@ -175,6 +178,7 @@ function Dashboard({ showToast }) {
             goal={goal}
             stats={stats}
             onSetGoal={() => setShowGoalModal(true)}
+            currencySymbol={currencySymbol}
           />
         </div>
         {/* Transactions list aligns with grid/visuals */}
@@ -189,6 +193,7 @@ function Dashboard({ showToast }) {
             onEdit={handleEditTransaction}
             onDelete={handleDeleteTransaction}
             emptyMsg="No transactions found for selected filters."
+            currencySymbol={currencySymbol}
           />
         </div>
       </div>
@@ -213,6 +218,7 @@ function Dashboard({ showToast }) {
             setEditTx(null);
           }}
           initial={editTx}
+          currencySymbol={currencySymbol}
         />
       )}
       {showGoalModal && (

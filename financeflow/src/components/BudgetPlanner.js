@@ -16,12 +16,14 @@ const STORAGE_TRANSACTIONS_KEY = 'fflow-transactions-v1';
  * Shows: Category, Budget (editable), Actual (current month), Variance (color-coded).
  * Persists budgets in localStorage; reads currency symbol from preferences.
  * Reverted: Category heading restored to classic, no margin shift/grouping with content.
+ * Now triggers a "budget saved!" notification on save and persists entered budgets between tab switches using localStorage.
  */
-function BudgetPlanner({ transactions = [] }) {
+function BudgetPlanner({ transactions = [], showToast }) {
   const { currencySymbol } = usePreferences() || { currencySymbol: '$' };
   const [budgets, setBudgets] = useState({});
   const [editingRow, setEditingRow] = useState(null); // Category string or null
   const [rowDraft, setRowDraft] = useState({});
+  const [justSavedCat, setJustSavedCat] = useState(null);
 
   // Only load budgets from localStorage (transactions now come from props/cloud/local sync)
   useEffect(() => {
@@ -30,6 +32,20 @@ function BudgetPlanner({ transactions = [] }) {
     } catch {
       setBudgets({});
     }
+  }, []);
+
+  // When this component remounts due to navigation, rehydrate state from localStorage
+  useEffect(() => {
+    const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
+    if (lsBudgets) {
+      try {
+        const parsed = JSON.parse(lsBudgets);
+        if (JSON.stringify(parsed) !== JSON.stringify(budgets)) {
+          setBudgets(parsed);
+        }
+      } catch {}
+    }
+    // eslint-disable-next-line
   }, []);
 
   // Update the rowDraft if budgets or editingRow changes
@@ -69,6 +85,17 @@ function BudgetPlanner({ transactions = [] }) {
     });
     return out;
   }, [transactions, monthStr]);
+
+  // Notify 'budget saved!' if a budget was just saved (used for inline feedback if showToast not provided)
+  useEffect(() => {
+    if (justSavedCat) {
+      if (typeof showToast === 'function') {
+        showToast('budget saved!', 'success');
+      }
+      // Reset after showing
+      setTimeout(() => setJustSavedCat(null), 1200);
+    }
+  }, [justSavedCat, showToast]);
 
   return (
     <section className="placeholder-view">
@@ -127,7 +154,14 @@ function BudgetPlanner({ transactions = [] }) {
                           min={0}
                           step="0.01"
                           autoFocus
-                          value={typeof rowDraft.value === 'number' && rowDraft.value !== 0 ? rowDraft.value : rowDraft.value === 0 ? '' : rowDraft.value || ''}
+                          value={
+                            typeof rowDraft.value === 'number'
+                              && rowDraft.value !== 0
+                                ? rowDraft.value
+                                : rowDraft.value === 0
+                                ? ''
+                                : rowDraft.value || ''
+                          }
                           onChange={e => setRowDraft({ value: e.target.value })}
                           style={{
                             width: 82, fontSize: '1em', textAlign: 'right',
@@ -168,6 +202,12 @@ function BudgetPlanner({ transactions = [] }) {
                               setBudgets(prev => ({ ...prev, [cat]: val }));
                               setEditingRow(null);
                               setRowDraft({});
+                              setJustSavedCat(cat);
+                              // Prefer notification via showToast prop if available
+                              if (!showToast) {
+                                // Fallback: Show inline notification if no showToast passed in parent
+                                // Will be rendered in the row
+                              }
                             }}
                             aria-label={`Save budget for ${cat}`}
                           >Save</button>
@@ -183,16 +223,24 @@ function BudgetPlanner({ transactions = [] }) {
                           >Cancel</button>
                         </div>
                       ) : (
-                        <button
-                          className="btn btn-large"
-                          style={{ minWidth: 34, padding: "4px 11px", fontSize: "0.97em" }}
-                          onClick={e => {
-                            e.preventDefault();
-                            setEditingRow(cat);
-                          }}
-                          aria-label={`Edit budget for ${cat}`}
-                          disabled={editingRow !== null}
-                        >Edit</button>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <button
+                            className="btn btn-large"
+                            style={{ minWidth: 34, padding: "4px 11px", fontSize: "0.97em" }}
+                            onClick={e => {
+                              e.preventDefault();
+                              setEditingRow(cat);
+                            }}
+                            aria-label={`Edit budget for ${cat}`}
+                            disabled={editingRow !== null}
+                          >Edit</button>
+                          {/* Inline feedback if no showToast (very rare path) */}
+                          {justSavedCat === cat && !showToast && (
+                            <span style={{ color: 'var(--income,#22C55E)', marginLeft: 6, fontWeight: 500, transition: 'opacity 0.18s', opacity: 0.90 }}>
+                              budget saved!
+                            </span>
+                          )}
+                        </span>
                       )}
                     </td>
                   </tr>

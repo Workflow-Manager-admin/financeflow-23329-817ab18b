@@ -1008,7 +1008,7 @@ function App() {
       ViewRaw = <ExpensesView transactions={transactions} />;
       break;
     case '/budget':
-      ViewRaw = <BudgetPlanner transactions={transactions} />;
+      ViewRaw = <BudgetPlanner transactions={transactions} showToast={notify} />;
       break;
     case '/calendar':
       ViewRaw = <CalendarView transactions={transactions} />;

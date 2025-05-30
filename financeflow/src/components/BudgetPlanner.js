@@ -239,7 +239,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                     <td className="budgetplanner-budget-cell"
                         style={{ textAlign: 'right', padding: "8px 5px" }}>
                       {isEditing ? (
-                        <>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                           <input
                             className="budgetplanner-input"
                             type="number"
@@ -261,11 +261,88 @@ function BudgetPlanner({ transactions = [], showToast }) {
                               setEditError('');
                             }}
                             aria-label={`Budget for ${cat}`}
+                            onKeyDown={e => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleSaveBudget(cat, rowDraft.value);
+                              } else if (e.key === 'Escape') {
+                                e.preventDefault();
+                                setEditingRow(null);
+                                setRowDraft({});
+                                setEditError('');
+                              }
+                            }}
                           />
+                          {/* Save/checkmark icon button */}
+                          <button
+                            type="button"
+                            className="budgetplanner-save-btn"
+                            onClick={e => {
+                              e.preventDefault();
+                              handleSaveBudget(cat, rowDraft.value);
+                            }}
+                            aria-label={`Save budget for ${cat}`}
+                            style={{
+                              marginLeft: 2,
+                              border: 'none',
+                              background: 'none',
+                              padding: 0,
+                              cursor: 'pointer',
+                              color: 'var(--income,#22C55E)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              fontSize: '1.25em'
+                            }}
+                          >
+                            {/* Modern checkmark SVG */}
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path
+                                d="M5 11l3.2 3.4a1 1 0 0 0 1.5-.1l5.3-6.5"
+                                stroke="currentColor"
+                                strokeWidth="2.1"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                fill="none"
+                              />
+                            </svg>
+                          </button>
+                          {/* Cancel/x icon button */}
+                          <button
+                            type="button"
+                            className="budgetplanner-cancel-btn"
+                            onClick={e => {
+                              e.preventDefault();
+                              setEditingRow(null);
+                              setRowDraft({});
+                              setEditError('');
+                            }}
+                            aria-label={`Cancel editing budget for ${cat}`}
+                            style={{
+                              marginLeft: 1,
+                              border: 'none',
+                              background: 'none',
+                              padding: 0,
+                              cursor: 'pointer',
+                              color: 'var(--expense,#E74C3C)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              fontSize: '1.18em'
+                            }}
+                          >
+                            {/* Minimal cancel/X SVG */}
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                              <path
+                                d="M5.6 5.6l6.8 6.8M12.4 5.6l-6.8 6.8"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                              />
+                            </svg>
+                          </button>
                           {editError &&
                             <div style={{ color: 'var(--expense,#E74C3C)', fontWeight: 600, marginTop: 6, fontSize: '0.95em' }}>{editError}</div>
                           }
-                        </>
+                        </div>
                       ) : (
                         <>
                           <span tabIndex={0} className="budgetplanner-edit-span" style={{ minWidth: 35, width: 52, fontSize: "1em", padding: "3px 5px", display: "inline-flex", alignItems: "center", gap: 6 }}>

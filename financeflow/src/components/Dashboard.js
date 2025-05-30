@@ -202,9 +202,20 @@ function Dashboard({ showToast }) {
   // ========== Render ================
   return (
     <section className="dashboard">
+      {/* Heading, visually grouped with main dashboard content */}
+      <div className="container" style={{paddingTop: 10, maxWidth: 950}}>
+        <h1 style={{
+          margin: "0 0 17px 0",
+          fontSize: "2.1rem",
+          color: "var(--primary,#6C2EBE)",
+          fontWeight: 700,
+          letterSpacing: "0.01em",
+          textAlign: "left"
+        }}>Dashboard</h1>
+      </div>
       <div className="container dashboard-layout">
         {/* Visualizations moved to top & larger */}
-        <div className="dashboard-visuals-grid" style={{marginBottom: 0, marginTop: '20px'}}>
+        <div className="dashboard-visuals-grid" style={{marginBottom: 0, marginTop: '6px'}}>
           <PieChart transactions={transactions} currencySymbol={currencySymbol} />
           <LineChart transactions={transactions} currencySymbol={currencySymbol} />
         </div>

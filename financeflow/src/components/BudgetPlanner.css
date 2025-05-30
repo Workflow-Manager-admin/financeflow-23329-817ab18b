@@ -65,16 +65,16 @@
 }
 
 .budgetplanner-input {
-  width: 123px;
-  font-size: 1.09em;
+  width: 160px;
+  font-size: 1.17em;
   text-align: right;
-  padding: 7px 14px;
-  border-radius: 7px;
-  border: 1.2px solid var(--secondary, #bbbbbf);
+  padding: 11px 18px;
+  border-radius: 8px;
+  border: 1.7px solid var(--secondary, #bbbbbf);
   background: var(--surface,#fff);
-  box-shadow: 0 1px 4px rgba(104,84,206,0.08);
+  box-shadow: 0 1.7px 6px rgba(104,84,206,0.10);
   outline: none;
-  transition: border 0.2s;
+  transition: border 0.22s;
 }
 
 .budgetplanner-input:focus {
@@ -84,14 +84,14 @@
 
 .budgetplanner-edit-span {
   display: inline-block;
-  width: 114px;
-  font-size: 1.11em;
+  width: 148px;
+  font-size: 1.19em;
   text-align: right;
   cursor: pointer;
-  padding: 4px 10px;
-  border-radius: 4px;
-  background: none;
-  transition: background 0.2s;
+  padding: 7px 15px;
+  border-radius: 5px;
+  background: rgba(240,240,255,0.03);
+  transition: background 0.18s;
 }
 
 .budgetplanner-summary-row {

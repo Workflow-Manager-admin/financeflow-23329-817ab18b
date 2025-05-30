@@ -289,11 +289,13 @@ const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 /*
   PUBLIC_INTERFACE
   Refactored ProfileView to display user info in a non-editable mode by default.
-  Render an "Edit" button to allow switching to edit mode; on save/cancel, reverts to read-only mode.
+  'Edit' button enables editing, and after saving, reverts to display-only mode.
 */
 function ProfileView() {
   // State for profile fields and edit mode
   const [profile, setProfile] = React.useState({ name: '', email: '', currency: '', language: '' });
+  // By default, show non-edit (display) mode after mount or after a Save,
+  // except for first-time setup (no name), in which case force edit.
   const [editMode, setEditMode] = React.useState(false);
   const [error, setError] = React.useState('');
   const [saved, setSaved] = React.useState(false);
@@ -340,8 +342,8 @@ function ProfileView() {
     }
     setError('');
     localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
-    setSaved(true);
     setEditMode(false);
+    setSaved(true);
     setTimeout(() => setSaved(false), 1400);
   }
 
@@ -369,10 +371,13 @@ function ProfileView() {
     setError('');
   }
 
-  // If no profile data, force edit mode (first-time user)
+  // Only allow edit mode if user clicked Edit, or if they do not have a name yet (first-time)
   React.useEffect(() => {
+    // If no profile data (first time), force edit mode for initial setup
     if (!profile.name) setEditMode(true);
-  }, [profile.name]);
+    else setEditMode(false); // When profile data loaded and has name, default to display mode
+    // eslint-disable-next-line
+  }, []);
 
   // UI: Display (non-edit) mode
   function renderProfileCard() {
@@ -533,6 +538,8 @@ function ProfileView() {
     );
   }
 
+  // Render: display mode unless in edit mode
+  // Only allow edit if clicked, or during initial setup (no name)!
   return (
     <section className="placeholder-view">
       <h1>Profile</h1>

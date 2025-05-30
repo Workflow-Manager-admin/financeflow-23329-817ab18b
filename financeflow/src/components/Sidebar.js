@@ -9,6 +9,15 @@ import { ThemeContext } from './ThemeProvider';
  */
 const icons = {
   dashboard: (
+  ),
+  budget: (
+    // Modern wallet/money SVG
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="M16 9.5A2.5 2.5 0 1016 14.5" />
+      <path d="M3 7l11.5 0" />
+    </svg>
+  ),
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <rect x="3" y="3" width="7" height="9" rx="2" />
       <rect x="14" y="3" width="7" height="5" rx="2" />
@@ -70,6 +79,7 @@ const icons = {
 const navItems = [
   { label: 'Dashboard', icon: 'dashboard', route: '/' },
   { label: 'Expenses', icon: 'list', route: '/expenses' },
+  { label: 'Budget', icon: 'budget', route: '/budget' },
   { label: 'Calendar', icon: 'calendar', route: '/calendar' },
   { label: 'Profile', icon: 'user', route: '/profile' },
 ];

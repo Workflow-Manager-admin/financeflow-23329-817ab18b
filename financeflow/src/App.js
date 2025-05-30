@@ -10,6 +10,8 @@ import PreferencesProvider, { usePreferences } from './components/PreferencesPro
 // Placeholder views
 import TransactionList from './components/transactions/TransactionList';
 import FilterBar from './components/transactions/FilterBar';
+import BudgetPlanner from './components/BudgetPlanner';
+import './components/BudgetPlanner.css';
 
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
 

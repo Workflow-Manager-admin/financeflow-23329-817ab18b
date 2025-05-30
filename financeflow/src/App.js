@@ -17,7 +17,7 @@ function ExpensesView() {
   const [transactions, setTransactions] = React.useState(() => {
     return JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || [];
   });
-  // Map any existing "salary" expense category in stored data to "Rent/House" so that filters are correct
+  // Map any "Salary" expense category (from legacy data) to "Rent/House"
   const expenseTx = React.useMemo(
     () =>
       transactions
@@ -31,6 +31,7 @@ function ExpensesView() {
     [transactions]
   );
   const [filters, setFilters] = React.useState({ category: 'All', from: '', to: '' });
+  // Categories: Only show actual used (no "Salary"), legacy "Salary" mapped to Rent/House above.
   const categories = React.useMemo(() => {
     const set = new Set(expenseTx.map(t => t.category));
     return ['All', ...Array.from(set).filter(Boolean)];

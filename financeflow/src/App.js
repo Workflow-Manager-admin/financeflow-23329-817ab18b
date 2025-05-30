@@ -912,6 +912,9 @@ function App() {
     case '/expenses':
       View = <ExpensesView />;
       break;
+    case '/budget':
+      View = <BudgetPlanner />;
+      break;
     case '/calendar':
       View = <CalendarView />;
       break;

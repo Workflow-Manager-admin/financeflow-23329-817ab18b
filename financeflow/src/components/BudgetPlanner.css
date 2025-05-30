@@ -97,23 +97,25 @@
 
 .budgetplanner-edit-span {
   display: inline-block;
-  width: 148px;
+  min-width: 120px;
+  width: 166px;
   font-size: 1.19em;
   text-align: right;
   cursor: pointer;
-  padding: 7px 15px;
-  border-radius: 5px;
-  background: rgba(240,240,255,0.03);
+  padding: 8px 15px 8px 11px;
+  border-radius: 7px;
+  background: rgba(240,240,255,0.07);
   transition: background 0.18s;
 }
 
 .budgetplanner-summary-row {
-  font-weight: 700;
-  font-size: 1.20em;
-  margin-top: 24px;
+  font-weight: 800;
+  font-size: 1.25em;
+  margin-top: 28px;
   border-radius: 10px;
   background: none;
-  gap: 50px;
+  gap: 58px;
+  letter-spacing: 0.01em;
 }
 
 .budgetplanner-actions-cell {

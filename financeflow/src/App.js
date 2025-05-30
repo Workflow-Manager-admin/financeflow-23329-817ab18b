@@ -53,30 +53,42 @@ function ExpensesView() {
 
   return (
     <section className="placeholder-view">
-      <div className="container" style={{maxWidth: 650}}>
-        <h1 style={{
-          margin: "0 0 18px 0",
-          fontSize: "2rem",
-          color: "var(--primary,#6C2EBE)",
-          fontWeight: 700,
-          letterSpacing: "0.01em",
-          textAlign: "left"
-        }}>Expenses</h1>
-        <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
-        <TransactionList
-          transactions={filtered}
-          onEdit={() => {}}
-          onDelete={() => {}}
-          emptyMsg={`No expenses found.`}
-          currencySymbol={currencySymbol}
-        />
-        {filtered.length === 0 &&
-          <p style={{color: "var(--text-secondary)"}}>
-            No expenses for current filters.
-          </p>
-        }
+      <div
+        className="container"
+        style={{ maxWidth: 650, background: "var(--surface,#fff)", borderRadius: 13, boxShadow: "0 2px 16px rgba(60,42,150,0.07)", padding: "34px 17px", marginTop: 30 }}
+      >
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 0, marginBottom: 8 }}>
+          <h1
+            style={{
+              margin: 0,
+              fontSize: "2rem",
+              color: "var(--primary,#6C2EBE)",
+              fontWeight: 700,
+              letterSpacing: "0.01em",
+              textAlign: "left",
+              flex: '1 1 auto'
+            }}
+          >
+            Expenses
+          </h1>
+        </div>
+        <div>
+          <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
+        </div>
+        <div>
+          <TransactionList
+            transactions={filtered}
+            onEdit={() => {}}
+            onDelete={() => {}}
+            emptyMsg={`No expenses found.`}
+            currencySymbol={currencySymbol}
+          />
+        </div>
+        {filtered.length === 0 && (
+          <p style={{ color: "var(--text-secondary)" }}>No expenses for current filters.</p>
+        )}
         <p style={{ color: "var(--text-secondary)", marginTop: 15, fontSize: "1.05em" }}>
-          Amounts shown in <span style={{fontWeight:600}}>{currencySymbol}</span>
+          Amounts shown in <span style={{ fontWeight: 600 }}>{currencySymbol}</span>
         </p>
       </div>
     </section>
@@ -673,15 +685,32 @@ function ProfileView() {
 
   return (
     <section className="placeholder-view">
-      <div className="container" style={{ maxWidth: 420 }}>
-        <h1 style={{
-          margin: "0 0 16px 0",
-          fontSize: "2rem",
-          color: "var(--primary,#6C2EBE)",
-          fontWeight: 700,
-          letterSpacing: "0.01em",
-          textAlign: "left"
-        }}>Profile</h1>
+      <div
+        className="container"
+        style={{
+          maxWidth: 420,
+          background: "var(--surface,#fff)",
+          borderRadius: 13,
+          boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
+          padding: "34px 17px",
+          marginTop: 30
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 0, marginBottom: 8 }}>
+          <h1
+            style={{
+              margin: 0,
+              fontSize: "2rem",
+              color: "var(--primary,#6C2EBE)",
+              fontWeight: 700,
+              letterSpacing: "0.01em",
+              textAlign: "left",
+              flex: '1 1 auto'
+            }}
+          >
+            Profile
+          </h1>
+        </div>
         {editMode ? renderProfileEditForm() : renderProfileCard()}
       </div>
     </section>

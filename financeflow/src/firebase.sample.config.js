@@ -1,4 +1,4 @@
-/*
+ /*
   Sample Firebase config file for FinanceFlow.
   DO NOT commit your real credentials here!
   Copy this file to 'firebase.config.js' and fill in your Firebase project settings.

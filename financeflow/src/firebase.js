@@ -7,7 +7,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from 'firebase/firestore';
 
-import firebaseConfig from '../firebase.sample.config.js';
+import firebaseConfig from './firebase.sample.config.js';
 
 // Use project config (replace firebase.sample.config.js with real config for prod)
 const app = initializeApp(firebaseConfig);

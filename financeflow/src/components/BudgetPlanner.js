@@ -112,13 +112,42 @@ function BudgetPlanner({ transactions = [], showToast }) {
   const handleSaveBudget = (cat, rawValue) => {
     let val = parseFloat(String(rawValue).replace(/[^0-9.]/g, ''));
     if (!Number.isFinite(val) || val < 0) val = 0;
-    setBudgets(prev => {
-      const updated = { ...prev, [cat]: val };
-      try {
-        localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(updated));
-      } catch {}
-      return updated;
-    });
+
+    // Compute the new total - handle prevent over-budget ONLY if raising value,
+    // but always allow lowering even if already over (see test requirement).
+    const currentBudgets = { ...budgets };
+    const prevVal = Number(currentBudgets[cat] || 0);
+    const newBudgets = { ...currentBudgets, [cat]: val };
+
+    // Compute total budget for all categories
+    const budgetedTotal =
+      Object.keys(newBudgets)
+        .reduce((sum, c) => sum + Number(newBudgets[c] || 0), 0);
+
+    // Compute total income for current month
+    const monthStr = new Date().toISOString().slice(0, 7);
+    const totalIncome = (transactions || []).reduce(
+      (sum, t) =>
+        t.type === 'income' && t.date && t.date.startsWith(monthStr)
+          ? sum + Number(t.amount)
+          : sum,
+      0
+    );
+
+    // If trying to increase a category budget such that total budgets would now go above income for the month, block and show error
+    if (
+      val > prevVal &&
+      totalIncome > 0 &&
+      budgetedTotal > totalIncome
+    ) {
+      setEditError(
+        'Cannot set this budget: total of all budgets would exceed your income for the month.'
+      );
+      return false;
+    }
+
+    setBudgets(newBudgets); // This triggers useEffect to persist to localStorage and re-render
+
     setEditingRow(null);
     setRowDraft({});
     setJustSavedCat(cat);

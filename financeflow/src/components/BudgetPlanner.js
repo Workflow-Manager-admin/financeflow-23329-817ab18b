@@ -144,13 +144,21 @@ function BudgetPlanner({ transactions = [], showToast }) {
           Budget Planner
         </h1>
         <div style={{ overflowX: "auto", width: "100%", marginBottom: 10 }}>
-          <table className="budgetplanner-table" style={{ minWidth: 900, width: "99.2%", tableLayout: "fixed" }}>
+          <table
+            className="budgetplanner-table"
+            style={{
+              minWidth: 1080,
+              width: "100%",
+              tableLayout: "fixed",
+              fontSize: "1.17em",
+            }}
+          >
             <colgroup>
-              <col style={{ width: "27%" }} />
-              <col style={{ width: "19%" }} />
-              <col style={{ width: "19%" }} />
-              <col style={{ width: "19%" }} />
-              <col style={{ width: "16%" }} />
+              <col style={{ minWidth: 160, width: "32%" }} />
+              <col style={{ minWidth: 138, width: "17%" }} />
+              <col style={{ minWidth: 138, width: "17%" }} />
+              <col style={{ minWidth: 138, width: "17%" }} />
+              <col style={{ minWidth: 108, width: "17%" }} />
             </colgroup>
             <thead>
               <tr>

@@ -43,7 +43,7 @@ function ExpensesView() {
     return arr;
   }
   const filtered = React.useMemo(() => applyFilters(expenseTx, filters), [expenseTx, filters]);
-  const { currency } = usePreferences() || { currency: 'USD' };
+  const { currency, currencySymbol } = usePreferences() || { currency: 'USD', currencySymbol: '$' };
 
   return (
     <section className="placeholder-view">
@@ -55,6 +55,7 @@ function ExpensesView() {
           onEdit={() => {}}
           onDelete={() => {}}
           emptyMsg={`No expenses found.`}
+          currencySymbol={currencySymbol}
         />
         {filtered.length === 0 &&
           <p style={{color: "var(--text-secondary)"}}>
@@ -63,7 +64,7 @@ function ExpensesView() {
         }
         {/* Currency displayed under list summary */}
         <p style={{ color: "var(--text-secondary)", marginTop: 15, fontSize: "1.05em" }}>
-          Displayed in <span style={{fontWeight:600}}>{currency}</span>
+          Amounts shown in <span style={{fontWeight:600}}>{currencySymbol}</span>
         </p>
       </div>
     </section>

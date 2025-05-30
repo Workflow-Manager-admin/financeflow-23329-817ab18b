@@ -66,31 +66,23 @@ function ExpensesView() {
         }}
       >
         {/* Heading visually grouped with content, minimal vertical gap */}
-        <div
+        {/* Heading moved above main content (pre-alignment) and shifted right */}
+        <h1
+          className="view-heading-shift"
           style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "32px 17px 0 17px",
-            minHeight: 0,
-            marginBottom: "-3px",
-            gap: 0
+            marginTop: 29,
+            marginBottom: 7,
+            marginLeft: 21,
+            fontSize: "2rem",
+            color: "var(--primary,#6C2EBE)",
+            fontWeight: 700,
+            letterSpacing: "0.01em",
+            textAlign: "left",
+            lineHeight: 1.13
           }}
         >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: "2rem",
-              color: "var(--primary,#6C2EBE)",
-              fontWeight: 700,
-              letterSpacing: "0.01em",
-              textAlign: "left",
-              flex: "1 1 auto",
-              lineHeight: 1.13
-            }}
-          >
-            Expenses
-          </h1>
-        </div>
+          Expenses
+        </h1>
         <div style={{ padding: "0 17px" }}>
           <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
         </div>
@@ -663,31 +655,23 @@ function ProfileView() {
           padding: "0 0 32px 0"
         }}
       >
-        <div
+        {/* Heading above card, shifted right */}
+        <h1
+          className="view-heading-shift"
           style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "28px 17px 0 17px",
-            minHeight: 0,
-            marginBottom: "-3px",
-            gap: 0
+            marginTop: 23,
+            marginBottom: 12,
+            marginLeft: 18,
+            fontSize: "2rem",
+            color: "var(--primary,#6C2EBE)",
+            fontWeight: 700,
+            letterSpacing: "0.01em",
+            textAlign: "left",
+            lineHeight: 1.13
           }}
         >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: "2rem",
-              color: "var(--primary,#6C2EBE)",
-              fontWeight: 700,
-              letterSpacing: "0.01em",
-              textAlign: "left",
-              flex: "1 1 auto",
-              lineHeight: 1.13
-            }}
-          >
-            Profile
-          </h1>
-        </div>
+          Profile
+        </h1>
         <div style={{ padding: "0 17px" }}>
           {editMode ? renderProfileEditForm() : renderProfileCard()}
         </div>

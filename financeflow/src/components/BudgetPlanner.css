@@ -2,24 +2,25 @@
 
 .budgetplanner-table {
   background: none;
-  border-radius: 14px;
-  box-shadow: 0 2.5px 17px rgba(70,50,180,0.04);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(70,50,180,0.06);
   overflow: hidden;
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
-  min-width: 700px;
-  margin-bottom: 32px;
-  margin-top: 14px;
+  min-width: 900px;
+  margin-bottom: 42px;
+  margin-top: 20px;
   table-layout: fixed;
 }
 
 .budgetplanner-table th,
 .budgetplanner-table td {
-  padding: 21px 22px;
-  font-size: 1.11em;
+  padding: 28px 30px;
+  font-size: 1.20em;
   background: none;
   vertical-align: middle;
+  word-break: keep-all;
 }
 
 .budgetplanner-table th {

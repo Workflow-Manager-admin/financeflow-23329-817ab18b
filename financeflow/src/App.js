@@ -33,7 +33,7 @@ function ExpensesView() {
   const [filters, setFilters] = React.useState({ category: 'All', from: '', to: '' });
   // Categories: Only show actual used (no "Salary"), legacy "Salary" mapped to Rent/House above.
   const categories = React.useMemo(() => {
-    const set = new Set(expenseTx.map(t => t.category));
+    const set = new Set(expenseTx.map(t => t.category === 'Salary' ? 'Rent/House' : t.category));
     return ['All', ...Array.from(set).filter(Boolean)];
   }, [expenseTx]);
   function applyFilters(data, filtersArg) {

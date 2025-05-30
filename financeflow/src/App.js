@@ -488,17 +488,29 @@ function ProfileView() {
           <div style={{ marginBottom: 17 }}>
             <label style={{ fontWeight: 500, display: "block", marginBottom: 7 }}>
               Mobile (optional)
-              <input
-                type="text"
-                name="mobile"
-                value={profile.mobile}
-                onChange={handleChange}
-                placeholder="Enter your mobile number"
-                style={{ width: "100%", padding: "9px 10px", marginTop: 5 }}
-                aria-label="Mobile number"
-                pattern="(\\+?\\d[\\d\\-\\s()]{5,17})"
-                maxLength={18}
-              />
+              <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 5 }}>
+                <CountryCodeDropdown
+                  countryCode={profile.countryCode || "+1"}
+                  onChange={cc =>
+                    setProfile(p => ({ ...p, countryCode: cc }))
+                  }
+                />
+                <input
+                  type="tel"
+                  name="mobile"
+                  value={profile.mobile}
+                  onChange={handleChange}
+                  placeholder="Enter 10-digit mobile"
+                  style={{ flex: 1, padding: "9px 10px" }}
+                  aria-label="Mobile number"
+                  maxLength={10}
+                  pattern="[0-9]{10}"
+                  required={false}
+                />
+              </div>
+              <div style={{ fontSize: "0.9em", color: "var(--text-secondary)", marginTop: 2 }}>
+                <span>Include 10 digits, country code selectable.</span>
+              </div>
             </label>
           </div>
           <div style={{ marginBottom: 19 }}>

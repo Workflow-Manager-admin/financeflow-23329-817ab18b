@@ -4,6 +4,10 @@
   gap: 10px;
   margin: 0;
   padding: 0;
+  /* Increase list visible height in parent scroll, but ensure smooth scroll for very long lists */
+  max-height: 460px;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 .tx-row {
   display: flex;

@@ -78,6 +78,21 @@
   margin-left: auto;
   margin-right: auto;
   border: 1px solid var(--secondary, #ececec);
+  /* Make transaction list taller and allow scrolling for overflow */
+  min-height: 420px;
+  max-height: 540px;
+  overflow-y: auto;
+  /* Smoother with mobile/desktop and page fit */
+  transition: max-height 0.23s, min-height 0.23s;
+}
+
+/* On mobile, make sure height is usable and scrolling still works */
+@media (max-width: 600px) {
+  .dashboard-txlist-outer {
+    min-height: 320px;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
 }
 
 /* Remove old floating action column styles */

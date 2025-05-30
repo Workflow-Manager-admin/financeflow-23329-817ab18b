@@ -281,24 +281,28 @@ const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 
 /*
   PUBLIC_INTERFACE
-  Refactored ProfileView to display user info in a non-editable mode by default.
-  'Edit' button enables editing, and after saving, reverts to display-only mode.
-  Now WITHOUT language preference, WITH mobile field.
-  Profile always persists; after save, navigation or refresh, display mode used.
+  ProfileView:
+  - Removes language preference.
+  - Adds a validated (format-checked) mobile number field.
+  - Profile information is always displayed in non-edit mode by default
+    (including after saving, refresh, or navigation).
+  - Edit mode is only entered if (a) the user clicks 'Edit', or (b) for first-time setup (no name present).
 */
 function ProfileView() {
-  // State for profile fields and edit mode
+  // Profile state and edit mode.
   const [profile, setProfile] = React.useState({ name: '', email: '', mobile: '', currency: '' });
-  // By default, show non-edit (display) mode after mount or after a Save,
-  // except for first-time setup (no name), in which case force edit.
+  // editMode is true ONLY if: (a) first-time setup (no name) (b) user clicks edit.
   const [editMode, setEditMode] = React.useState(false);
   const [error, setError] = React.useState('');
   const [saved, setSaved] = React.useState(false);
 
   const currencyOptions = ['USD', 'EUR', 'GBP', 'INR', 'CNY'];
 
-  // Load profile from localStorage on mount
-  useEffect(() => {
+  // Remember if we already saw an initial profile (for first run flow).
+  const isFirstRender = React.useRef(true);
+
+  // -- Initialization: load profile (and decide on edit/display mode)
+  React.useEffect(() => {
     const savedProfile = localStorage.getItem(PROFILE_STORAGE_KEY);
     if (savedProfile) {
       try {
@@ -309,18 +313,31 @@ function ProfileView() {
           mobile: obj.mobile || "",
           currency: obj.currency || ""
         });
+        // No language field, remove any previous language reference.
       } catch {
         setProfile({ name: '', email: '', mobile: '', currency: '' });
       }
     }
+    // After (re)load, only switch to edit mode if name is missing (first-time), else always non-edit
+    isFirstRender.current = false;
   }, []);
 
+  // When profile changes (after mount), enforce display mode unless new profile is missing name
+  React.useEffect(() => {
+    // If first mount and profile has no name, go to edit mode (forced for first setup)
+    if (isFirstRender.current) return; // skip during profile fetch
+    if (!profile.name) setEditMode(true);
+    else setEditMode(false);
+  }, [profile.name]); // react to name changes only
+
+  // Handler: field change
   // PUBLIC_INTERFACE
   function handleChange(e) {
     const { name, value } = e.target;
     setProfile(p => ({ ...p, [name]: value }));
   }
 
+  // Handler: Save (with validation, including mobile)
   // PUBLIC_INTERFACE
   function handleSave(e) {
     e.preventDefault && e.preventDefault();
@@ -332,26 +349,28 @@ function ProfileView() {
       setError("Invalid email address.");
       return;
     }
-    if (profile.mobile && !/^[\d+\-\s()]{6,}$/.test(profile.mobile)) {
-      setError("Enter a valid mobile number.");
+    if (profile.mobile && !/^(\\+?\\d[\\d\\-\\s()]{5,17})$/.test(profile.mobile.trim())) {
+      setError("Enter a valid mobile number. It should be at least 6 digits and can include +, -, spaces or parentheses.");
       return;
     }
     setError('');
     localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
     setEditMode(false);
     setSaved(true);
-    setTimeout(() => setSaved(false), 1400);
+    setTimeout(() => setSaved(false), 1300);
   }
 
+  // Handler: Enter edit mode manually
   // PUBLIC_INTERFACE
   function handleEdit() {
     setEditMode(true);
   }
 
+  // Handler: Cancel edits, revert to last-saved profile, always stays non-edit after cancel
   // PUBLIC_INTERFACE
   function handleCancel() {
     setEditMode(false);
-    // Reload from localStorage to revert any unsaved changes
+    // Reload from localStorage to revert any unsaved edits
     const savedProfile = localStorage.getItem(PROFILE_STORAGE_KEY);
     if (savedProfile) {
       try {
@@ -366,14 +385,6 @@ function ProfileView() {
     }
     setError('');
   }
-
-  // Only allow edit mode if user clicked Edit, or if they do not have a name yet (first-time)
-  useEffect(() => {
-    if (!profile.name) setEditMode(true);
-    else setEditMode(false);
-    // Always defaults to display mode after navigation/refresh if profile is present
-    // eslint-disable-next-line
-  }, []);
 
   // Display (non-edit) mode
   function renderProfileCard() {
@@ -485,7 +496,7 @@ function ProfileView() {
                 placeholder="Enter your mobile number"
                 style={{ width: "100%", padding: "9px 10px", marginTop: 5 }}
                 aria-label="Mobile number"
-                pattern="[\d+\-\s()]{6,}"
+                pattern="(\\+?\\d[\\d\\-\\s()]{5,17})"
                 maxLength={18}
               />
             </label>

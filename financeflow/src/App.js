@@ -769,13 +769,16 @@ function SettingsView() {
           padding: "0 0 32px 0"
         }}
       >
-        <div style={{
-          padding: "20px 17px 0 17px",
-          display: "flex",
-          alignItems: "flex-end",
-          gap: 0,
-          marginBottom: 0
-        }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            padding: "25px 17px 0 17px",
+            minHeight: 0,
+            marginBottom: "-3px",
+            gap: 0
+          }}
+        >
           <h1
             style={{
               margin: 0,
@@ -784,7 +787,8 @@ function SettingsView() {
               fontWeight: 700,
               letterSpacing: "0.01em",
               textAlign: "left",
-              flex: "1 1 auto"
+              flex: "1 1 auto",
+              lineHeight: 1.13
             }}
           >
             Settings

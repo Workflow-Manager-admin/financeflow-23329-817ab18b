@@ -21,7 +21,7 @@ const LIGHT_THEME = {
 const DARK_THEME = {
   '--primary': '#6C2EBE',
   '--secondary': '#23243A',
-  '--accent': '#D3BFFF',
+  '--accent': '#BB86FC',
   '--background': '#23243A',
   '--surface': '#292B44',
   '--text-color': '#fff',

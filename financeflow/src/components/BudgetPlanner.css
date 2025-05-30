@@ -95,20 +95,23 @@
 }
 
 .budgetplanner-summary-row {
-  font-weight: 600;
-  font-size: 1.11em;
-  margin-top: 10px;
+  font-weight: 700;
+  font-size: 1.20em;
+  margin-top: 24px;
   border-radius: 10px;
   background: none;
+  gap: 50px;
 }
 
 .budgetplanner-actions-cell {
   display: flex;
   flex-direction: row;
-  gap: 9px;
+  gap: 18px;
   justify-content: center;
   align-items: center;
-  min-width: 116px;
+  min-width: 124px;
+  padding-left: 7px;
+  padding-right: 7px;
 }
 
 @media (max-width: 1024px) {

@@ -54,10 +54,13 @@ export function PreferencesProvider({ children }) {
 
   // Write to localStorage whenever updated (for language, currency)
   useEffect(() => {
-    localStorage.setItem(
-      STORAGE_SETTINGS,
-      JSON.stringify({ language, currency })
-    );
+    // Never persist empty/null settings, only valid updates.
+    if (language && currency) {
+      localStorage.setItem(
+        STORAGE_SETTINGS,
+        JSON.stringify({ language, currency })
+      );
+    }
   }, [language, currency]);
 
   // Write to tab settings storage on change of notifications (for two-way sync)

@@ -47,7 +47,10 @@ function BudgetPlanner() {
 
   // Save budgets to localStorage on change
   useEffect(() => {
-    localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(budgets));
+    // Never overwrite budgets key with null or undefined.
+    if (budgets && typeof budgets === 'object') {
+      localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(budgets));
+    }
   }, [budgets]);
 
   // Calculate actual spent for current month for each category

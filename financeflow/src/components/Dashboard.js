@@ -76,7 +76,10 @@ function Dashboard({ showToast }) {
   }, [filters, transactions]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_GOAL, JSON.stringify(goal));
+    // Prevent accidental destructive write: only commit goal if not null/undefined.
+    if (goal && typeof goal === 'object') {
+      localStorage.setItem(STORAGE_GOAL, JSON.stringify(goal));
+    }
     // eslint-disable-next-line
   }, [goal]);
 

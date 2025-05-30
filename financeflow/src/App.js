@@ -65,14 +65,11 @@ function ExpensesView() {
           padding: "0 0 32px 0"
         }}
       >
-        {/* Heading visually grouped with content, minimal vertical gap */}
-        {/* Heading moved above main content (pre-alignment) and shifted right */}
+        {/* ORIGINAL Expenses heading, left-aligned without margin shift */}
         <h1
-          className="view-heading-shift"
           style={{
-            marginTop: 29,
-            marginBottom: 7,
-            marginLeft: 21,
+            marginTop: 20,
+            marginBottom: 20,
             fontSize: "2rem",
             color: "var(--primary,#6C2EBE)",
             fontWeight: 700,
@@ -83,10 +80,10 @@ function ExpensesView() {
         >
           Expenses
         </h1>
-        <div style={{ padding: "0 17px" }}>
+        <div>
           <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
         </div>
-        <div style={{ padding: "0 17px" }}>
+        <div>
           <TransactionList
             transactions={filtered}
             onEdit={() => {}}
@@ -96,9 +93,9 @@ function ExpensesView() {
           />
         </div>
         {filtered.length === 0 && (
-          <p style={{ color: "var(--text-secondary)", paddingLeft: 17 }}>No expenses for current filters.</p>
+          <p style={{ color: "var(--text-secondary)", paddingLeft: 0 }}>No expenses for current filters.</p>
         )}
-        <p style={{ color: "var(--text-secondary)", marginTop: 15, fontSize: "1.05em", paddingLeft: 17 }}>
+        <p style={{ color: "var(--text-secondary)", marginTop: 15, fontSize: "1.05em", paddingLeft: 0 }}>
           Amounts shown in <span style={{ fontWeight: 600 }}>{currencySymbol}</span>
         </p>
       </div>
@@ -655,13 +652,11 @@ function ProfileView() {
           padding: "0 0 32px 0"
         }}
       >
-        {/* Heading above card, shifted right */}
+        {/* ORIGINAL Profile heading, no right-move/shift */}
         <h1
-          className="view-heading-shift"
           style={{
-            marginTop: 23,
-            marginBottom: 12,
-            marginLeft: 18,
+            marginTop: 20,
+            marginBottom: 20,
             fontSize: "2rem",
             color: "var(--primary,#6C2EBE)",
             fontWeight: 700,
@@ -672,7 +667,7 @@ function ProfileView() {
         >
           Profile
         </h1>
-        <div style={{ padding: "0 17px" }}>
+        <div>
           {editMode ? renderProfileEditForm() : renderProfileCard()}
         </div>
       </div>

@@ -118,39 +118,39 @@ function BudgetPlanner({ transactions = [], showToast }) {
       <div
         className="container"
         style={{
-          maxWidth: 980,
+          maxWidth: 1270,
           minWidth: 310,
           background: "var(--surface,#fff)",
-          borderRadius: 17,
-          boxShadow: "0 3px 28px rgba(60,42,150,0.08)",
-          marginTop: 36,
+          borderRadius: 21,
+          boxShadow: "0 8px 48px rgba(60,42,150,0.11)",
+          marginTop: 32,
           marginBottom: 0,
-          padding: "0 0 44px 0",
-          border: "1px solid var(--secondary, #ececec)"
+          padding: "0 0 54px 0",
+          border: "1.3px solid var(--secondary, #ececec)"
         }}
       >
         <h1
           style={{
-            marginTop: 27,
-            marginBottom: 26,
-            fontSize: "2.3rem",
+            marginTop: 32,
+            marginBottom: 32,
+            fontSize: "2.62rem",
             color: "var(--primary,#6C2EBE)",
             fontWeight: 800,
-            letterSpacing: "0.011em",
+            letterSpacing: "0.012em",
             textAlign: "left",
             lineHeight: 1.13
           }}
         >
           Budget Planner
         </h1>
-        <div style={{ overflowX: "auto", width: "100%", marginBottom: 8 }}>
-          <table className="budgetplanner-table" style={{ minWidth: 700, width: "98%", tableLayout: "fixed" }}>
+        <div style={{ overflowX: "auto", width: "100%", marginBottom: 10 }}>
+          <table className="budgetplanner-table" style={{ minWidth: 900, width: "99.2%", tableLayout: "fixed" }}>
             <colgroup>
-              <col style={{ width: "26%" }} />
+              <col style={{ width: "27%" }} />
               <col style={{ width: "19%" }} />
-              <col style={{ width: "18%" }} />
-              <col style={{ width: "18%" }} />
               <col style={{ width: "19%" }} />
+              <col style={{ width: "19%" }} />
+              <col style={{ width: "16%" }} />
             </colgroup>
             <thead>
               <tr>
@@ -170,9 +170,10 @@ function BudgetPlanner({ transactions = [], showToast }) {
                 // Variance column: Clamp each category's "remaining" based on user's income for the month
                 // Compute share of income allocated to this category, only if budgetedTotal > 0 and monthIncome > 0
                 let incomeAwareVariance = budgetPrev - actual;
+                let allowable = budgetPrev;
                 if (monthIncome > 0 && budgetedTotal > monthIncome) {
                   // Adjusted proportional max for this category: (budgetPrev / budgetedTotal) * monthIncome
-                  const allowable = (budgetPrev / budgetedTotal) * monthIncome;
+                  allowable = (budgetPrev / budgetedTotal) * monthIncome;
                   incomeAwareVariance = allowable - actual;
                 }
                 const varColor = incomeAwareVariance >= 0 ? 'var(--income,#22C55E)' : 'var(--expense,#E74C3C)';
@@ -207,20 +208,55 @@ function BudgetPlanner({ transactions = [], showToast }) {
                           {currencySymbol}{Number(budgetPrev || 0).toFixed(2)}
                         </span>
                       )}
+                      {monthIncome > 0 && budgetedTotal > monthIncome && !isEditing && (
+                        <span
+                          style={{
+                            color: "#e74c3c",
+                            fontSize: "1em",
+                            marginLeft: 10,
+                            fontWeight: 500,
+                            whiteSpace: "nowrap",
+                            display: "inline-block"
+                          }}
+                          title="Budgeted amount exceeds share of income"
+                        >
+                          {allowable < budgetPrev && (
+                            <span>⚠️</span>
+                          )}
+                        </span>
+                      )}
                     </td>
                     <td className="budgetplanner-actual-cell" style={{ textAlign: 'right' }}>
                       {currencySymbol}{actual.toFixed(2)}
                     </td>
-                    <td className="budgetplanner-variance-cell" style={{ textAlign: 'right', fontWeight: 700, color: varColor }}>
+                    <td className="budgetplanner-variance-cell" style={{
+                          textAlign: 'right',
+                          fontWeight: 800,
+                          color: varColor,
+                          fontSize: "1.21em",
+                          letterSpacing: "0.01em"
+                        }}>
                       {incomeAwareVariance >= 0 ? '+' : ''}
                       {currencySymbol}{incomeAwareVariance.toFixed(2)}
+                      {(monthIncome > 0 && budgetedTotal > monthIncome && allowable < budgetPrev && !isEditing) && (
+                        <span
+                          style={{
+                            marginLeft: 8,
+                            color: '#e74c3c',
+                            fontSize: "0.98em",
+                            fontWeight: 600
+                          }}
+                        >
+                          (exceeds)
+                        </span>
+                      )}
                     </td>
                     <td className="budgetplanner-actions-cell">
                       {isEditing ? (
                         <div>
                           <button
                             className="btn btn-large"
-                            style={{ minWidth: 34, padding: "4px 11px", fontSize: "0.99em" }}
+                            style={{ minWidth: 44, padding: "9px 18px", fontSize: "1em" }}
                             onClick={e => {
                               e.preventDefault();
                               let val = parseFloat(String(rowDraft.value).replace(/[^0-9.]/g, ''));
@@ -243,7 +279,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                           >Save</button>
                           <button
                             className="btn btn-cancel"
-                            style={{ minWidth: 34, padding: "4px 11px", fontSize: "0.99em" }}
+                            style={{ minWidth: 44, padding: "9px 18px", fontSize: "1em" }}
                             onClick={e => {
                               e.preventDefault();
                               setEditingRow(null);
@@ -253,10 +289,10 @@ function BudgetPlanner({ transactions = [], showToast }) {
                           >Cancel</button>
                         </div>
                       ) : (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                           <button
                             className="btn btn-large"
-                            style={{ minWidth: 34, padding: "4px 11px", fontSize: "0.97em" }}
+                            style={{ minWidth: 44, padding: "9px 18px", fontSize: "1em" }}
                             onClick={e => {
                               e.preventDefault();
                               setEditingRow(cat);
@@ -265,7 +301,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                             disabled={editingRow !== null}
                           >Edit</button>
                           {justSavedCat === cat && !showToast && (
-                            <span style={{ color: 'var(--income,#22C55E)', marginLeft: 6, fontWeight: 500, transition: 'opacity 0.18s', opacity: 0.90 }}>
+                            <span style={{ color: 'var(--income,#22C55E)', marginLeft: 8, fontWeight: 600, transition: 'opacity 0.18s', opacity: 0.97 }}>
                               budget saved!
                             </span>
                           )}
@@ -278,17 +314,53 @@ function BudgetPlanner({ transactions = [], showToast }) {
             </tbody>
           </table>
         </div>
-        <div className="budgetplanner-summary-row" style={{ display: 'flex', flexWrap: 'wrap', marginTop: 10, gap: '44px 24px', alignItems: 'center', justifyContent: 'flex-start', fontSize: '1.08em', color: 'var(--primary)' }}>
+        {monthIncome > 0 && overBudget && (
+          <div
+            style={{
+              marginTop: 3,
+              marginBottom: 12,
+              background: "#ffecec",
+              borderRadius: 12,
+              border: "1.5px solid #e74c3c",
+              color: "#e74c3c",
+              padding: "15px 20px 13px 26px",
+              fontWeight: 600,
+              fontSize: "1.15em",
+              display: "flex",
+              alignItems: "center",
+              gap: 12
+            }}
+            aria-live="polite"
+          >
+            <span style={{ fontSize: "1.33em", marginRight: 6 }}>⚠️</span>
+            Your total expense budgets exceed your income for this month. Each category's variance is now adjusted (see red cells and 'exceeds' labels).
+          </div>
+        )}
+        <div className="budgetplanner-summary-row"
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            marginTop: 2,
+            gap: '54px 27px',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            fontSize: '1.18em',
+            color: 'var(--primary,#6C2EBE)'
+          }}>
           <div>
-            <span style={{ fontWeight: 500 }}>Total Budgeted:</span> {currencySymbol}{budgetedTotal.toFixed(2)}
+            <span style={{ fontWeight: 700 }}>Total Budgeted:</span> {currencySymbol}{budgetedTotal.toFixed(2)}
           </div>
           <div>
-            <span style={{ fontWeight: 500 }}>Income this Month:</span> {currencySymbol}{monthIncome.toFixed(2)}
+            <span style={{ fontWeight: 700 }}>Income this Month:</span> {currencySymbol}{monthIncome.toFixed(2)}
           </div>
           {monthIncome > 0 && (
-            <div style={{ fontWeight: 500, color: overBudget ? 'var(--expense,#E74C3C)' : 'var(--income,#22C55E)' }}>
+            <div style={{
+              fontWeight: 800,
+              color: overBudget ? 'var(--expense,#E74C3C)' : 'var(--income,#22C55E)',
+              fontSize: "1.10em"
+            }}>
               {overBudget
-                ? '⚠️ Over Budget! Your expense budgets exceed your income. Variance recalculated accordingly.'
+                ? '⚠️ Over Budget! Your expense budgets exceed your income this month.'
                 : '✓ Budgets are within your income.'}
             </div>
           )}

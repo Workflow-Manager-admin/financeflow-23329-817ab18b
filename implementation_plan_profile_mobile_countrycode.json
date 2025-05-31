@@ -1,39 +1,55 @@
 {
   "steps": [
     {
-      "description": "Analyze current Profile input logic for mobile and plan country code dropdown integration.",
-      "details": "Review current Profile component logic for storing mobile number, determine UI and storage model for (country code + mobile), and ensure clean separation in state and saving logic.",
-      "files_to_modify": ["financeflow/src/App.js"],
-      "expected_changes": "Full enhancement plan for country code dropdown, validation, and feedback for the Profile tab."
+      "description": "Analyze current Profile and Preferences logic and plan unified currency selection integration.",
+      "details": "Review profile setup and settings to determine optimal way to add and save preferred currency, ensuring consistency and persistence via context/localStorage. Identify all areas where currency should be displayed (transactions, budgets, summaries, etc.) and plan updates.",
+      "files_to_modify": [
+        "financeflow/src/App.js",
+        "financeflow/src/components/PreferencesProvider.js"
+      ],
+      "expected_changes": "Clear understanding of how/where currency data is set, updated, and consumed for correct propagation and update."
     },
     {
-      "description": "Add/configure a CountryCodeDropdown as reusable React component with flag icons.",
-      "details": "Create or update the CountryCodeDropdown inline component rendering flag + code in dropdown, using emoji-flags for visual consistency.",
-      "files_to_modify": ["financeflow/src/App.js"],
-      "expected_changes": "Create/adjust a country code selector with flag icons for use inside the Profile edit form."
+      "description": "Add preferred currency select field to profile setup and update save logic.",
+      "details": "Expose a currency dropdown in the profile setup form (including onboarding/setup flow). On save, persist to localStorage and ensure this value updates currency preference in context/state if available.",
+      "files_to_modify": [
+        "financeflow/src/App.js",
+        "financeflow/src/components/PreferencesProvider.js"
+      ],
+      "expected_changes": "Profile setup form will always include (and validate/save) preferred currency."
     },
     {
-      "description": "Enforce validation: Require exactly 10-digit mobile, ensure coupling of country code and mobile field if either is set.",
-      "details": "Update Profile state management, ensure clear error messaging if invalid, and update input to restrict to [0-9] and 10 digits only.",
-      "files_to_modify": ["financeflow/src/App.js"],
-      "expected_changes": "Enforce digit restriction, update profile save validation, and show feedback if user enters an incorrect number or does not select code."
+      "description": "Add preferred currency selection to settings with two-way save.",
+      "details": "Show the same currency selector in settings; saving from either location updates the context/localStorage. Changing in either place instantly updates all money UI (via context).",
+      "files_to_modify": [
+        "financeflow/src/App.js",
+        "financeflow/src/components/PreferencesProvider.js"
+      ],
+      "expected_changes": "Settings/Preferences currency picker is unified with profile, and persisted on change."
     },
     {
-      "description": "Change storage model: Save country code + mobile as separate fields, and always display both if present.",
-      "details": "Update save (localStorage) and load logic to ensure the two fields persist correctly, and update display.",
-      "files_to_modify": ["financeflow/src/App.js"],
-      "expected_changes": "Persist and restore both fields, using the new model."
+      "description": "Update PreferencesProvider to sync with profile currency and emit symbol.",
+      "details": "Ensure that profile currency and context currency stay in sync (via a shared key in localStorage and context). Provide React context with both ISO code and symbol, and allow updates from either profile or settings.",
+      "files_to_modify": ["financeflow/src/components/PreferencesProvider.js"],
+      "expected_changes": "Currency symbol reflects the user's choice everywhere, and can be changed at any time."
     },
     {
-      "description": "Polish: Accessibility, feedback, placeholder, and usage instructions.",
-      "details": "Update ARIA labels, add instructive placeholder, ensure feedback is easily visible.",
-      "files_to_modify": ["financeflow/src/App.js"],
-      "expected_changes": "Accessibility and UX tweaks as part of edit form logic."
+      "description": "Refactor all transaction, budget, summary, and goal UIs to consume currency info only via context.",
+      "details": "Replace all hardcoded or local profile currency usages with consumption from PreferencesProvider context. Ensure transaction lists, budget planner, summaries, chart labels/legends, etc. use the context currency and symbol, and respond to user changes immediately.",
+      "files_to_modify": [
+        "financeflow/src/components/BudgetPlanner.js",
+        "financeflow/src/components/transactions/TransactionList.js",
+        "financeflow/src/components/Dashboard.js",
+        "financeflow/src/components/visuals/PieChart.js",
+        "financeflow/src/components/visuals/LineChart.js",
+        "financeflow/src/components/savings/SavingsRing.js"
+      ],
+      "expected_changes": "All UI displays current currency symbol and updates live."
     }
   ],
   "assumptions": [
-    "Only App.js needs modifications for Profile tab logic and rendering; styling is handled inline or by main stylesheet.",
-    "No changes needed to preferences or provider logic as mobile/country code are for profile only.",
-    "A limited, curated set of country codes/flags will be used for UX simplicity."
+    "PreferencesProvider is the single source of truth for currency. Profile and settings both read and update it.",
+    "Currency choices will be a manageable set (e.g., USD, INR, EUR, GBP, CNY) for simplicity.",
+    "No backend sync, only localStorage/context required."
   ]
 }

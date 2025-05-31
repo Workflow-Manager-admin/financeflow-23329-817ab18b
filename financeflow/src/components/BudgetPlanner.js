@@ -29,8 +29,7 @@ const STORAGE_BUDGETS_KEY = 'fflow-budgets-v1';
  * BudgetPlanner displays and edits monthly budgets per expense category (excl. investments).
  * Shows: Category, Budget (editable), Actual (current month), Variance (color-coded).
  * Persists budgets in localStorage; reads currency symbol from preferences.
- * Always loads budgets from localStorage on mount and whenever navigation/tab changes,
- * and always saves to both state and localStorage on budget save.
+ * Ensures the budgets are persisted across navigation, reloads, and state changes.
  */
 function BudgetPlanner({ transactions = [], showToast }) {
   const { currencySymbol } = usePreferences() || { currencySymbol: '$' };
@@ -38,6 +37,8 @@ function BudgetPlanner({ transactions = [], showToast }) {
   const [editingRow, setEditingRow] = useState(null); // Category string or null
   const [rowDraft, setRowDraft] = useState({});
   const [justSavedCat, setJustSavedCat] = useState(null);
+  const [summary, setSummary] = useState({}); // for total budget and income warnings
+  const [lastError, setLastError] = useState(null);
 
   // Detect hash navigation changes for reload
   const navLocation = useNavLocation();
@@ -85,10 +86,11 @@ function BudgetPlanner({ transactions = [], showToast }) {
   useEffect(() => {
     if (editingRow) {
       setRowDraft({ value: Number(budgets[editingRow] || 0) });
+      setLastError(null);
     }
   }, [editingRow, budgets]);
 
-  // Always write budgets state to localStorage on change (redundant/defensive)
+  // Always write budgets state to localStorage on change
   useEffect(() => {
     if (
       budgets &&
@@ -129,25 +131,104 @@ function BudgetPlanner({ transactions = [], showToast }) {
     return out;
   }, [transactions, monthStr]);
 
-  // PUBLIC_INTERFACE
-  // Always persist any value to both state and localStorage for robust persistence/reload
+  // Compute summary: total budgeted, income, warning if over budget
+  useEffect(() => {
+    let totalBudget = 0;
+    for (let cat of EXPENSE_CATEGORIES) {
+      totalBudget += Number(budgets[cat] || 0);
+    }
+    let income = 0;
+    for (let tx of transactions) {
+      if (tx.type === 'income' && tx.date && tx.date.startsWith(monthStr)) {
+        income += Number(tx.amount);
+      }
+    }
+    setSummary({ totalBudget, income, isOver: totalBudget > income });
+  }, [budgets, transactions, monthStr]);
+
+  // Enforce: Do not allow increasing a budget that would push total budgets > income for the month,
+  // unless income is zero (then allow, with a warning)
+  // Always allow reduction.
+  // Returns: true if allowed, false if blocked
   const handleSaveBudget = (cat, rawValue) => {
     let val = parseFloat(String(rawValue).replace(/[^0-9.]/g, ''));
     if (!Number.isFinite(val) || val < 0) val = 0;
-    const newBudgets = { ...budgets, [cat]: val };
-    setBudgets(newBudgets);
+    // If no month income, allow any budget (just warn)
+    let priorBudget = Number(budgets[cat] || 0);
+    let nextBudgets = { ...budgets, [cat]: val };
+    let nextTotal = 0;
+    for (let c of EXPENSE_CATEGORIES) {
+      nextTotal += Number(nextBudgets[c] || 0);
+    }
+    let income = summary.income !== undefined ? summary.income : 0;
+    if (income !== 0 && nextTotal > income && val > priorBudget) {
+      setLastError(`Cannot set this budget: total budgets (${currencySymbol}${nextTotal.toFixed(2)}) exceed income (${currencySymbol}${income.toFixed(2)}). (Reduce another category or increase income.)`);
+      return false;
+    }
+    setBudgets(nextBudgets);
     try {
       // Always update localStorage with the latest value directly on save
-      localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(newBudgets));
+      localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(nextBudgets));
     } catch {}
     setEditingRow(null);
     setRowDraft({});
     setJustSavedCat(cat);
+    setLastError(null);
     if (typeof showToast === 'function') {
       showToast('budget saved!', 'success');
     }
     return true;
   };
+
+  // Compute variance per-category for over-budget flag
+  function getVarianceNote(variance, cat) {
+    // If variance < 0 (over), note
+    if (variance < 0) {
+      return (<span style={{ color: 'var(--expense,#E74C3C)', fontSize: "0.96em", fontWeight: 500 }}> (exceeds)</span>);
+    }
+    return null;
+  }
+
+  // Budget summary row (Total Budget, Income, Budget Status)
+  function renderBudgetSummary() {
+    const { totalBudget = 0, income = 0, isOver = false } = summary;
+    return (
+      <div style={{
+        padding: "13px 0 14px 0",
+        marginBottom: 5,
+        background: "rgba(108,46,190,0.05)",
+        borderRadius: 8,
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        alignItems: "flex-start"
+      }}>
+        <div>
+          <b>Total Budgeted:</b> <span>{currencySymbol}{totalBudget.toFixed(2)}</span>
+        </div>
+        <div>
+          <b>Income this Month:</b> <span>{currencySymbol}{income.toFixed(2)}</span>
+        </div>
+        <div>
+          {income === 0 && totalBudget > 0 && (
+            <span style={{ color: "var(--expense,#E74C3C)", fontWeight: 500 }}>
+              You do not have any income transactions this month; budgets will not be compared to income.
+            </span>
+          )}
+          {income > 0 && isOver && (
+            <span style={{ color: "var(--expense,#E74C3C)", fontWeight: 500 }}>
+              Over Budget! Your expense budgets exceed your income for the month.
+            </span>
+          )}
+          {income > 0 && !isOver && (
+            <span style={{ color: "var(--income,#22C55E)", fontWeight: 500 }}>
+              Budgets are within your income.
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section className="placeholder-view">
@@ -180,6 +261,10 @@ function BudgetPlanner({ transactions = [], showToast }) {
         >
           Budget Planner
         </h1>
+        {/* Show summary panel */}
+        {renderBudgetSummary()}
+        {/* Optional lastError, e.g. for blocking raises */}
+        {lastError && <div style={{ color: "var(--expense,#E74C3C)", marginBottom: 8 }}>{lastError}</div>}
         <div style={{ overflowX: "auto", width: "100%", marginBottom: 4 }}>
           <table
             className="budgetplanner-table"
@@ -249,6 +334,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                             onChange={e => {
                               let candidateValue = e.target.value === '' ? '' : parseFloat(e.target.value);
                               setRowDraft({ value: candidateValue });
+                              setLastError(null);
                             }}
                             aria-label={`Budget for ${cat}`}
                             onKeyDown={e => {
@@ -259,6 +345,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                                 e.preventDefault();
                                 setEditingRow(null);
                                 setRowDraft({});
+                                setLastError(null);
                               }
                             }}
                           />
@@ -303,6 +390,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                               e.preventDefault();
                               setEditingRow(null);
                               setRowDraft({});
+                              setLastError(null);
                             }}
                             aria-label={`Cancel editing budget for ${cat}`}
                             style={{
@@ -337,6 +425,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                               onClick={e => {
                                 e.preventDefault();
                                 setEditingRow(cat);
+                                setLastError(null);
                               }}
                               aria-label={`Edit budget for ${cat}`}
                               title="Edit"
@@ -379,6 +468,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                       }}>
                       {variance >= 0 ? '+' : ''}
                       {currencySymbol}{variance.toFixed(2)}
+                      {getVarianceNote(variance, cat)}
                     </td>
                     <td className="budgetplanner-actions-cell" style={{padding: "2px 2px", minWidth: 54}}>
                       {isEditing ? (
@@ -392,6 +482,7 @@ function BudgetPlanner({ transactions = [], showToast }) {
                             onClick={e => {
                               e.preventDefault();
                               setEditingRow(cat);
+                              setLastError(null);
                             }}
                             aria-label={`Edit budget for ${cat}`}
                             disabled={editingRow !== null}

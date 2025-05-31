@@ -6,6 +6,7 @@ import PieChart from './visuals/PieChart';
 import HeatMapCalendar from './visuals/HeatMapCalendar';
 import SavingsRing from './savings/SavingsRing';
 import SavingsGoalModal from './savings/SavingsGoalModal';
+import SpendingTrendsWithInsights from './visuals/SpendingTrendsWithInsights';
 import './Dashboard.css';
 import { usePreferences } from './PreferencesProvider';
 
@@ -177,21 +178,11 @@ function Dashboard({
               <HeatMapCalendar transactions={transactions} currencySymbol={currencySymbol} />
               {/* Existing PieChart for category breakdown */}
               <PieChart transactions={transactions} currencySymbol={currencySymbol} />
-              {/* Trends/Insights panel placeholder (remains unchanged) */}
-              <div className="dashboard-insights-panel" style={{
-                marginTop: 11,
-                padding: '18px 17px',
-                background: 'var(--secondary,#fcfbff)',
-                borderRadius: 10,
-                minHeight: 42,
-                boxShadow: '0 1px 9px rgba(108,64,190,0.04)',
-                fontSize: '1.04em',
-                color: 'var(--primary,#6C2EBE)',
-                fontWeight: 500
-              }}>
-                {/* Placeholder for spending trends and insights */}
-                <span role="img" aria-label="Trend">📊</span> <b>Spending Trends & Insights:</b> Feature coming soon!
-              </div>
+              {/* Trends/Insights panel */}
+              <SpendingTrendsWithInsights
+                transactions={transactions}
+                currencySymbol={currencySymbol}
+              />
             </div>
           </div>
           {/* Transactions list */}

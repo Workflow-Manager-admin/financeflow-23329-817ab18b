@@ -376,9 +376,13 @@ function ProfileView() {
 
   // Enforce edit mode for first-time users
   React.useEffect(() => {
+    // On first render, don't change editMode; allow onboarding control over timing.
     if (isFirstRender.current) return;
+    // If no name, enforce edit mode (but do NOT trigger profile complete on just name input)
     if (!profile.name) setEditMode(true);
-    else setEditMode(false);
+    // If name present but we are on modal/setup, do NOT auto-finish; wait for explicit Save
+    // Remove 'else setEditMode(false);' so setup does not auto-complete after name field is filled
+    // User must click Save to exit
   }, [profile.name]);
 
   function handleChange(e) {

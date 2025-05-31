@@ -17,7 +17,7 @@ function Dashboard({ showToast, transactions, setTransactions, goal, setGoal }) 
   return (
     <section className="dashboard-root">
       <div className="dashboard-flex-row">
-        {/* Left: Savings Goal/Progress, stacked + button */}
+        {/* Savings Goal Left Column: Original Position */}
         <div className="dashboard-savings-goal-col">
           <div className="savings-goal-verticalCard">
             <SavingsRing goal={goal} />
@@ -31,19 +31,18 @@ function Dashboard({ showToast, transactions, setTransactions, goal, setGoal }) 
             </button>
           </div>
         </div>
-        {/* Right: Elongated Visuals/Insights/Heatmap section */}
+        {/* Main Dashboard Visuals Area */}
         <div className="dashboard-visuals-area">
           <div className="dashboard-header-row">
             <h1 className="dashboard-title">Dashboard</h1>
           </div>
-          {/* Main visuals grid */}
-          <div className="dashboard-visuals-main-grid">
-            <div className="dashboard-pie-trends">
+          {/* Main grid: PieChart (Expenses by Category), SpendingTrendsWithInsights side-by-side on large screens, stacked on mobile */}
+          <div className="dashboard-visuals-main-grid" style={{ display: 'flex', flexDirection: 'row', gap: 22, flexWrap: 'wrap', alignItems: 'flex-start' }}>
+            <div style={{ flex: 1, minWidth: 270, maxWidth: 410 }}>
               <PieChart transactions={transactions} />
-              <SpendingTrendsWithInsights transactions={transactions} />
             </div>
-            <div className="dashboard-heatmap-long">
-              <HeatMapCalendar transactions={transactions} />
+            <div style={{ flex: 2, minWidth: 340, maxWidth: 630 }}>
+              <SpendingTrendsWithInsights transactions={transactions} />
             </div>
           </div>
         </div>

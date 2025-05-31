@@ -62,6 +62,7 @@
   max-width: 175px;
   min-width: 70px;
   white-space: normal;
+  background: var(--surface, #fff);
 }
 
 .budgetplanner-budget-cell,
@@ -78,6 +79,8 @@
   padding-right: 7px !important;
   padding-left: 5px !important;
   vertical-align: middle;
+  background: var(--surface, #fff);
+  transition: background 0.18s;
 }
 
 .budgetplanner-input {

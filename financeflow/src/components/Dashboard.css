@@ -1,267 +1,177 @@
-.dashboard {
-  margin: 0;
+ /* Elongate visuals/heatmaps, move Savings Goal to the left.
+   Responsive flex layout for a clean, modern dashboard.
+*/
+
+.dashboard-root {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 20px 40px 20px;
+  box-sizing: border-box;
+  min-height: 100vh;
+  background: none;
+}
+
+.dashboard-flex-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 34px;
   width: 100%;
 }
 
-/* NEW: Centralize, enlarge, and ensure vertical balance */
-.dashboard .container {
-  max-width: 980px !important;
-  margin: 38px auto 0 auto !important;
-  background: var(--surface,#fff);
-  border-radius: 16px;
-  box-shadow: 0 3px 30px rgba(60,42,150,0.09);
-  padding: 0 0 44px 0;
-}
-
-.dashboard-layout,
-.elongated-dashboard-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 36px;
-  padding: 44px 32px 48px 32px;
-}
-
-.dashboard-main-flex {
-  display: flex;
-  flex-direction: row;
-  gap: 36px;
-  align-items: stretch;
-  width: 100%;
-}
-
-.dashboard-left-panel {
+/* Left column for Savings Goal ("sidebar") */
+.dashboard-savings-goal-col {
   flex: 0 0 270px;
-  min-width: 225px;
-  max-width: 330px;
+  min-width: 210px;
+  max-width: 320px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-}
-
-.dashboard-right-panel {
-  flex: 1 1 0;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  /* Make this whole area visually prominent/elongated */
-}
-
-.elongated-visual-block {
-  min-height: 340px;
-  flex: 1 1 420px;
-  background: var(--secondary,#f7f7fd);
-  border-radius: 12px;
-  box-shadow: 0 2px 19px rgba(60,42,150,0.06);
-  padding: 22px 12px 20px 22px;
-  margin-bottom: 0;
-  display: flex;
   align-items: stretch;
 }
 
-.elongated-trends-block {
-  min-height: 140px;
-  background: var(--background,#fff);
-  border-radius: 12px;
-  box-shadow: 0 1px 10px rgba(80,64,200,0.05);
-  padding: 18px 14px 18px 24px;
+.savings-goal-verticalCard {
+  background: var(--surface, #fff);
+  border-radius: 14px;
+  box-shadow: 0 2px 16px rgba(60,42,150,0.08);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  margin-bottom: 0;
-}
-
-.dashboard-piechart-section {
-  padding: 13px 0 0 0;
-  /* Only minor separation for pie */
-}
-
-@media (max-width: 1100px) {
-  .dashboard .container {
-    max-width: 98vw !important;
-    padding: 0 !important;
-  }
-  .dashboard-layout,
-  .elongated-dashboard-layout {
-    padding: 24px 2vw 24px 2vw;
-    gap: 30px;
-  }
-  .dashboard-main-flex {
-    gap: 18px;
-  }
-}
-@media (max-width: 900px) {
-  .dashboard-main-flex {
-    flex-direction: column;
-    gap: 24px;
-  }
-  .dashboard-left-panel {
-    max-width: unset;
-    min-width: 0;
-    flex: 1 1 0;
-  }
-}
-@media (max-width: 700px) {
-  .dashboard-layout,
-  .elongated-dashboard-layout {
-    padding: 11px 1vw 20px 1vw;
-    gap: 12px;
-  }
-  .dashboard-main-flex {
-    flex-direction: column;
-    gap: 13px;
-  }
-  .elongated-visual-block,
-  .elongated-trends-block {
-    padding: 9px 4vw 12px 4vw;
-    min-height: 170px;
-    border-radius: 8px;
-  }
-}
-
-
-.dashboard-upper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0;
-  margin-top: 0;
-}
-
-.dashboard-visuals-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1.2fr;
-  gap: 38px;
-  justify-items: stretch;
-  margin-bottom: 0;
-  margin-top: 0;
-}
-
-@media (max-width: 1100px) {
-  .dashboard-visuals-grid {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-}
-@media (max-width: 850px) {
-  .dashboard-visuals-grid {
-    grid-template-columns: 1fr;
-  }
-  .dashboard .container {
-    padding: 0 !important;
-  }
-}
-
-/* Lift the "Transaction List" visually and increase separation */
-.dashboard-txlist-outer {
-  margin-top: 15px;
-  background: var(--surface, #fff);
-  border-radius: 13px;
-  box-shadow: 0 3px 16px rgba(60,42,150,0.05);
-  padding: 30px 18px 13px 18px;
-  /* Match visuals/charts width: expand closer to .dashboard .container size */
-  max-width: 930px;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  border: 1px solid var(--secondary, #ececec);
-  /* Make transaction list taller and allow scrolling for overflow */
-  min-height: 420px;
-  max-height: 540px;
-  overflow-y: auto;
-  /* Smoother with mobile/desktop and page fit */
-  transition: max-width 0.23s, min-width 0.23s, max-height 0.23s, min-height 0.23s;
-}
-
-/* On mobile, make sure height is usable and scrolling still works */
-@media (max-width: 600px) {
-  .dashboard-txlist-outer {
-    min-height: 320px;
-    max-height: 70vh;
-    overflow-y: auto;
-  }
-}
-
-/* Remove old floating action column styles */
-.dashboard-fab-col {
-  display: none;
-}
-
-/* Modern single floating/sticky Add button (bottom right on desktop, fixed at bottom on mobile) */
-.dashboard-add-btn {
-  position: fixed;
-  right: 45px;
-  bottom: 36px;
-  z-index: 1001;
-  display: flex;
   align-items: center;
-  gap: 12px;
+  padding: 27px 23px 31px 23px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.goal-btn {
+  padding: 10px 28px;
   background: var(--primary, #6C2EBE);
   color: #fff;
   border: none;
-  border-radius: 34px;
-  box-shadow: 0 10px 32px rgba(60,42,150,0.13);
-  padding: 16px 40px 16px 18px;
-  font-size: 1.18rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.16s;
-  outline: none;
+  transition: background 0.18s;
+  box-shadow: 0 2px 7px rgba(60,42,150,0.07);
 }
 
-.dashboard-add-btn:hover,
-.dashboard-add-btn:focus {
-  background: #7938d4;
-  box-shadow: 0 16px 38px rgba(60,42,150,0.18);
+.goal-btn:hover,
+.goal-btn:focus {
+  background: #4D2290;
 }
 
-.dashboard-add-btn-icon {
-  background: #fff;
-  color: var(--primary, #6C2EBE);
-  width: 33px;
-  height: 33px;
-  border-radius: 50%;
-  font-size: 1.53rem;
-  font-weight: bold;
+/* Right elongated visuals/insights area */
+.dashboard-visuals-area {
+  flex: 1 1 620px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+
+/* Header/title row inside visuals panel */
+.dashboard-header-row {
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 3px 9px rgba(120,110,180,0.11);
-  margin-right: 9px;
+  margin-bottom: 9px;
 }
-.dashboard-add-btn-label {
-  font-size: 1.13rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+.dashboard-title {
+  font-size: 2.10em;
+  color: var(--primary, #6C2EBE);
+  font-weight: 800;
+  margin: 0 0 0 3px;
+  letter-spacing: 0.01em;
+  line-height: 1.07;
+}
+
+/* Main grid for visuals and insights/heatmap */
+.dashboard-visuals-main-grid {
+  display: flex;
+  align-items: stretch;
+  gap: 34px;
+  width: 100%;
+}
+.dashboard-pie-trends {
+  flex: 1.45 1 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 260px;
+}
+.dashboard-heatmap-long {
+  flex: 1.1 1 0px;
+  display: flex;
+  align-items: stretch;
+  background: var(--surface, #fff);
+  border-radius: 14px;
+  box-shadow: 0 2px 16px rgba(60,42,150,0.08);
+  margin-left: 0;
+  min-width: 270px;
+  max-width: 390px;
+  padding: 13px 15px 20px 15px;
+}
+
+@media (max-width: 1100px) {
+  .dashboard-flex-row {
+    flex-direction: column;
+    gap: 25px;
+  }
+  .dashboard-visuals-main-grid {
+    flex-direction: column;
+    gap: 19px;
+  }
+  .dashboard-heatmap-long {
+    max-width: 100vw;
+    min-width: unset;
+    padding: 10px 6px 11px 8px;
+  }
+  .dashboard-pie-trends {
+    gap: 12px;
+  }
 }
 
 @media (max-width: 700px) {
-  .dashboard .container {
-    max-width: 99vw !important;
-    border-radius: 0 !important;
+  .dashboard-root {
+    padding: 4px 1vw 16px 1vw;
   }
-}
-
-@media (max-width: 600px) {
-  .dashboard-add-btn {
-    width: 97vw;
-    max-width: 510px;
-    left: 2vw;
-    right: auto;
-    bottom: 13px;
-    border-radius: 16px;
-    padding: 16px 0;
-    justify-content: center;
-    font-size: 1.14rem;
+  .dashboard-flex-row {
+    flex-direction: column;
+    gap: 13px;
   }
-  .dashboard-add-btn-icon {
-    margin-right: 13px;
+  .dashboard-savings-goal-col {
+    flex: none;
+    min-width: 0;
+    max-width: unset;
+    width: 100%;
   }
-  .dashboard-txlist-outer {
-    padding: 19px 2vw 10px 2vw;
-    max-width: 100vw !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    border-radius: 10px;
+  .savings-goal-verticalCard {
+    padding: 13px 6px 19px 6px;
+    margin-bottom: 11px;
+  }
+  .dashboard-header-row {
+    margin-bottom: 7px;
+  }
+  .dashboard-title {
+    font-size: 1.46em;
+  }
+  .dashboard-visuals-area {
+    min-width: 0;
+    width: 100%;
+  }
+  .dashboard-visuals-main-grid {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .dashboard-heatmap-long {
+    padding: 6px 3px 8px 3px;
+    max-width: 100vw;
+    min-width: 0;
+    margin-left: 0;
+    border-radius: 9px;
+  }
+  .dashboard-pie-trends {
+    gap: 7px;
+    min-width: 0;
   }
 }

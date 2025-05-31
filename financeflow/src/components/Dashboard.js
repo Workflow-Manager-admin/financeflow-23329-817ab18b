@@ -3,7 +3,7 @@ import TransactionList from './transactions/TransactionList';
 import TransactionFormModal from './transactions/TransactionFormModal';
 import FilterBar from './transactions/FilterBar';
 import PieChart from './visuals/PieChart';
-import LineChart from './visuals/LineChart';
+import HeatMapCalendar from './visuals/HeatMapCalendar';
 import SavingsRing from './savings/SavingsRing';
 import SavingsGoalModal from './savings/SavingsGoalModal';
 import './Dashboard.css';

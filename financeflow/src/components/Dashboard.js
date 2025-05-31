@@ -4,8 +4,6 @@ import SavingsGoalModal from "./savings/SavingsGoalModal";
 import SavingsRing from "./savings/SavingsRing";
 import PieChart from "./visuals/PieChart";
 import SpendingTrendsWithInsights from "./visuals/SpendingTrendsWithInsights";
-import HeatMapCalendar from "./visuals/HeatMapCalendar";
-
 /**
  * PUBLIC_INTERFACE
  * Main dashboard layout:

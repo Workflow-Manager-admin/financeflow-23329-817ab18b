@@ -327,8 +327,10 @@ function CalendarView() {
 
 const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 
+import { usePreferences } from './components/PreferencesProvider';
+// ...
 // PUBLIC_INTERFACE
-function ProfileView() {
+function ProfileView({}) {
   // Profile state and edit mode, decoupling country code & mobile as two fields
   const [profile, setProfile] = React.useState({ name: '', email: '', mobile: '', countryCode: "+1", currency: '' });
   const [editMode, setEditMode] = React.useState(false);

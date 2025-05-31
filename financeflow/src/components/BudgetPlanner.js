@@ -2,9 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { usePreferences } from './PreferencesProvider';
 
 /**
- * BudgetPlanner component (numeric-only input, no summary/warning logic).
- * Users can enter a numeric budget per category; value is saved to localStorage and persists.
+ * BudgetPlanner component allows budgeting per category and shows dynamic actuals/variance.
+ * Now shows 'Actual Expenses' and 'Variance' columns, computes variance, and uses edit icon only.
+ * 
+ * Data is persisted in localStorage and loads reliably on tab/view switch.
  */
+
 const EXPENSE_CATEGORIES = [
   'Food', 'Transport', 'Shopping', 'Utilities', 'Subscriptions',
   'Rent/House', 'Gift', 'Healthcare', 'Other'
@@ -17,6 +20,7 @@ function BudgetPlanner({ transactions = [] }) {
   const [budgets, setBudgets] = useState({});
   const [editingRow, setEditingRow] = useState(null);
   const [rowDraft, setRowDraft] = useState({});
+  const [error, setError] = useState('');
 
   // Only load budgets from localStorage on mount or out-of-sync event.
   const loadBudgets = useCallback(() => {
@@ -46,6 +50,7 @@ function BudgetPlanner({ transactions = [] }) {
   useEffect(() => {
     if (editingRow) {
       setRowDraft({ value: Number(budgets[editingRow] || 0) });
+      setError('');
     }
   }, [editingRow, budgets]);
 
@@ -60,6 +65,18 @@ function BudgetPlanner({ transactions = [] }) {
     }
   }, [budgets]);
 
+  // Compute actual expenses per category for current month (default behavior, can be changed)
+  const monthStr = new Date().toISOString().slice(0, 7);
+  const actualExpenses = {};
+  transactions.filter(tx => tx.type === 'expense').forEach(tx => {
+    const category = tx.category === 'Salary' ? 'Rent/House' : tx.category;
+    // Only sum for this month
+    if (tx.date && tx.date.slice(0, 7) === monthStr) {
+      actualExpenses[category] = (actualExpenses[category] || 0) + Number(tx.amount || 0);
+    }
+  });
+
+  // Handle save action for budget input
   const handleSaveBudget = (cat, rawValue) => {
     let val = parseFloat(String(rawValue).replace(/[^0-9.]/g, ''));
     if (!Number.isFinite(val) || val < 0) val = 0;
@@ -70,9 +87,12 @@ function BudgetPlanner({ transactions = [] }) {
     } catch {}
     setEditingRow(null);
     setRowDraft({});
+    setError('');
     return true;
   };
 
+  // Remove separate Edit button: only render edit icon inline
+  // Add 'Actual Expenses' and 'Variance' columns, dynamically updating
   return (
     <section className="placeholder-view">
       <div
@@ -108,44 +128,39 @@ function BudgetPlanner({ transactions = [] }) {
           <table
             className="budgetplanner-table"
             style={{
-              minWidth: 420,
+              minWidth: 490,
               width: "100%",
-              maxWidth: 680,
+              maxWidth: 740,
               tableLayout: "fixed",
               fontSize: "1em",
             }}
           >
             <colgroup>
-              <col style={{ minWidth: 110, width: "41%" }} />
-              <col style={{ minWidth: 85, width: "33%" }} />
-              <col style={{ minWidth: 35, width: "auto" }} />
+              <col style={{ minWidth: 110, width: "33%" }} />
+              <col style={{ minWidth: 78, width: "18%" }} />
+              <col style={{ minWidth: 78, width: "18%" }} />
+              <col style={{ minWidth: 90, width: "21%" }} />
+              <col style={{ minWidth: 44, width: "auto" }} />
             </colgroup>
             <thead>
               <tr>
                 <th style={{ textAlign: 'left', fontSize: "1.01em", padding: "9px 6px" }}>Category</th>
-                <th style={{ textAlign: 'right', fontSize: "1.01em", padding: "9px 6px" }}>Budget</th>
-                <th></th>
+                <th style={{ textAlign: 'right' }}>Budget Set</th>
+                <th style={{ textAlign: 'right' }}>Actual Expenses</th>
+                <th style={{ textAlign: 'right' }}>Variance</th>
+                <th aria-label="Actions"></th>
               </tr>
             </thead>
             <tbody>
               {EXPENSE_CATEGORIES.map((cat) => {
                 const budgetVal = Number(budgets[cat] || 0);
                 const isEditing = editingRow === cat;
+                const actual = Number(actualExpenses[cat] || 0);
+                const variance = budgetVal - actual;
                 return (
                   <tr key={cat}>
-                    <td className="budgetplanner-category-cell" style={{
-                      fontWeight: 600,
-                      color: 'var(--text-color, #402060)',
-                      fontSize: '1.05em',
-                      paddingLeft: 13,
-                      paddingRight: 6,
-                      textAlign: 'left',
-                      minWidth: 70,
-                      maxWidth: 175,
-                      wordBreak: 'break-word'
-                    }}>{cat}</td>
-                    <td className="budgetplanner-budget-cell"
-                        style={{ textAlign: 'right', padding: "8px 5px" }}>
+                    <td className="budgetplanner-category-cell">{cat}</td>
+                    <td className="budgetplanner-budget-cell">
                       {isEditing ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                           <input
@@ -156,15 +171,10 @@ function BudgetPlanner({ transactions = [] }) {
                             autoFocus
                             style={{ width: 70, fontSize: '1em', padding: '4px 7px'}}
                             value={
-                              typeof rowDraft.value === 'number'
-                                && rowDraft.value !== 0
-                                  ? rowDraft.value
-                                  : rowDraft.value === 0
-                                  ? ''
-                                  : rowDraft.value || ''
+                              (rowDraft.value === 0) ? '' :
+                                (typeof rowDraft.value === 'number' && !Number.isNaN(rowDraft.value)) ? rowDraft.value : rowDraft.value || ''
                             }
                             onChange={e => {
-                              // Only allow numbers in input
                               let v = e.target.value;
                               if (/^-?[0-9]*\.?[0-9]*$/.test(v) || v === "") {
                                 setRowDraft({ value: v === "" ? "" : parseFloat(v) });
@@ -179,10 +189,10 @@ function BudgetPlanner({ transactions = [] }) {
                                 e.preventDefault();
                                 setEditingRow(null);
                                 setRowDraft({});
+                                setError('');
                               }
                             }}
                           />
-                          {/* Save/checkmark icon button */}
                           <button
                             type="button"
                             className="budgetplanner-save-btn"
@@ -214,7 +224,6 @@ function BudgetPlanner({ transactions = [] }) {
                               />
                             </svg>
                           </button>
-                          {/* Cancel/x icon button */}
                           <button
                             type="button"
                             className="budgetplanner-cancel-btn"
@@ -222,6 +231,7 @@ function BudgetPlanner({ transactions = [] }) {
                               e.preventDefault();
                               setEditingRow(null);
                               setRowDraft({});
+                              setError('');
                             }}
                             aria-label={`Cancel editing budget for ${cat}`}
                             style={{
@@ -247,58 +257,63 @@ function BudgetPlanner({ transactions = [] }) {
                           </button>
                         </div>
                       ) : (
-                        <>
-                          <span tabIndex={0} className="budgetplanner-edit-span" style={{ minWidth: 35, width: 52, fontSize: "1em", padding: "3px 5px", display: "inline-flex", alignItems: "center", gap: 6 }}>
-                            {currencySymbol}{Number(budgetVal || 0).toFixed(2)}
-                            <button
-                              className="budgetplanner-edit-btn"
-                              onClick={e => {
-                                e.preventDefault();
-                                setEditingRow(cat);
-                              }}
-                              aria-label={`Edit budget for ${cat}`}
-                              title="Edit"
-                              disabled={editingRow !== null}
-                              style={{
-                                background: 'none',
-                                border: 'none',
-                                marginLeft: 3,
-                                padding: 0,
-                                fontSize: '1em',
-                                cursor: editingRow === null ? 'pointer' : 'not-allowed',
-                                color: 'var(--primary, #6C2EBE)',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                opacity: editingRow !== null ? 0.5 : 0.96
-                              }}
-                              tabIndex={0}
-                              type="button"
-                            >
-                              <svg width="17" height="17" viewBox="0 0 20 20" fill="none" style={{ display: 'inline', verticalAlign: 'middle' }}>
-                                <path d="M14.8 3.8l1.4-1.3a2 2 0 112.8 2.8l-1.3 1.4-2.9-2.9zM3 17l2.4-.3c.2 0 .4-.1.5-.2L16.7 6.7l-2.9-2.9L3.6 14.1c-.1.1-.2.3-.2.5L3 17z" stroke="currentColor" strokeWidth="1.15" fill="none"/>
-                              </svg>
-                            </button>
-                          </span>
-                        </>
-                      )}
-                    </td>
-                    <td className="budgetplanner-actions-cell" style={{padding: "2px 2px", minWidth: 54}}>
-                      {isEditing ? (
-                        <span></span>
-                      ) : (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                        <span
+                          tabIndex={0}
+                          className="budgetplanner-edit-span"
+                          style={{ display: "inline-flex", alignItems: "center", gap: 5, cursor: 'pointer' }}
+                          onClick={editingRow === null ? () => setEditingRow(cat) : undefined}
+                          aria-label={`Edit budget for ${cat}`}
+                        >
+                          {currencySymbol}{budgetVal.toFixed(2)}
                           <button
-                            className="btn btn-large"
-                            style={{ minWidth: 32, padding: "6px 11px", fontSize: "0.99em" }}
+                            tabIndex={0}
+                            type="button"
+                            className="budgetplanner-edit-btn"
                             onClick={e => {
                               e.preventDefault();
                               setEditingRow(cat);
+                              setError('');
                             }}
                             aria-label={`Edit budget for ${cat}`}
+                            title="Edit"
                             disabled={editingRow !== null}
-                          >Edit</button>
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              marginLeft: 4,
+                              padding: 0,
+                              fontSize: '1em',
+                              cursor: editingRow === null ? 'pointer' : 'not-allowed',
+                              color: 'var(--primary, #6C2EBE)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              opacity: editingRow !== null ? 0.5 : 1
+                            }}
+                          >
+                            <svg width="17" height="17" viewBox="0 0 20 20" fill="none" style={{ display: 'inline', verticalAlign: 'middle' }}>
+                              <path d="M14.8 3.8l1.4-1.3a2 2 0 112.8 2.8l-1.3 1.4-2.9-2.9zM3 17l2.4-.3c.2 0 .4-.1.5-.2L16.7 6.7l-2.9-2.9L3.6 14.1c-.1.1-.2.3-.2.5L3 17z" stroke="currentColor" strokeWidth="1.15" fill="none"/>
+                            </svg>
+                          </button>
                         </span>
                       )}
+                    </td>
+                    <td className="budgetplanner-actual-cell" style={{ textAlign: 'right' }}>
+                      {currencySymbol}{actual.toFixed(2)}
+                    </td>
+                    <td className="budgetplanner-variance-cell" style={{
+                          textAlign: 'right',
+                          color: variance < 0
+                            ? 'var(--expense,#E74C3C)'
+                            : 'var(--income,#22C55E)',
+                          fontWeight: 600,
+                        }}>
+                      {variance >= 0
+                        ? <>+{currencySymbol}{Math.abs(variance).toFixed(2)}</>
+                        : <>-{currencySymbol}{Math.abs(variance).toFixed(2)}</>
+                      }
+                    </td>
+                    <td className="budgetplanner-actions-cell" style={{padding: "2px 2px", minWidth: 44}}>
+                      {/* No separate edit button any more */}
                     </td>
                   </tr>
                 );
@@ -306,9 +321,16 @@ function BudgetPlanner({ transactions = [] }) {
             </tbody>
           </table>
         </div>
+        {error && (
+          <div style={{ color: 'var(--expense,#E74C3C)', fontWeight: 500, marginLeft: 8, marginBottom: 10 }}>
+            {error}
+          </div>
+        )}
         <div style={{ color: 'var(--text-secondary)', fontSize: '1em', marginTop: 23, marginLeft: 6 }}>
           <ul style={{ marginLeft: 9, paddingLeft: 0, listStyle: 'circle', color: 'var(--primary)', fontSize: '0.99em' }}>
             <li>Budgets are auto-saved for each category. Enter numbers only.</li>
+            <li>'Actual Expenses' and 'Variance' update live from your transactions for this month.</li>
+            <li>Variance = Budget Set - Actual Expenses. Positive means under budget; negative is over budget.</li>
           </ul>
         </div>
       </div>

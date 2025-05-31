@@ -6,6 +6,23 @@ const COLORS = [
   '#00B8D9', '#FF8B4D', '#8247E5', '#3498db', '#ff5c8a'
 ];
 
+function getAvailableMonthsAndYears(transactions) {
+  const monthYearSet = new Set();
+  transactions.forEach(t => {
+    if (t.date) {
+      // Format: YYYY-MM
+      const [y, m] = t.date.split('-');
+      monthYearSet.add(`${y}-${m}`);
+    }
+  });
+  const sorted = Array.from(monthYearSet).sort().reverse();
+  const yearSet = new Set(sorted.map(v => v.split('-')[0]));
+  return {
+    months: sorted,
+    years: Array.from(yearSet).sort().reverse()
+  };
+}
+
 function getPieData(transactions) {
   const expenses = transactions.filter((t) => t.type === 'expense');
   const data = {};

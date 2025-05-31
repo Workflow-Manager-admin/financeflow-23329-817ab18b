@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useMemo } from '
 
 const STORAGE_SETTINGS = 'fflow-settings-v1';
 const STORAGE_SETTINGS_TAB = 'fflow-settings-tab-v1'; // For toggles in Settings page (notifications)
+const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 const DEFAULT_LANGUAGE = 'English';
 const DEFAULT_CURRENCY = 'USD';
 

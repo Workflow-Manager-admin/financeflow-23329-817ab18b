@@ -1,7 +1,7 @@
 /* Shrink BudgetPlanner table, reduce paddings/font size, and compress cell layouts for a balanced, modern look */
 
 .budgetplanner-table {
-  background: none;
+  background: var(--surface, #fff);
   border-radius: 11px;
   box-shadow: 0 2px 9px rgba(70,50,180,0.03);
   overflow: hidden;
@@ -20,11 +20,12 @@
 .budgetplanner-table td {
   padding: 8px 7px;
   font-size: 1em;
-  background: none;
+  background: var(--surface, #fff);
   vertical-align: middle;
   word-break: break-word;
   min-width: 42px;
   box-sizing: border-box;
+  transition: background 0.18s;
 }
 
 .budgetplanner-table th {
@@ -43,11 +44,11 @@
 }
 
 .budgetplanner-table tr:nth-child(even) td {
-  background: #fbfbfc;
+  background: var(--secondary, #F5F6FA);
 }
 
 .budgetplanner-table tr:hover td {
-  background: var(--secondary, #f4f4fa) !important;
+  background: var(--secondary, #31285a) !important;
 }
 
 .budgetplanner-category-cell {

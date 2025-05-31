@@ -3,9 +3,10 @@ import { usePreferences } from './PreferencesProvider';
 
 /**
  * BudgetPlanner component allows budgeting per category and shows dynamic actuals/variance.
- * Now shows 'Actual Expenses' and 'Variance' columns, computes variance, and uses edit icon only.
  * 
  * Data is persisted in localStorage and loads reliably on tab/view switch.
+ * Handles save/restore for all budget actions. Table and cells support full dark mode and
+ * address unwanted spacing/columns next to variance.
  */
 
 const EXPENSE_CATEGORIES = [
@@ -17,36 +18,56 @@ const STORAGE_BUDGETS_KEY = 'fflow-budgets-v1';
 // PUBLIC_INTERFACE
 function BudgetPlanner({ transactions = [] }) {
   const { currencySymbol } = usePreferences() || { currencySymbol: '$' };
-  const [budgets, setBudgets] = useState({});
+
+  // Local storage state for budgets
+  const [budgets, setBudgets] = useState(() => {
+    try {
+      const ls = localStorage.getItem(STORAGE_BUDGETS_KEY);
+      return ls ? JSON.parse(ls) : {};
+    } catch { return {}; }
+  });
+
   const [editingRow, setEditingRow] = useState(null);
   const [rowDraft, setRowDraft] = useState({});
   const [error, setError] = useState('');
 
-  // Only load budgets from localStorage on mount or out-of-sync event.
-  const loadBudgets = useCallback(() => {
-    try {
-      const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
-      setBudgets(lsBudgets ? JSON.parse(lsBudgets) : {});
-    } catch {
-      setBudgets({});
-    }
-  }, []);
-
+  // --- Save to localStorage on edit, add, or delete ---
   useEffect(() => {
+    // Save every change to budgets
+    localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(budgets));
+  }, [budgets]);
+
+  // --- Reload from localStorage on tab focus or on mount for consistency (multi-tab) ---
+  useEffect(() => {
+    const loadBudgets = () => {
+      try {
+        const lsBudgets = localStorage.getItem(STORAGE_BUDGETS_KEY);
+        setBudgets(lsBudgets ? JSON.parse(lsBudgets) : {});
+      } catch {
+        setBudgets({});
+      }
+    };
     loadBudgets();
-    // Reload on tab focus
+    // Listen for visibility/tab change and storage events
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
         loadBudgets();
       }
     };
+    const handleStorage = (e) => {
+      if (e.key === STORAGE_BUDGETS_KEY) {
+        loadBudgets();
+      }
+    };
     document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("storage", handleStorage);
     return () => {
       document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("storage", handleStorage);
     };
-  }, [loadBudgets]);
+  }, []);
 
-  // Keep rowDraft synced with state on edit
+  // --- Keep rowDraft in sync with state on edit ---
   useEffect(() => {
     if (editingRow) {
       setRowDraft({ value: Number(budgets[editingRow] || 0) });
@@ -54,45 +75,51 @@ function BudgetPlanner({ transactions = [] }) {
     }
   }, [editingRow, budgets]);
 
-  // Always save to localStorage on budgets state change
-  useEffect(() => {
-    if (
-      budgets &&
-      typeof budgets === 'object' &&
-      Object.keys(budgets).length >= 0
-    ) {
-      localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(budgets));
-    }
-  }, [budgets]);
-
-  // Compute actual expenses per category for current month (default behavior, can be changed)
+  // --- Compute actual expenses per category for THIS month only ---
   const monthStr = new Date().toISOString().slice(0, 7);
   const actualExpenses = {};
   transactions.filter(tx => tx.type === 'expense').forEach(tx => {
     const category = tx.category === 'Salary' ? 'Rent/House' : tx.category;
-    // Only sum for this month
+    // Only include transactions from this month
     if (tx.date && tx.date.slice(0, 7) === monthStr) {
       actualExpenses[category] = (actualExpenses[category] || 0) + Number(tx.amount || 0);
     }
   });
 
-  // Handle save action for budget input
+  // --- Table-wide budget summary (used for warnings) ---
+  const totalBudget = EXPENSE_CATEGORIES.reduce(
+    (sum, cat) => sum + Number(budgets[cat] || 0), 0
+  );
+  const monthIncome = transactions
+    .filter(tx => tx.type === 'income' && tx.date && tx.date.slice(0, 7) === monthStr)
+    .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+
+  // --- Handle save for a category, blocking if new budget would make budgets > income ---
   const handleSaveBudget = (cat, rawValue) => {
     let val = parseFloat(String(rawValue).replace(/[^0-9.]/g, ''));
     if (!Number.isFinite(val) || val < 0) val = 0;
-    let nextBudgets = { ...budgets, [cat]: val };
-    setBudgets(nextBudgets);
-    try {
-      localStorage.setItem(STORAGE_BUDGETS_KEY, JSON.stringify(nextBudgets));
-    } catch {}
+    const newBudgets = { ...budgets, [cat]: val };
+
+    // Calculate what total would be after this edit
+    const otherSum = EXPENSE_CATEGORIES.reduce(
+      (sum, c) => c === cat ? sum : sum + Number(newBudgets[c] || 0), 0
+    );
+    const proposedSum = otherSum + val;
+
+    // Only block if proposedSum > income and this is a RAISE, not a reduction or same
+    if (monthIncome > 0 && proposedSum > monthIncome && val > Number(budgets[cat] || 0)) {
+      setError("Cannot set this budget: total for all categories would exceed your income for this month.");
+      return false;
+    }
+
+    setBudgets(newBudgets);
     setEditingRow(null);
     setRowDraft({});
     setError('');
     return true;
   };
 
-  // Remove separate Edit button: only render edit icon inline
-  // Add 'Actual Expenses' and 'Variance' columns, dynamically updating
+  // --- Remove any fifth "actions" cell: variance is now the last cell ---
   return (
     <section className="placeholder-view">
       <div
@@ -100,6 +127,7 @@ function BudgetPlanner({ transactions = [] }) {
         style={{
           maxWidth: 720,
           minWidth: 250,
+          // Use dark mode variable for background (shows correct shade in both modes)
           background: "var(--surface,#fff)",
           borderRadius: 18,
           boxShadow: "0 6px 36px rgba(60,42,150,0.10)",
@@ -124,6 +152,38 @@ function BudgetPlanner({ transactions = [] }) {
         >
           Budget Planner
         </h1>
+        {/* Summary panel above the table */}
+        <div style={{
+          margin: "0 0 10px 2px",
+          padding: "12px 8px 7px 8px",
+          borderRadius: "11px",
+          background: "var(--secondary, #F5F6FA)",
+          color: "var(--text-color, #23243A)",
+          fontSize: "1.05em",
+          border: "1.1px solid var(--secondary, #ececec)",
+          boxShadow: "0 2px 9px rgba(60,42,150,0.05)",
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: "20px 24px"
+        }}>
+          <span>
+            <b>Total Budgeted:</b> {currencySymbol}{totalBudget.toFixed(2)}
+          </span>
+          <span>
+            <b>Income this Month:</b> {currencySymbol}{monthIncome.toFixed(2)}
+          </span>
+          {(monthIncome > 0 && totalBudget > monthIncome) && (
+            <span style={{ color: "var(--expense,#E74C3C)", fontWeight: 600, marginLeft: 14 }}>
+              Over Budget! Your expense budgets exceed your income.
+            </span>
+          )}
+          {(monthIncome > 0 && totalBudget <= monthIncome) && (
+            <span style={{ color: "var(--income,#22C55E)", fontWeight: 500, marginLeft: 14 }}>
+              Budgets are within your income.
+            </span>
+          )}
+        </div>
         <div style={{ overflowX: "auto", width: "100%", marginBottom: 4 }}>
           <table
             className="budgetplanner-table"
@@ -133,6 +193,8 @@ function BudgetPlanner({ transactions = [] }) {
               maxWidth: 740,
               tableLayout: "fixed",
               fontSize: "1em",
+              // Ensure table background is full surface (for dark mode consistency)
+              background: "var(--surface,#fff)"
             }}
           >
             <colgroup>
@@ -140,7 +202,6 @@ function BudgetPlanner({ transactions = [] }) {
               <col style={{ minWidth: 78, width: "18%" }} />
               <col style={{ minWidth: 78, width: "18%" }} />
               <col style={{ minWidth: 90, width: "21%" }} />
-              <col style={{ minWidth: 44, width: "auto" }} />
             </colgroup>
             <thead>
               <tr>
@@ -148,7 +209,6 @@ function BudgetPlanner({ transactions = [] }) {
                 <th style={{ textAlign: 'right' }}>Budget Set</th>
                 <th style={{ textAlign: 'right' }}>Actual Expenses</th>
                 <th style={{ textAlign: 'right' }}>Variance</th>
-                <th aria-label="Actions"></th>
               </tr>
             </thead>
             <tbody>
@@ -157,10 +217,16 @@ function BudgetPlanner({ transactions = [] }) {
                 const isEditing = editingRow === cat;
                 const actual = Number(actualExpenses[cat] || 0);
                 const variance = budgetVal - actual;
+                const isOver = budgetVal > 0 && budgetVal < actual;
+                const isExceedsBudget = monthIncome > 0 && totalBudget > monthIncome;
                 return (
-                  <tr key={cat}>
-                    <td className="budgetplanner-category-cell">{cat}</td>
-                    <td className="budgetplanner-budget-cell">
+                  <tr key={cat} style={{ background: "none" }}>
+                    <td className="budgetplanner-category-cell" style={{
+                      background: "var(--surface,#fff)",
+                    }}>{cat}</td>
+                    <td className="budgetplanner-budget-cell" style={{
+                      background: "var(--surface,#fff)"
+                    }}>
                       {isEditing ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                           <input
@@ -169,7 +235,7 @@ function BudgetPlanner({ transactions = [] }) {
                             min={0}
                             step="0.01"
                             autoFocus
-                            style={{ width: 70, fontSize: '1em', padding: '4px 7px'}}
+                            style={{ width: 70, fontSize: '1em', padding: '4px 7px', background: "var(--surface,#fff)" }}
                             value={
                               (rowDraft.value === 0) ? '' :
                                 (typeof rowDraft.value === 'number' && !Number.isNaN(rowDraft.value)) ? rowDraft.value : rowDraft.value || ''
@@ -297,23 +363,37 @@ function BudgetPlanner({ transactions = [] }) {
                         </span>
                       )}
                     </td>
-                    <td className="budgetplanner-actual-cell" style={{ textAlign: 'right' }}>
+                    <td className="budgetplanner-actual-cell" style={{ 
+                      textAlign: 'right',
+                      background: "var(--surface,#fff)"
+                    }}>
                       {currencySymbol}{actual.toFixed(2)}
                     </td>
                     <td className="budgetplanner-variance-cell" style={{
-                          textAlign: 'right',
-                          color: variance < 0
-                            ? 'var(--expense,#E74C3C)'
-                            : 'var(--income,#22C55E)',
-                          fontWeight: 600,
-                        }}>
+                        textAlign: 'right',
+                        color: variance < 0
+                          ? 'var(--expense,#E74C3C)'
+                          : 'var(--income,#22C55E)',
+                        fontWeight: 600,
+                        background: "var(--surface,#fff)",
+                        position:"relative"
+                      }}>
                       {variance >= 0
                         ? <>+{currencySymbol}{Math.abs(variance).toFixed(2)}</>
                         : <>-{currencySymbol}{Math.abs(variance).toFixed(2)}</>
                       }
-                    </td>
-                    <td className="budgetplanner-actions-cell" style={{padding: "2px 2px", minWidth: 44}}>
-                      {/* No separate edit button any more */}
+                      {/* Only append " (exceeds)" label if this individual category is over its value or all budgets are over total income */}
+                      {(variance < 0 || (monthIncome > 0 && totalBudget > monthIncome)) && (
+                        <span style={{
+                          fontSize: "0.98em",
+                          color: "var(--expense,#E74C3C)",
+                          marginLeft: 6,
+                          fontWeight: 500,
+                          whiteSpace: 'nowrap'
+                        }}>
+                          (exceeds)
+                        </span>
+                      )}
                     </td>
                   </tr>
                 );
@@ -322,12 +402,23 @@ function BudgetPlanner({ transactions = [] }) {
           </table>
         </div>
         {error && (
-          <div style={{ color: 'var(--expense,#E74C3C)', fontWeight: 500, marginLeft: 8, marginBottom: 10 }}>
+          <div style={{
+            color: 'var(--expense,#E74C3C)',
+            fontWeight: 500,
+            marginLeft: 8,
+            marginBottom: 10
+          }}>
             {error}
           </div>
         )}
         <div style={{ color: 'var(--text-secondary)', fontSize: '1em', marginTop: 23, marginLeft: 6 }}>
-          <ul style={{ marginLeft: 9, paddingLeft: 0, listStyle: 'circle', color: 'var(--primary)', fontSize: '0.99em' }}>
+          <ul style={{
+            marginLeft: 9,
+            paddingLeft: 0,
+            listStyle: 'circle',
+            color: 'var(--primary)',
+            fontSize: '0.99em'
+          }}>
             <li>Budgets are auto-saved for each category. Enter numbers only.</li>
             <li>'Actual Expenses' and 'Variance' update live from your transactions for this month.</li>
             <li>Variance = Budget Set - Actual Expenses. Positive means under budget; negative is over budget.</li>

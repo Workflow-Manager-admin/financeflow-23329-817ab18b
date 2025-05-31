@@ -48,7 +48,7 @@ function ExpensesView() {
     return arr;
   }
   const filtered = React.useMemo(() => applyFilters(expenseTx, filters), [expenseTx, filters]);
-  const { currency, currencySymbol } = usePreferences() || { currency: 'USD', currencySymbol: '$' };
+  const { currency, currencySymbol } = usePreferences();
 
   return (
     <section className="placeholder-view">
@@ -909,7 +909,7 @@ function App() {
   const [toast, setToast] = useState(null);
 
   // Notification preference (get from PreferencesProvider if present)
-  const { notificationsEnabled = true } = usePreferences?.() || {};
+  const { notificationsEnabled = true } = usePreferences() || {};
 
   // Router
   const initialRoute = window.location.hash.replace('#', '') || '/';

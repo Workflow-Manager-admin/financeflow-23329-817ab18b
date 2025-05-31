@@ -74,7 +74,9 @@
   border-radius: 13px;
   box-shadow: 0 3px 16px rgba(60,42,150,0.05);
   padding: 30px 18px 13px 18px;
-  max-width: 700px;
+  /* Match visuals/charts width: expand closer to .dashboard .container size */
+  max-width: 930px;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   border: 1px solid var(--secondary, #ececec);
@@ -83,7 +85,7 @@
   max-height: 540px;
   overflow-y: auto;
   /* Smoother with mobile/desktop and page fit */
-  transition: max-height 0.23s, min-height 0.23s;
+  transition: max-width 0.23s, min-width 0.23s, max-height 0.23s, min-height 0.23s;
 }
 
 /* On mobile, make sure height is usable and scrolling still works */

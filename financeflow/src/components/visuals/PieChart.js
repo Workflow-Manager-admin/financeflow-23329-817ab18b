@@ -47,12 +47,35 @@ function getPieData(transactions) {
 
 /**
  * PUBLIC_INTERFACE
- * PieChart displays a pie of expenses by category, with total expense value shown next to chart.
+ * PieChart displays a pie of expenses by category, with total expense value shown next to chart, filtered by month and year using dropdowns above the chart. UI matches FinanceFlow style.
  */
 function PieChart({ transactions, currencySymbol = '$' }) {
-  const pie = getPieData(transactions);
+  // Filter state: month/year
+  const { months, years } = getAvailableMonthsAndYears(transactions);
+  // Default to most recent available month
+  const [selectedYear, setSelectedYear] = useState(months.length > 0 ? months[0].split('-')[0] : new Date().getFullYear().toString());
+  const [selectedMonth, setSelectedMonth] = useState(months.length > 0 ? months[0].split('-')[1] : (String(new Date().getMonth() + 1).padStart(2, "0")));
+
+  // Filter transactions for selected month and year
+  const filteredTxs = React.useMemo(() => {
+    if (!selectedYear || !selectedMonth) return [];
+    const ym = `${selectedYear}-${selectedMonth}`;
+    return transactions.filter(
+      t => t.type === 'expense' && t.date && t.date.slice(0, 7) === ym
+    );
+  }, [transactions, selectedYear, selectedMonth]);
+  const pie = getPieData(filteredTxs);
   const pieData = pie.slices || [];
   const total = pie.total !== undefined ? pie.total : 0;
+
+  // For UI: build month options for the selected year (show only months that exist in data for that year)
+  const monthsInYear = months.filter(m => m.startsWith(selectedYear)).map(m => m.split('-')[1]);
+  // Month labels
+  const MONTH_LABELS = {
+    "01": "January", "02": "February", "03": "March", "04": "April", "05": "May",
+    "06": "June", "07": "July", "08": "August", "09": "September", "10": "October",
+    "11": "November", "12": "December"
+  };
 
   // Prepare arcs
   let start = 0;
@@ -77,8 +100,60 @@ function PieChart({ transactions, currencySymbol = '$' }) {
 
   return (
     <div className="piechart-box">
-      <h4>Expenses by Category</h4>
-      {/* Add a wrapper to show chart + total in a row */}
+      <div style={{
+        marginBottom: 12,
+        display: "flex",
+        gap: 10,
+        alignItems: "center",
+        justifyContent: "space-between"
+      }}>
+        <h4 style={{ margin: 0, fontWeight: 700 }}>Expenses by Category</h4>
+        <div style={{ display: "flex", gap: 9 }}>
+          <select
+            style={{
+              fontSize: "1em",
+              padding: "5px 7px",
+              borderRadius: 6,
+              border: "1px solid var(--secondary, #ececec)",
+              background: "var(--surface, #fff)",
+              color: "var(--text-color,#23243A)",
+              outline: "none"
+            }}
+            value={selectedMonth}
+            onChange={e => setSelectedMonth(e.target.value)}
+            aria-label="Filter by month"
+          >
+            {monthsInYear.map(m => (
+              <option key={m} value={m}>{MONTH_LABELS[m] || m}</option>
+            ))}
+          </select>
+          <select
+            style={{
+              fontSize: "1em",
+              padding: "5px 7px",
+              borderRadius: 6,
+              border: "1px solid var(--secondary, #ececec)",
+              background: "var(--surface, #fff)",
+              color: "var(--text-color,#23243A)",
+              outline: "none"
+            }}
+            value={selectedYear}
+            onChange={e => {
+              setSelectedYear(e.target.value);
+              // Auto-select latest month with data for new year
+              const monthsInNewYear = months.filter(x => x.startsWith(e.target.value));
+              if (monthsInNewYear.length > 0) {
+                setSelectedMonth(monthsInNewYear[0].split('-')[1]);
+              }
+            }}
+            aria-label="Filter by year"
+          >
+            {years.map(y => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
+        </div>
+      </div>
       <div style={{
         display: "flex",
         alignItems: "center",

@@ -1,139 +1,174 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Dashboard.css";
-import SavingsRing from "./savings/SavingsRing";
-import PieChart from "./visuals/PieChart";
 import SpendingTrendsWithInsights from "./visuals/SpendingTrendsWithInsights";
-import TransactionList from "./transactions/TransactionList";
-import FilterBar from "./transactions/FilterBar";
+import PieChart from "./visuals/PieChart";
+import SavingsRing from "./savings/SavingsRing";
 import SavingsGoalModal from "./savings/SavingsGoalModal";
+import TransactionList from "./transactions/TransactionList";
+import TransactionFormModal from "./transactions/TransactionFormModal";
+import FilterBar from "./transactions/FilterBar";
 
 /**
- * PUBLIC_INTERFACE
- * Main dashboard layout (2024 revision):
- * - Top row: PieChart (top left), Spending Trends & Insights (top right)
- * - Second row: Savings Goal (centered, below both charts)
- * - Third row: Transactions List (spans full width)
- * Responsive and visually balanced.
+ * Dashboard component displaying main panels, charts, savings ring, and transactions list.
+ * Restores a floating Add Transaction button positioned bottom-right, which triggers the add transaction workflow/modal.
+ * 
+ * @param {Object} props
+ * @param {Function} props.showToast
+ * @param {Array} props.transactions
+ * @param {Function} props.setTransactions
+ * @param {Object|null} props.goal
+ * @param {Function} props.setGoal
  */
-function Dashboard({ showToast, transactions, setTransactions, goal, setGoal }) {
+// PUBLIC_INTERFACE
+function Dashboard({
+  showToast,
+  transactions,
+  setTransactions,
+  goal,
+  setGoal,
+}) {
+  // -- Local States --
+  // Add Transaction Modal
+  const [showAddModal, setShowAddModal] = useState(false);
+  // Savings Goal Modal
   const [showGoalModal, setShowGoalModal] = useState(false);
-
-  // Currency symbol can be brought in from context/provider if needed, use "$" fallback for demo
-  const currencySymbol = "$";
-
-  // TransactionList callbacks (if unused, pass noop)
-  const handleEdit = () => {};
-  const handleDelete = () => {};
-
-  // Filter state for type, category, date range
+  // Transactions filter states
   const [filters, setFilters] = useState({
-    type: "All",       // All, Income, Expense
-    category: "All",   // All, or per options below
+    category: "All",
     from: "",
     to: ""
   });
 
-  // Build categories dynamically from transactions, mapping legacy "Salary" to "Rent/House" for expense
+  // Open transaction add modal
+  function handleFabClick() {
+    setShowAddModal(true);
+  }
+  // Close add modal (when user cancels or submits)
+  function handleAddModalClose() {
+    setShowAddModal(false);
+  }
+  // Submit handler for new transaction
+  function handleAddTransaction(newTx) {
+    setTransactions && setTransactions([...transactions, newTx]);
+    showToast && showToast("Transaction added!", "success");
+    setShowAddModal(false);
+  }
+  // Open savings goal modal
+  function openGoalModal() {
+    setShowGoalModal(true);
+  }
+  // Close savings goal modal
+  function closeGoalModal() {
+    setShowGoalModal(false);
+  }
+  // Handle saving a new/updated goal
+  function handleGoalSave(goalObj) {
+    setGoal && setGoal(goalObj);
+    showToast && showToast("Goal saved!", "success");
+    closeGoalModal();
+  }
+
+  // Category Filter
   const categories = React.useMemo(() => {
-    const set = new Set(
-      (transactions || []).map(t =>
-        t.type === "expense" && t.category === "Salary"
-          ? "Rent/House"
-          : t.category
-      )
-    );
-    return ["All", ...Array.from(set).filter(Boolean)];
+    const set = new Set((transactions || [])
+      .map(t => t.category && t.type === 'expense' ? t.category : null)
+      .filter(Boolean));
+    return ["All", ...Array.from(set)];
   }, [transactions]);
 
-  // Filtering logic for Dashboard
-  function applyFilters(data, flt) {
-    let arr = data || [];
-    if (flt.type && flt.type !== "All") {
-      arr = arr.filter(t => t.type === flt.type.toLowerCase());
+  // Filter transactions
+  function applyFilters(data, filtersArg) {
+    let arr = data;
+    const { category = "All", from = "", to = "" } = filtersArg || {};
+    if (category && category !== "All") {
+      arr = arr.filter(t => t.category === category);
     }
-    if (flt.category && flt.category !== "All") {
-      arr = arr.filter(t =>
-        (t.type === "expense" && t.category === "Salary" ? "Rent/House" : t.category) === flt.category
-      );
-    }
-    if (flt.from) arr = arr.filter(t => t.date >= flt.from);
-    if (flt.to) arr = arr.filter(t => t.date <= flt.to);
+    if (from) arr = arr.filter(t => t.date >= from);
+    if (to) arr = arr.filter(t => t.date <= to);
     return arr;
   }
-  const filteredTransactions = React.useMemo(() => applyFilters(transactions, filters), [transactions, filters]);
+  const filteredTx = React.useMemo(
+    () => applyFilters(transactions || [], filters),
+    [transactions, filters]
+  );
 
   return (
-    <section className="dashboard-root">
-
-      {/* Top Row: Visuals + Insights */}
-      <div className="dashboard-visuals-top">
-        <div className="dashboard-col dashboard-col-pie">
-          <PieChart transactions={transactions} />
+    <div className="dashboard">
+      {/* Top: Savings Ring and Goal Panel */}
+      <div className="dashboard-row" style={{ display: "flex", gap: 32, alignItems: "flex-start", flexWrap: "wrap", marginTop: 24 }}>
+        {/* Savings Progress Ring */}
+        <div style={{ flex: "1 1 220px", minWidth: 210, maxWidth: 430 }}>
+          <SavingsRing
+            goal={goal}
+            currentAmount={
+              (transactions || []).filter(t => t.type === "income").reduce((sum, t) => sum + Number(t.amount || 0), 0) -
+              (transactions || []).filter(t => t.type === "expense").reduce((sum, t) => sum + Number(t.amount || 0), 0)
+            }
+            onSetGoal={openGoalModal}
+          />
         </div>
-        <div className="dashboard-col dashboard-col-trends">
-          <SpendingTrendsWithInsights transactions={transactions} />
-
-          {/* SavingsRing is placed directly below the insights/trends */}
-          <div className="dashboard-savings-goal-card dash-savings-below-insights">
-            <SavingsRing
-              goal={goal}
-              stats={{
-                balance: Array.isArray(transactions)
-                  ? transactions
-                      .filter((tx) => tx.type === "income") // treat only incomes as savings
-                      .reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0)
-                  : 0
-              }}
-              onSetGoal={() => setShowGoalModal(true)}
-              currencySymbol={currencySymbol}
-            />
-          </div>
+        {/* Sparkline/spending trends */}
+        <div style={{ flex: "2 1 320px", minWidth: 260, maxWidth: 900 }}>
+          <SpendingTrendsWithInsights
+            transactions={transactions}
+            style={{ width: "100%" }}
+          />
+        </div>
+        {/* Pie Chart Panel */}
+        <div style={{ flex: "2 1 300px", minWidth: 220, maxWidth: 800 }}>
+          <PieChart
+            transactions={transactions}
+            style={{ width: "100%" }}
+          />
         </div>
       </div>
-
-      {/* Transactions List (bottom row) */}
-      <div className="dashboard-transactions-list-row">
-
-        {/* Transactions Heading */}
-        <h2
-          style={{
-            margin: "0 0 7px 1px",
-            fontSize: "1.38rem",
-            fontWeight: 700,
-            color: "var(--primary,#6C2EBE)",
-            letterSpacing: "0.01em",
-            textAlign: "left",
-          }}
-        >
-          Transactions
-        </h2>
-
-        {/* Filtering Bar */}
-        <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
-
+      {/* Transaction filters and list */}
+      <div style={{ marginTop: 36 }}>
+        <FilterBar
+          filters={filters}
+          setFilters={setFilters}
+          categories={categories}
+        />
+      </div>
+      <div style={{ marginTop: 16 }}>
         <TransactionList
-          transactions={filteredTransactions}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          emptyMsg="No transactions yet."
-          currencySymbol={currencySymbol}
+          transactions={filteredTx}
+          onEdit={null}
+          onDelete={null}
+          emptyMsg="No transactions found."
         />
-        {filteredTransactions.length === 0 && (
-          <p style={{ color: "var(--text-secondary)", paddingLeft: 0, margin: "11px 0 0 1px" }}>
-            No transactions for current filters.
-          </p>
-        )}
       </div>
 
-      {/* Modal for setting savings goal */}
-      {showGoalModal && (
-        <SavingsGoalModal
-          currentGoal={goal}
-          onClose={() => setShowGoalModal(false)}
-          onSaveGoal={setGoal}
-        />
-      )}
-    </section>
+      {/* Floating Add Transaction Button */}
+      <button
+        className="fab-add-transaction"
+        aria-label="Add Transaction"
+        title="Add Transaction"
+        onClick={handleFabClick}
+      >
+        <span style={{
+          fontSize: 28,
+          lineHeight: 1,
+          display: 'inline-block',
+          verticalAlign: 'middle',
+        }}>+</span>
+      </button>
+
+      {/* Add Transaction Modal */}
+      <TransactionFormModal
+        isOpen={showAddModal}
+        onRequestClose={handleAddModalClose}
+        onSubmit={handleAddTransaction}
+        mode="add"
+      />
+      {/* Savings Goal Modal */}
+      <SavingsGoalModal
+        isOpen={showGoalModal}
+        onClose={closeGoalModal}
+        onSave={handleGoalSave}
+        goal={goal}
+      />
+    </div>
   );
 }
 

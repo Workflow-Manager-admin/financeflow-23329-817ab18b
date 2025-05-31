@@ -130,7 +130,7 @@ function Dashboard({
   return (
     <section className="dashboard">
       <div className="container" style={{
-        maxWidth: 950,
+        maxWidth: 1100,
         background: "var(--surface, #fff)",
         borderRadius: 13,
         boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
@@ -141,19 +141,56 @@ function Dashboard({
         padding: "0 0 44px 0"
       }}>
         <div className="dashboard-layout" style={{ paddingTop: 4, gap: 34 }}>
-          {/* Visualizations */}
-          <div className="dashboard-visuals-grid" style={{ marginTop: 0, marginBottom: 0 }}>
-            <PieChart transactions={transactions} currencySymbol={currencySymbol} />
-            <LineChart transactions={transactions} currencySymbol={currencySymbol} />
-          </div>
-          {/* Savings ring */}
-          <div className="dashboard-upper">
-            <SavingsRing
-              goal={goal}
-              stats={stats}
-              onSetGoal={() => setShowGoalModal(true)}
-              currencySymbol={currencySymbol}
-            />
+          {/* New Upper Section: Left = Savings, Right = Visuals column */}
+          <div className="dashboard-visuals-row" style={{
+            display: 'flex',
+            gap: 38,
+            alignItems: 'stretch',
+            marginBottom: 0
+          }}>
+            {/* Left: Goal */}
+            <div style={{
+              flex: '0 0 270px',
+              minWidth: 230,
+              maxWidth: 300,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start'
+            }}>
+              <SavingsRing
+                goal={goal}
+                stats={stats}
+                onSetGoal={() => setShowGoalModal(true)}
+                currencySymbol={currencySymbol}
+              />
+              {/* Could add other left-panel items below */}
+            </div>
+            {/* Right: Visuals block (HeatMap + Pie + Trends/Insights) */}
+            <div style={{
+              flex: '1 1 0',
+              minWidth: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '19px'
+            }}>
+              <HeatMapCalendar transactions={transactions} currencySymbol={currencySymbol} />
+              <PieChart transactions={transactions} currencySymbol={currencySymbol} />
+              {/* Trends/Insights panel placeholder */}
+              <div className="dashboard-insights-panel" style={{
+                marginTop: 11,
+                padding: '18px 17px',
+                background: 'var(--secondary,#fcfbff)',
+                borderRadius: 10,
+                minHeight: 42,
+                boxShadow: '0 1px 9px rgba(108,64,190,0.04)',
+                fontSize: '1.04em',
+                color: 'var(--primary,#6C2EBE)',
+                fontWeight: 500
+              }}>
+                {/* Placeholder for spending trends and insights */}
+                <span role="img" aria-label="Trend">📊</span> <b>Spending Trends & Insights:</b> Feature coming soon!
+              </div>
+            </div>
           </div>
           {/* Transactions list */}
           <div className="dashboard-txlist-outer">

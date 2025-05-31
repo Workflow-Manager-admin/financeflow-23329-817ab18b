@@ -1,0 +1,62 @@
+.heatmapcard-box {
+  background: var(--surface, #fff);
+  border-radius: 13px;
+  box-shadow: 0 2px 13px rgba(60,42,150,0.09);
+  padding: 22px 18px 22px 18px;
+  margin-bottom: 0;
+  min-width: 284px;
+  min-height: 305px;
+}
+
+.heatmapcalendar-table {
+  border-spacing: 0;
+  user-select: none;
+  width: 100%;
+}
+
+.heatmapcalendar-cell {
+  min-width: 38px;
+  max-width: 50px;
+  height: 40px;
+  text-align: center;
+  vertical-align: top;
+  outline: none;
+  position: relative;
+  transition: background 0.16s, box-shadow 0.14s;
+  cursor: pointer;
+}
+
+.heatmapcalendar-cell:focus {
+  z-index: 2;
+  box-shadow: 0 0 0 2.5px var(--primary,#6C2EBE);
+}
+
+.heatmapcalendar-dot {
+  display: inline-block;
+  margin-top: 1px;
+}
+
+.heatmapcolorball {
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  background: var(--heatmap-med,#c4b3ed);
+  display: inline-block;
+  margin-right: 1.5px;
+  border: 0.5px solid #dfd5ef;
+}
+
+.heatmapcalendar-popup {
+  animation: fadeInPop 0.25s;
+}
+
+@keyframes fadeInPop {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

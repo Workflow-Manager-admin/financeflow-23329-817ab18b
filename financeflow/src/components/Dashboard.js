@@ -43,15 +43,19 @@ function Dashboard({ showToast, transactions, setTransactions, goal, setGoal }) 
       {/* Savings Goal (centered row, below visuals) */}
       <div className="dashboard-savings-row">
         <div className="dashboard-savings-goal-card">
-          <SavingsRing goal={goal} />
-          <button
-            className="btn goal-btn"
-            onClick={() => setShowGoalModal(true)}
-            style={{ marginTop: 18 }}
-            aria-label="Set Savings Goal"
-          >
-            Set Savings Goal
-          </button>
+          <SavingsRing
+            goal={goal}
+            stats={{
+              balance: Array.isArray(transactions)
+                ? transactions
+                    .filter((tx) => tx.type === "income") // treat only incomes as savings
+                    .reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0)
+                : 0
+            }}
+            onSetGoal={() => setShowGoalModal(true)}
+            currencySymbol={currencySymbol}
+          />
+          {/* Removed separate button, integrate Set/Edit Goal as part of SavingsRing */}
         </div>
       </div>
 

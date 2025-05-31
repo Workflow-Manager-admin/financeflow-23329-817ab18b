@@ -174,6 +174,51 @@
   }
 }
 
+/* --- DARK MODE SUPPORT FOR BUDGET PLANNER TABLE --- */
+body[data-theme="dark"] .budgetplanner-table {
+  background: var(--surface, #292B44);
+}
+
+body[data-theme="dark"] .budgetplanner-table th {
+  background: var(--secondary, #23243A);
+  color: var(--primary, #BB86FC);
+  border-bottom: 2px solid var(--primary, #cbb5ef);
+}
+
+body[data-theme="dark"] .budgetplanner-table td,
+body[data-theme="dark"] .budgetplanner-table tr,
+body[data-theme="dark"] .budgetplanner-category-cell,
+body[data-theme="dark"] .budgetplanner-budget-cell,
+body[data-theme="dark"] .budgetplanner-actual-cell,
+body[data-theme="dark"] .budgetplanner-variance-cell {
+  background: var(--surface, #292B44);
+  color: var(--text-color, #fff);
+}
+
+body[data-theme="dark"] .budgetplanner-table tr:nth-child(even) td {
+  background: var(--secondary, #23243A);
+}
+
+body[data-theme="dark"] .budgetplanner-table tr:hover td {
+  background: #35354c !important;
+}
+
+body[data-theme="dark"] .budgetplanner-input {
+  background: var(--surface, #292B44);
+  color: #fff;
+  border: 1.3px solid var(--secondary,#363649);
+}
+
+body[data-theme="dark"] .budgetplanner-input:focus {
+  background: #26263a;
+  border: 1.2px solid var(--primary,#cbb5ef);
+}
+
+body[data-theme="dark"] .budgetplanner-edit-span {
+  background: rgba(50,50,80,0.10);
+  color: var(--text-color,#fff);
+}
+
 .budgetplanner-table::-webkit-scrollbar {
   height: 9px;
 }

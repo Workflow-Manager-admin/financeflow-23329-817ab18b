@@ -370,3 +370,4 @@ src/App.js
   Line 330:9:  Parsing error: Identifier 'usePreferences' has already been declared. (330:9)
 
 webpack compiled with 2 errors
+Compiling...

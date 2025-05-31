@@ -13,6 +13,7 @@ import BudgetPlanner from './components/BudgetPlanner';
 import './components/BudgetPlanner.css';
 
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
+const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 
 function ExpensesView() {
   const [transactions] = React.useState(() => {
@@ -48,7 +49,7 @@ function ExpensesView() {
     return arr;
   }
   const filtered = React.useMemo(() => applyFilters(expenseTx, filters), [expenseTx, filters]);
-  const { currency, currencySymbol } = usePreferences();
+  const { currencySymbol } = usePreferences(); // always use live context
 
   return (
     <section className="placeholder-view">
@@ -325,19 +326,13 @@ function CalendarView() {
   );
 }
 
-const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
-
-import { usePreferences } from './components/PreferencesProvider';
-// ...
 // PUBLIC_INTERFACE
-function ProfileView({}) {
-  // Profile state and edit mode, decoupling country code & mobile as two fields
+function ProfileView() {
   const [profile, setProfile] = React.useState({ name: '', email: '', mobile: '', countryCode: "+1", currency: '' });
   const [editMode, setEditMode] = React.useState(false);
   const [error, setError] = React.useState('');
   const [saved, setSaved] = React.useState(false);
 
-  // Country code list with emoji flags for dropdown (limited set for focus/UX)
   const COUNTRY_OPTIONS = [
     { code: "+1", flag: "🇺🇸", label: "USA" },
     { code: "+91", flag: "🇮🇳", label: "India" },
@@ -353,8 +348,10 @@ function ProfileView({}) {
   ];
   const currencyOptions = ['USD', 'EUR', 'GBP', 'INR', 'CNY'];
 
-  // Used for first-run flow
   const isFirstRender = React.useRef(true);
+
+  // Access context currency setter for instant sync
+  const { setCurrency } = usePreferences() || {};
 
   // Initialize: load profile
   React.useEffect(() => {
@@ -376,17 +373,14 @@ function ProfileView({}) {
     isFirstRender.current = false;
   }, []);
 
-  // Enforce edit mode for true first-time users, but never on revisit/navigation
+  // Enforce edit mode for true first-time users
   React.useEffect(() => {
-    // On first render, don't change editMode; let onboarding/modal control it.
     if (isFirstRender.current) return;
-    // If no name and profile is empty or missing, force edit mode (new user).
     if (!profile.name) {
       setEditMode(true);
     }
-    // If user is set up, do NOT auto-enable edit mode again on navigation.
-    // Edit mode should only be set explicitly via the 'Edit' button or Save/Cancel workflows.
-  }, []); // remove dependency on profile.name
+    // else do not auto-switch to edit mode
+  }, []);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -430,6 +424,10 @@ function ProfileView({}) {
         countryCode: profile.countryCode || "+1"
       })
     );
+    // Update global context for currency
+    if (profile.currency && typeof setCurrency === "function") {
+      setCurrency(profile.currency);
+    }
     setEditMode(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 1300);
@@ -682,7 +680,6 @@ function ProfileView({}) {
 }
 
 function SettingsView() {
-  // Remove language selector; only keep and move Currency selector to top
   const {
     currency,
     setCurrency,
@@ -690,7 +687,6 @@ function SettingsView() {
   } = usePreferences();
 
   // For toggles/persistent settings, use local state and localStorage.
-  // Notifications and sync are just toggles for demo. Data reset is an action.
   const STORAGE_SETTINGS = 'fflow-settings-tab-v1';
 
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(() => {
@@ -979,26 +975,6 @@ function App() {
     [notificationsEnabled]
   );
 
-  // Props to pass to children
-  function passProfileOverrides(child) {
-    return React.cloneElement(child, {
-      profile: profile,
-      setProfile: setProfile,
-    });
-  }
-  function passSettingsOverrides(child) {
-    return React.cloneElement(child, {
-      settings: settings,
-      setSettings: setSettings,
-    });
-  }
-  function passTransactionsOverrides(child) {
-    return React.cloneElement(child, {
-      transactions: transactions,
-      setTransactions: setTransactions,
-    });
-  }
-
   // Child Router
   let ViewRaw;
   switch (route) {
@@ -1021,16 +997,15 @@ function App() {
       ViewRaw = <CalendarView transactions={transactions} />;
       break;
     case '/profile':
-      ViewRaw = <ProfileView profile={profile} setProfile={setProfile} />;
+      ViewRaw = <ProfileView />;
       break;
     case '/settings':
-      ViewRaw = <SettingsView settings={settings} setSettings={setSettings} />;
+      ViewRaw = <SettingsView />;
       break;
     default:
       ViewRaw = <section className="placeholder-view"><div className="container"><h1>Not Found</h1></div></section>;
   }
 
-  // Removed AuthStatusBar: all cloud sync/login/logout UI
   // Onboarding dismiss
   const handleOnboardingDismiss = () => {
     localStorage.setItem('fflow-onboarded', '1');

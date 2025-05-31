@@ -1,221 +1,60 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import TransactionList from './transactions/TransactionList';
-import TransactionFormModal from './transactions/TransactionFormModal';
-import FilterBar from './transactions/FilterBar';
-import PieChart from './visuals/PieChart';
-import HeatMapCalendar from './visuals/HeatMapCalendar';
-import SavingsRing from './savings/SavingsRing';
-import SavingsGoalModal from './savings/SavingsGoalModal';
-import SpendingTrendsWithInsights from './visuals/SpendingTrendsWithInsights';
-import './Dashboard.css';
-import { usePreferences } from './PreferencesProvider';
+import React, { useState } from "react";
+import "./Dashboard.css";
+import SavingsGoalModal from "./savings/SavingsGoalModal";
+import SavingsRing from "./savings/SavingsRing";
+import PieChart from "./visuals/PieChart";
+import SpendingTrendsWithInsights from "./visuals/SpendingTrendsWithInsights";
+import HeatMapCalendar from "./visuals/HeatMapCalendar";
 
-const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
-const STORAGE_GOAL = 'fflow-savings-goal-v1';
-
-// PUBLIC_INTERFACE
 /**
- * Dashboard component for managing transactions, savings goals,
- * and visualizations.
- * 
- * Layout reverted: No dashboard title/grouping—all content blocks follow original, "stacked" loose container layout.
+ * PUBLIC_INTERFACE
+ * Main dashboard layout:
+ * - Left: Savings Goal/Progress Ring (fixed width, "sidebar-style").
+ * - Right: "elongated" section containing Visuals (Pie & Trends stacked) and HeatMap/Insights.
+ * - Uses flexbox for clean, modern, responsive look.
  */
-function Dashboard({
-  showToast,
-  transactions = [],
-  setTransactions,
-  goal,
-  setGoal,
-}) {
-  const [filtered, setFiltered] = useState([]);
-  const [filters, setFilters] = useState({ category: 'All', from: '', to: '' });
-  const [showTxModal, setShowTxModal] = useState(false);
-  const [editTx, setEditTx] = useState(null);
+function Dashboard({ showToast, transactions, setTransactions, goal, setGoal }) {
   const [showGoalModal, setShowGoalModal] = useState(false);
 
-  // --- Filtering logic ONLY - goal is managed at top-level now ---
-  useEffect(() => {
-    setFiltered(applyFilters(transactions, filters));
-    // eslint-disable-next-line
-  }, [filters, transactions]);
-
-  // ========== Actions ==============
-  function handleSaveTransaction(tx) {
-    let arr;
-    if (tx.id) {
-      arr = transactions.map(t => (t.id === tx.id ? tx : t));
-      showToast && showToast('Transaction updated!', 'success');
-    } else {
-      const id = 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
-      arr = [{ ...tx, id }, ...transactions];
-      showToast && showToast('Transaction added!', 'success');
-    }
-    setTransactions(arr);
-    setShowTxModal(false);
-    setEditTx(null);
-  }
-
-  function handleDeleteTransaction(id) {
-    setTransactions(transactions.filter(t => t.id !== id));
-    showToast && showToast('Transaction deleted!', 'success');
-  }
-
-  function handleSaveGoal(goalData) {
-    setGoal(goalData);
-    showToast && showToast('Savings goal set!', 'success');
-    setShowGoalModal(false);
-  }
-
-  // Milestone notification support for savings
-  useEffect(() => {
-    if (!goal) return;
-    const target = goal.target;
-    const sum = transactions.reduce(
-      (acc, t) => t.type === 'income'
-        ? acc + Number(t.amount)
-        : acc - Number(t.amount)
-      , 0
-    );
-    if (target && sum >= target && !goal.achieved) {
-      setGoal({ ...goal, achieved: true });
-      showToast && showToast('Congratulations! You have reached your savings goal!', 'success');
-    }
-    // eslint-disable-next-line
-  }, [goal, transactions]);
-
-  function applyFilters(data, filtersArg) {
-    const { category = 'All', from = '', to = '' } = filtersArg || {};
-    let arr = data;
-    if (category && category !== 'All') {
-      arr = arr.filter(t =>
-        t.type === 'expense' &&
-        ((t.category === 'Salary' && category === 'Rent/House') || t.category === category)
-      );
-    }
-    if (from) arr = arr.filter(t => t.date >= from);
-    if (to) arr = arr.filter(t => t.date <= to);
-    return arr.sort((a, b) => b.date.localeCompare(a.date));
-  }
-
-  // Category choices (only from expenses, skip incomes), normalize any "Salary" to "Rent/House" for filter UI
-  const categories = useMemo(() => {
-    const set = new Set(
-      transactions
-        .filter(t => t.type === 'expense')
-        .map(t =>
-          t.category === 'Salary' ? 'Rent/House' : t.category
-        )
-    );
-    return ['All', ...Array.from(set).filter(Boolean)];
-  }, [transactions]);
-
-  const stats = useMemo(() => {
-    const income = transactions
-      .filter(t => t.type === 'income')
-      .reduce((sum, t) => sum + Number(t.amount), 0);
-    const expense = transactions
-      .filter(t => t.type === 'expense')
-      .reduce((sum, t) => sum + Number(t.amount), 0);
-    const balance = income - expense;
-    return { income, expense, balance };
-  }, [transactions]);
-
-  function handleEditTransaction(tx) {
-    setEditTx(tx);
-    setShowTxModal(true);
-  }
-
-  const { currencySymbol } = usePreferences();
-
-  // ========== Render ================
   return (
-    <section className="dashboard">
-      <div className="container" style={{
-        maxWidth: 1100,
-        background: "var(--surface, #fff)",
-        borderRadius: 13,
-        boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
-        marginTop: 32,
-        marginBottom: 0,
-        marginLeft: "auto",
-        marginRight: "auto",
-        padding: "0 0 44px 0"
-      }}>
-        <div className="dashboard-layout elongated-dashboard-layout">
-          {/* Modernized section: Side-by-side (desktop), stacked (mobile/tablet) */}
-          <div className="dashboard-main-flex">
-            {/* Left column: Savings Goal */}
-            <aside className="dashboard-left-panel" aria-label="Savings Goal">
-              <SavingsRing
-                goal={goal}
-                stats={stats}
-                onSetGoal={() => setShowGoalModal(true)}
-                currencySymbol={currencySymbol}
-              />
-            </aside>
-            {/* Right column: Elongated/Prominent HeatMap, Insights, Pie */}
-            <section className="dashboard-right-panel" aria-label="Main visualizations">
-              <div className="elongated-visual-block">
-                {/* Elongated HeatMap */}
-                <HeatMapCalendar transactions={transactions} currencySymbol={currencySymbol} />
-              </div>
-              <div className="elongated-trends-block">
-                <SpendingTrendsWithInsights
-                  transactions={transactions}
-                  currencySymbol={currencySymbol}
-                />
-              </div>
-              <div className="dashboard-piechart-section">
-                <PieChart transactions={transactions} currencySymbol={currencySymbol} />
-              </div>
-            </section>
+    <section className="dashboard-root">
+      <div className="dashboard-flex-row">
+        {/* Left: Savings Goal/Progress, stacked + button */}
+        <div className="dashboard-savings-goal-col">
+          <div className="savings-goal-verticalCard">
+            <SavingsRing goal={goal} />
+            <button
+              className="btn goal-btn"
+              onClick={() => setShowGoalModal(true)}
+              style={{ marginTop: 18 }}
+              aria-label="Set Savings Goal"
+            >
+              Set Savings Goal
+            </button>
           </div>
-          {/* Transactions list (remains full width below) */}
-          <div className="dashboard-txlist-outer">
-            <FilterBar
-              filters={filters}
-              setFilters={setFilters}
-              categories={categories}
-            />
-            <TransactionList
-              transactions={filtered}
-              onEdit={handleEditTransaction}
-              onDelete={handleDeleteTransaction}
-              emptyMsg="No transactions found for selected filters."
-              currencySymbol={currencySymbol}
-            />
+        </div>
+        {/* Right: Elongated Visuals/Insights/Heatmap section */}
+        <div className="dashboard-visuals-area">
+          <div className="dashboard-header-row">
+            <h1 className="dashboard-title">Dashboard</h1>
+          </div>
+          {/* Main visuals grid */}
+          <div className="dashboard-visuals-main-grid">
+            <div className="dashboard-pie-trends">
+              <PieChart transactions={transactions} />
+              <SpendingTrendsWithInsights transactions={transactions} />
+            </div>
+            <div className="dashboard-heatmap-long">
+              <HeatMapCalendar transactions={transactions} />
+            </div>
           </div>
         </div>
       </div>
-      <button
-        className="dashboard-add-btn"
-        aria-label="Add transaction"
-        title="Add new transaction"
-        type="button"
-        onClick={() => {
-          setShowTxModal(true);
-          setEditTx(null);
-        }}
-      >
-        <span className="dashboard-add-btn-icon">＋</span>
-        <span className="dashboard-add-btn-label">Add Transaction</span>
-      </button>
-      {showTxModal && (
-        <TransactionFormModal
-          onSave={handleSaveTransaction}
-          onClose={() => {
-            setShowTxModal(false);
-            setEditTx(null);
-          }}
-          initial={editTx}
-          currencySymbol={currencySymbol}
-        />
-      )}
       {showGoalModal && (
         <SavingsGoalModal
-          onSave={handleSaveGoal}
+          currentGoal={goal}
           onClose={() => setShowGoalModal(false)}
-          initial={goal}
+          onSaveGoal={setGoal}
         />
       )}
     </section>

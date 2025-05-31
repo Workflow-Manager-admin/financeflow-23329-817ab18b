@@ -6,7 +6,7 @@ import './SavingsRing.css';
  * SavingsRing component always shows the label 'Savings Goal'
  * (no user or custom label displayed), with a clean appearance.
  */
-function SavingsRing({ goal, stats, onSetGoal, currencySymbol = '$' }) {
+function SavingsRing({ goal, stats = {}, onSetGoal, currencySymbol = '$' }) {
   const target = goal?.target || 0;
   // Always show 'Savings Goal' as title
   const saved = stats.balance || 0;

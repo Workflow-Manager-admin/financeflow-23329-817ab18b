@@ -11,21 +11,7 @@
   background: none;
 }
 
-/* Header/title row */
-.dashboard-header-row {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  margin-bottom: 18px;
-}
-.dashboard-title {
-  font-size: 2.10em;
-  color: var(--primary, #6C2EBE);
-  font-weight: 800;
-  margin: 0 0 0 3px;
-  letter-spacing: 0.01em;
-  line-height: 1.07;
-}
+/* (Removed dashboard-header-row and dashboard-title since heading is gone) */
 
 /* Top row: PieChart left, Trends right */
 .dashboard-visuals-top {

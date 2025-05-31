@@ -26,36 +26,30 @@ function Dashboard({ showToast, transactions, setTransactions, goal, setGoal }) 
 
   return (
     <section className="dashboard-root">
-      <div className="dashboard-header-row">
-        <h1 className="dashboard-title">Dashboard</h1>
-      </div>
 
-      {/* Top Row: Visuals */}
+      {/* Top Row: Visuals + Insights */}
       <div className="dashboard-visuals-top">
         <div className="dashboard-col dashboard-col-pie">
           <PieChart transactions={transactions} />
         </div>
         <div className="dashboard-col dashboard-col-trends">
           <SpendingTrendsWithInsights transactions={transactions} />
-        </div>
-      </div>
 
-      {/* Savings Goal (centered row, below visuals) */}
-      <div className="dashboard-savings-row">
-        <div className="dashboard-savings-goal-card">
-          <SavingsRing
-            goal={goal}
-            stats={{
-              balance: Array.isArray(transactions)
-                ? transactions
-                    .filter((tx) => tx.type === "income") // treat only incomes as savings
-                    .reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0)
-                : 0
-            }}
-            onSetGoal={() => setShowGoalModal(true)}
-            currencySymbol={currencySymbol}
-          />
-          {/* Removed separate button, integrate Set/Edit Goal as part of SavingsRing */}
+          {/* SavingsRing is placed directly below the insights/trends */}
+          <div className="dashboard-savings-goal-card dash-savings-below-insights">
+            <SavingsRing
+              goal={goal}
+              stats={{
+                balance: Array.isArray(transactions)
+                  ? transactions
+                      .filter((tx) => tx.type === "income") // treat only incomes as savings
+                      .reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0)
+                  : 0
+              }}
+              onSetGoal={() => setShowGoalModal(true)}
+              currencySymbol={currencySymbol}
+            />
+          </div>
         </div>
       </div>
 

@@ -4,6 +4,7 @@ import SavingsRing from "./savings/SavingsRing";
 import PieChart from "./visuals/PieChart";
 import SpendingTrendsWithInsights from "./visuals/SpendingTrendsWithInsights";
 import TransactionList from "./transactions/TransactionList";
+import FilterBar from "./transactions/FilterBar";
 import SavingsGoalModal from "./savings/SavingsGoalModal";
 
 /**

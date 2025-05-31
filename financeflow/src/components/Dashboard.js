@@ -25,6 +25,43 @@ function Dashboard({ showToast, transactions, setTransactions, goal, setGoal }) 
   const handleEdit = () => {};
   const handleDelete = () => {};
 
+  // Filter state for type, category, date range
+  const [filters, setFilters] = useState({
+    type: "All",       // All, Income, Expense
+    category: "All",   // All, or per options below
+    from: "",
+    to: ""
+  });
+
+  // Build categories dynamically from transactions, mapping legacy "Salary" to "Rent/House" for expense
+  const categories = React.useMemo(() => {
+    const set = new Set(
+      (transactions || []).map(t =>
+        t.type === "expense" && t.category === "Salary"
+          ? "Rent/House"
+          : t.category
+      )
+    );
+    return ["All", ...Array.from(set).filter(Boolean)];
+  }, [transactions]);
+
+  // Filtering logic for Dashboard
+  function applyFilters(data, flt) {
+    let arr = data || [];
+    if (flt.type && flt.type !== "All") {
+      arr = arr.filter(t => t.type === flt.type.toLowerCase());
+    }
+    if (flt.category && flt.category !== "All") {
+      arr = arr.filter(t =>
+        (t.type === "expense" && t.category === "Salary" ? "Rent/House" : t.category) === flt.category
+      );
+    }
+    if (flt.from) arr = arr.filter(t => t.date >= flt.from);
+    if (flt.to) arr = arr.filter(t => t.date <= flt.to);
+    return arr;
+  }
+  const filteredTransactions = React.useMemo(() => applyFilters(transactions, filters), [transactions, filters]);
+
   return (
     <section className="dashboard-root">
 
@@ -56,13 +93,36 @@ function Dashboard({ showToast, transactions, setTransactions, goal, setGoal }) 
 
       {/* Transactions List (bottom row) */}
       <div className="dashboard-transactions-list-row">
+
+        {/* Transactions Heading */}
+        <h2
+          style={{
+            margin: "0 0 7px 1px",
+            fontSize: "1.38rem",
+            fontWeight: 700,
+            color: "var(--primary,#6C2EBE)",
+            letterSpacing: "0.01em",
+            textAlign: "left",
+          }}
+        >
+          Transactions
+        </h2>
+
+        {/* Filtering Bar */}
+        <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
+
         <TransactionList
-          transactions={transactions}
+          transactions={filteredTransactions}
           onEdit={handleEdit}
           onDelete={handleDelete}
           emptyMsg="No transactions yet."
           currencySymbol={currencySymbol}
         />
+        {filteredTransactions.length === 0 && (
+          <p style={{ color: "var(--text-secondary)", paddingLeft: 0, margin: "11px 0 0 1px" }}>
+            No transactions for current filters.
+          </p>
+        )}
       </div>
 
       {/* Modal for setting savings goal */}

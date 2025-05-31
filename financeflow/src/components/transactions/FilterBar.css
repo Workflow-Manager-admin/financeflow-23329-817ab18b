@@ -1,23 +1,40 @@
 .filterbar {
   display: flex;
   gap: 8px;
-  align-items: center;
+  align-items: flex-end;
   margin-bottom: 13px;
+  flex-wrap: wrap;
 }
 .filterbar select,
 .filterbar input[type="date"] {
   font-size: 1em;
-  padding: 7px;
+  padding: 7px 8px 6px 8px;
   border-radius: 6px;
   border: 1px solid var(--secondary, #ececec);
   outline: none;
   background: var(--surface, #fff);
   color: var(--text-color,#23243A);
+  min-width: 90px;
+  margin-right: 2px;
 }
-@media (max-width: 520px) {
+.filterbar select {
+  min-width: 90px;
+  max-width: 150px;
+}
+.filterbar input[type="date"] {
+  width: 120px;
+  max-width: 140px;
+}
+@media (max-width: 650px) {
   .filterbar {
     flex-direction: column;
     align-items: flex-start;
     gap: 7px;
+  }
+  .filterbar select,
+  .filterbar input[type="date"] {
+    width: 100%;
+    min-width: 0;
+    margin-right: 0;
   }
 }

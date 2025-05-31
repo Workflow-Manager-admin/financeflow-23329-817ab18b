@@ -182,7 +182,12 @@ export function PreferencesProvider({ children }) {
       currency,
       currencySymbol,
       setLanguage,
-      setCurrency,
+      // PUBLIC_INTERFACE for global real-time updates
+      setCurrency: (cur) => {
+        // Update context immediately, persistence is handled in effect
+        setCurrency(cur);
+        // Optionally: sub-persist handled in effect above.
+      },
       notificationsEnabled,
       setNotificationsEnabled,
       setPreferences: ({ language, currency, notificationsEnabled }) => {

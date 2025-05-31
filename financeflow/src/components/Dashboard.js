@@ -173,9 +173,11 @@ function Dashboard({
               flexDirection: 'column',
               gap: '19px'
             }}>
+              {/* Replacement: Interactive Transaction HeatMap */}
               <HeatMapCalendar transactions={transactions} currencySymbol={currencySymbol} />
+              {/* Existing PieChart for category breakdown */}
               <PieChart transactions={transactions} currencySymbol={currencySymbol} />
-              {/* Trends/Insights panel placeholder */}
+              {/* Trends/Insights panel placeholder (remains unchanged) */}
               <div className="dashboard-insights-panel" style={{
                 marginTop: 11,
                 padding: '18px 17px',

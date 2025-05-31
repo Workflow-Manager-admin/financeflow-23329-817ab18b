@@ -141,58 +141,42 @@ function Dashboard({
         marginRight: "auto",
         padding: "0 0 44px 0"
       }}>
-        <div className="dashboard-layout" style={{ paddingTop: 4, gap: 34 }}>
-          {/* New Upper Section: Left = Savings, Right = Visuals column */}
-          <div className="dashboard-visuals-row" style={{
-            display: 'flex',
-            gap: 38,
-            alignItems: 'stretch',
-            marginBottom: 0
-          }}>
-            {/* Left: Goal */}
-            <div style={{
-              flex: '0 0 270px',
-              minWidth: 230,
-              maxWidth: 300,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-start'
-            }}>
+        <div className="dashboard-layout elongated-dashboard-layout">
+          {/* Modernized section: Side-by-side (desktop), stacked (mobile/tablet) */}
+          <div className="dashboard-main-flex">
+            {/* Left column: Savings Goal */}
+            <aside className="dashboard-left-panel" aria-label="Savings Goal">
               <SavingsRing
                 goal={goal}
                 stats={stats}
                 onSetGoal={() => setShowGoalModal(true)}
                 currencySymbol={currencySymbol}
               />
-              {/* Could add other left-panel items below */}
-            </div>
-            {/* Right: Visuals block (HeatMap + Pie + Trends/Insights) */}
-            <div style={{
-              flex: '1 1 0',
-              minWidth: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '19px'
-            }}>
-              {/* Replacement: Interactive Transaction HeatMap */}
-              <HeatMapCalendar transactions={transactions} currencySymbol={currencySymbol} />
-              {/* Existing PieChart for category breakdown */}
-              <PieChart transactions={transactions} currencySymbol={currencySymbol} />
-              {/* Trends/Insights panel */}
-              <SpendingTrendsWithInsights
-                transactions={transactions}
-                currencySymbol={currencySymbol}
-              />
-            </div>
+            </aside>
+            {/* Right column: Elongated/Prominent HeatMap, Insights, Pie */}
+            <section className="dashboard-right-panel" aria-label="Main visualizations">
+              <div className="elongated-visual-block">
+                {/* Elongated HeatMap */}
+                <HeatMapCalendar transactions={transactions} currencySymbol={currencySymbol} />
+              </div>
+              <div className="elongated-trends-block">
+                <SpendingTrendsWithInsights
+                  transactions={transactions}
+                  currencySymbol={currencySymbol}
+                />
+              </div>
+              <div className="dashboard-piechart-section">
+                <PieChart transactions={transactions} currencySymbol={currencySymbol} />
+              </div>
+            </section>
           </div>
-          {/* Transactions list */}
+          {/* Transactions list (remains full width below) */}
           <div className="dashboard-txlist-outer">
             <FilterBar
               filters={filters}
               setFilters={setFilters}
               categories={categories}
             />
-            {/* Container now controls scroll/height */}
             <TransactionList
               transactions={filtered}
               onEdit={handleEditTransaction}

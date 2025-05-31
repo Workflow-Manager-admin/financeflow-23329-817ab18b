@@ -20,6 +20,39 @@
   padding: 40px 30px 52px 30px;
 }
 
+/* New row layout (left savings, right visuals) replaces .dashboard-visuals-grid for greater vertical height */
+.dashboard-visuals-row {
+  display: flex;
+  flex-direction: row;
+  gap: 38px;
+  align-items: flex-start;
+  margin-bottom: 0;
+  width: 100%;
+}
+.dashboard-visuals-row > div:first-child {
+  min-width: 208px;
+  max-width: 310px;
+}
+.dashboard-visuals-row > div:last-child {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+@media (max-width: 900px) {
+  .dashboard-visuals-row {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .dashboard-visuals-row > div:first-child {
+    max-width: unset;
+    min-width: 0;
+    flex: 1 1 0;
+  }
+}
+
 @media (max-width: 1100px) {
   .dashboard .container {
     max-width: 97vw !important;

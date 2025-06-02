@@ -10,6 +10,7 @@ import PreferencesProvider, { usePreferences } from './components/PreferencesPro
 import TransactionList from './components/transactions/TransactionList';
 import FilterBar from './components/transactions/FilterBar';
 import BudgetPlanner from './components/BudgetPlanner';
+import TransactionFormModal from './components/transactions/TransactionFormModal'; // Import modal
 import './components/BudgetPlanner.css';
 
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
@@ -976,6 +977,15 @@ function App() {
   );
 
   // Child Router
+  // Add Transaction Modal state control
+  const [showTransactionModal, setShowTransactionModal] = useState(false);
+
+  // Method to open modal (can be passed to Dashboard for FAB or Add button)
+  const handleOpenTransactionModal = () => setShowTransactionModal(true);
+
+  // After transaction is added or modal closed
+  const handleCloseTransactionModal = () => setShowTransactionModal(false);
+
   let ViewRaw;
   switch (route) {
     case '/':
@@ -985,6 +995,7 @@ function App() {
         setTransactions={setTransactions}
         goal={goal}
         setGoal={setGoal}
+        onAddTransaction={handleOpenTransactionModal} // Pass modal open handler
       />;
       break;
     case '/expenses':

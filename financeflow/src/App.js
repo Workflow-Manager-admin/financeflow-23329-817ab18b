@@ -873,7 +873,7 @@ function SettingsView() {
 
 function App() {
   // Onboarding flag
-  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false); // Track modal visibility
 
   // App State Management (localStorage only)
   const [profile, setProfile] = useState(() => {
@@ -919,11 +919,11 @@ function App() {
 
   // Initialization
   useEffect(() => {
-    // Show onboarding if first visit
+    // Show onboarding modal if first visit (i.e., 'fflow-onboarded' absent)
     if (!localStorage.getItem('fflow-onboarded')) {
       setShowOnboarding(true);
     }
-    // Handle hash route change
+    // Setup route hash change listener
     const onHashChange = () => {
       setRoute(window.location.hash.replace('#', '') || '/');
     };
@@ -1054,6 +1054,7 @@ function App() {
               isOpen={showTransactionModal}
             />
           )}
+          {/* Render onboarding modal for new users; allow closing to unblock app */}
           {showOnboarding && (
             <OnboardingModal onClose={handleOnboardingDismiss} />
           )}

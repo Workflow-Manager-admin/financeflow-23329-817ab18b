@@ -12,6 +12,7 @@
   min-width: 290px;
   max-width: 98vw;
   min-height: 220px;
+  /* Avoid using comma for fallback, only use valid custom property fallback syntax */
   background: var(--surface, #fff);
   color: var(--text-color, #23243A);
   border-radius: 15px;

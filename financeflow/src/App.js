@@ -1044,13 +1044,12 @@ function App() {
           </main>
           {showTransactionModal && (
             <TransactionFormModal
-              show={showTransactionModal}
-              onClose={handleCloseTransactionModal}
-              onAdd={tx => {
+              onSave={tx => {
                 setTransactions(prev => [...prev, tx]);
                 setShowTransactionModal(false);
                 notify('Transaction added successfully!', 'success');
               }}
+              onClose={handleCloseTransactionModal}
             />
           )}
           {showOnboarding && (

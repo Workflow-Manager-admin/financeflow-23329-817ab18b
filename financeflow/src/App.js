@@ -1042,6 +1042,17 @@ function App() {
           <main className="main-content" tabIndex={-1} aria-live="polite">
             {ViewRaw}
           </main>
+          {showTransactionModal && (
+            <TransactionFormModal
+              show={showTransactionModal}
+              onClose={handleCloseTransactionModal}
+              onAdd={tx => {
+                setTransactions(prev => [...prev, tx]);
+                setShowTransactionModal(false);
+                notify('Transaction added successfully!', 'success');
+              }}
+            />
+          )}
           {showOnboarding && (
             <OnboardingModal onClose={handleOnboardingDismiss} />
           )}

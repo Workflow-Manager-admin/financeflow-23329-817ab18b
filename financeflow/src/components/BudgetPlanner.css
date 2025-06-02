@@ -33,7 +33,7 @@
   color: var(--primary, #6C2EBE);
   font-weight: 700;
   font-size: 1.08em;
-  border-bottom: 2px solid var(--primary, #6C2EBE, #cbb5ef);
+  border-bottom: 2px solid var(--primary, #6C2EBE);
   letter-spacing: 0.01em;
   padding: 9px 6px;
 }

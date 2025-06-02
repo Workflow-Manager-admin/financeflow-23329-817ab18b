@@ -61,23 +61,19 @@
   border-color: var(--primary, #6C2EBE);
 }
 
-/* match Add Transaction: make dropdown arrow match */
 .goalmodal select::-ms-expand {
   display: none;
 }
 
-/* Placeholder color for disabled/placeholder option */
 .goalmodal select option[disabled],
 .goalmodal select option[value=""] {
   color: var(--text-secondary, #8A889A) !important;
 }
 
-/* More minimal, modern margin feedback for stacked elements */
 .goalmodal select + input {
   margin-top: 5px;
 }
 
-/* Slight shadow, subtle hover, minimal spacing, touch target min. */
 @media (max-width: 600px) {
   .goalmodal select,
   .goalmodal input {

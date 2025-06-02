@@ -1,5 +1,3 @@
-/* Shrink BudgetPlanner table, reduce paddings/font size, and compress cell layouts for a balanced, modern look */
-
 .budgetplanner-table {
   background: var(--surface, #fff);
   border-radius: 11px;
@@ -211,7 +209,7 @@ body[data-theme="dark"] .budgetplanner-input {
 
 body[data-theme="dark"] .budgetplanner-input:focus {
   background: #26263a;
-  border: 1.2px solid var(--primary,#cbb5ef);
+  border: 1.2px solid var(--primary,#BB86FC);
 }
 
 body[data-theme="dark"] .budgetplanner-edit-span {
@@ -223,6 +221,6 @@ body[data-theme="dark"] .budgetplanner-edit-span {
   height: 9px;
 }
 .budgetplanner-table::-webkit-scrollbar-thumb {
-  background: var(--primary, #6C2EBE, #b5a2f0);
+  background: var(--primary, #6C2EBE);
   border-radius: 6px;
 }

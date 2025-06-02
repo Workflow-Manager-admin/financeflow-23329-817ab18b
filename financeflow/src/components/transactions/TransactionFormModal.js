@@ -138,4 +138,16 @@ function TransactionFormModal({ onSave, onClose, initial, currencySymbol }) {
   );
 }
 
+TransactionFormModal.propTypes = {
+  // PUBLIC_INTERFACE
+  /** Handler function to save a new or edited transaction (required). */
+  onSave: PropTypes.func.isRequired,
+  /** Handler to close the modal. */
+  onClose: PropTypes.func,
+  /** Initial transaction object for editing mode. */
+  initial: PropTypes.object,
+  /** Currency symbol for display, falls back to context if not provided. */
+  currencySymbol: PropTypes.string,
+};
+
 export default TransactionFormModal;

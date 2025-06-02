@@ -114802,7 +114802,7 @@
     height: 52px;
     font-size: 1.7rem;
   }
-}@/* Floating Add Transaction Button (FAB) */
+}/* Floating Add Transaction Button (FAB) */
 .fab-add-transaction {
   position: fixed;
   right: 28px;
@@ -128227,7 +128227,7 @@
     height: 52px;
     font-size: 1.7rem;
   }
-}@/* Floating Add Transaction Button (FAB) */
+}/* Floating Add Transaction Button (FAB) */
 .fab-add-transaction {
   position: fixed;
   right: 28px;

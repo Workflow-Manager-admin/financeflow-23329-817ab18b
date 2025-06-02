@@ -182,7 +182,7 @@ body[data-theme="dark"] .budgetplanner-table {
 body[data-theme="dark"] .budgetplanner-table th {
   background: var(--secondary, #23243A);
   color: var(--primary, #BB86FC);
-  border-bottom: 2px solid var(--primary, #cbb5ef);
+  border-bottom: 2px solid var(--primary, #BB86FC);
 }
 
 body[data-theme="dark"] .budgetplanner-table td,

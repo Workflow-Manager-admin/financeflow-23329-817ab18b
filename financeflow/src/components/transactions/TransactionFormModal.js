@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import './TransactionFormModal.css';
 import { usePreferences } from '../PreferencesProvider';
 
@@ -20,7 +21,6 @@ const categories = [
   'Rent/House', 'Investment', 'Gift', 'Healthcare', 'Other'
 ];
 
-// PUBLIC_INTERFACE
 /**
  * TransactionFormModal: Modal dialog to add/edit a transaction,
  * taking currencySymbol from props or preferences context for live updates.
@@ -54,6 +54,15 @@ function TransactionFormModal({ onSave, onClose, initial, currencySymbol }) {
     let tx = { ...form, amount: Number(form.amount), id: initial?.id || undefined };
     if (form.type !== 'expense') {
       delete tx.category;
+    }
+    if (typeof onSave !== 'function') {
+      // User-friendly error + dev warning, do not crash
+      setError('Unexpected form error, please reload the page.');
+      if (process.env.NODE_ENV !== 'production') {
+        // eslint-disable-next-line no-console
+        console.error('TransactionFormModal error: onSave prop is not defined or not a function.');
+      }
+      return;
     }
     onSave(tx);
     setError('');

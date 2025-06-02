@@ -1044,12 +1044,14 @@ function App() {
           </main>
           {showTransactionModal && (
             <TransactionFormModal
+              // Prevent modal from blocking UI and support escape key or overlay click to close
               onSave={tx => {
                 setTransactions(prev => [...prev, tx]);
                 setShowTransactionModal(false);
                 notify('Transaction added successfully!', 'success');
               }}
               onClose={handleCloseTransactionModal}
+              isOpen={showTransactionModal}
             />
           )}
           {showOnboarding && (

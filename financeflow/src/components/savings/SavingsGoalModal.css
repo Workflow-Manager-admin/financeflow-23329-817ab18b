@@ -9,7 +9,7 @@
 }
 .goalmodal {
   background: var(--surface, #fff);
-  color: var(--text-color,#23243A);
+  color: var(--text-color, #23243A);
   border-radius: 12px;
   padding: 29px 24px 17px;
   min-width: 240px;
@@ -32,7 +32,7 @@
   border: 1px solid var(--secondary, #ececec);
   border-radius: 8px;
   background: var(--secondary, #F5F6FA);
-  color: var(--text-color,#23243A);
+  color: var(--text-color, #23243A);
   outline: none;
   box-shadow: 0 1.5px 5px rgba(60,42,150,0.038);
   transition: border-color 0.18s, box-shadow 0.19s, background 0.16s;
@@ -93,7 +93,7 @@
   color: #222 !important;
 }
 .goalmodal-error {
-  color: var(--expense,#E74C3C);
+  color: var(--expense, #E74C3C);
   font-size: 0.98em;
   margin-bottom: -7px;
 }

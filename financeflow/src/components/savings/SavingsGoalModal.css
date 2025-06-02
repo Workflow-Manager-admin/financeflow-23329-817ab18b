@@ -41,7 +41,7 @@
 .goalmodal select {
   appearance: none;
   -webkit-appearance: none;
-  background: var(--secondary, #F5F6FA) url("data:image/svg+xml,%3Csvg%20width%3D'18'%20height%3D'18'%20viewBox%3D'0%200%2020%2020'%20fill%3D'none'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%3Cpath%20d%3D'M6%208L10%2012L14%208'%20stroke%3D'%238A889A'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%2F%3E%3C%2Fsvg%3E") no-repeat right 11px center/22px 22px;
+  background: var(--secondary, #F5F6FA);
   cursor: pointer;
   padding-right: 32px;
   min-width: 160px;

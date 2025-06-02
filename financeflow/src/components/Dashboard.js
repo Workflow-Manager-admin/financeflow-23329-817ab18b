@@ -162,12 +162,13 @@ function Dashboard({
         mode="add"
       />
       {/* Savings Goal Modal */}
-      <SavingsGoalModal
-        isOpen={showGoalModal}
-        onClose={closeGoalModal}
-        onSave={handleGoalSave}
-        goal={goal}
-      />
+      {showGoalModal && (
+        <SavingsGoalModal
+          onClose={closeGoalModal}
+          onSave={handleGoalSave}
+          initial={goal}
+        />
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-  /* Modal Backdrop covers whole app, above any sidebar and content */
+/* Modal Backdrop covers whole app, above any sidebar and content */
 .modal-backdrop {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -15,7 +15,6 @@
   to { opacity: 1; }
 }
 
-/* Modal Content box: centered, modern, shadow, popup look */
 .modal-content {
   background: var(--surface, #fff);
   border-radius: 18px;
@@ -51,7 +50,6 @@
   }
 }
 
-/* Modal close button: top right, unobtrusive */
 .modal-close-btn {
   position: absolute;
   top: 13px;
@@ -70,7 +68,6 @@
   color: var(--expense, #E74C3C);
 }
 
-/* Modal form layout modern */
 .txmodal-form {
   display: flex;
   flex-direction: column;
@@ -78,7 +75,6 @@
   margin: 0;
 }
 
-/* Inputs style modern */
 .txmodal-form input,
 .txmodal-form select {
   border: 1.4px solid var(--border-color, #ececec);
@@ -119,7 +115,6 @@
   }
 }
 
-/* Modern fade & modal layer fix */
 body.modal-open {
   overflow: hidden !important;
 }

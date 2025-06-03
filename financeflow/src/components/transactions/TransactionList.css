@@ -121,7 +121,6 @@
   outline: none;
 }
 
-/* visually hidden utility for buttons */
 .visually-hidden {
   position: absolute;
   left: -9999px;
@@ -130,7 +129,6 @@
   overflow: hidden;
 }
 
-/* Empty message styling */
 .tx-list-empty-msg {
   color: #b3aacb;
   text-align: center;

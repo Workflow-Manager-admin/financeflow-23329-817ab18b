@@ -43,7 +43,6 @@ function Dashboard({
         tabIndex={0}
         onClick={onAddTransaction}
       >
-        {/* Only the plus icon is visible. The label is visually hidden for accessibility. */}
         <span className="fab-icon" aria-hidden="true">
           <svg
             width="18"
@@ -60,38 +59,32 @@ function Dashboard({
             <rect x="14" y="7" width="2" height="16" rx="1" fill="currentColor" />
           </svg>
         </span>
-        {/* Accessible label, hidden visually */}
         <span className="fab-label sr-only">Add transaction</span>
       </button>
 
-      {/* Dashboard main content with sidebar offset */}
+      {/* Dashboard main content; grid layout with sidebar offset */}
       <div className="dashboard-content-wrapper">
-        <div className="dashboard-flex-grid">
-          <div className="dashboard-pie-savings-col">
-            <div className="dashboard-piechart-panel">
-              {/* Pass currencySymbol to PieChart */}
-              <PieChart transactions={transactions} currencySymbol={currencySymbol} />
-            </div>
-            <div className="dashboard-savings-goal" style={{ marginTop: 22 }}>
-              <SavingsRing
-                goal={goal}
-                stats={{ balance: totalIncome - totalExpense }}
-                // onSetGoal, currencySymbol may be forwarded via savingsRingProps:
-                {...(typeof savingsRingProps === "object" ? savingsRingProps : {})}
-                // For backward-compatibility also pass legacy props
-                setGoal={setGoal}
-                showToast={showToast}
-                currencySymbol={currencySymbol}
-              />
-            </div>
+        <div className="dashboard-grid">
+          {/* Expenses by Category (Pie Chart) */}
+          <div className="dashboard-piechart-panel">
+            <PieChart transactions={transactions} currencySymbol={currencySymbol} />
           </div>
-          <div className="dashboard-insights-col">
-            <div className="dashboard-insights-panel">
-              <SpendingTrendsWithInsights transactions={transactions} />
-            </div>
+          {/* Spending Insights on the right */}
+          <div className="dashboard-insights-panel">
+            <SpendingTrendsWithInsights transactions={transactions} />
+          </div>
+          {/* Savings Goal directly below Spending Insights (spans right column only)  */}
+          <div className="dashboard-savings-goal">
+            <SavingsRing
+              goal={goal}
+              stats={{ balance: totalIncome - totalExpense }}
+              {...(typeof savingsRingProps === "object" ? savingsRingProps : {})}
+              setGoal={setGoal}
+              showToast={showToast}
+              currencySymbol={currencySymbol}
+            />
           </div>
         </div>
-
         <div className="dashboard-transactions-list">
           <TransactionList transactions={transactions} onEdit={() => {}} onDelete={() => {}} />
         </div>

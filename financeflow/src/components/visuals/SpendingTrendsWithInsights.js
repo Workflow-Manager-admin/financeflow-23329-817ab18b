@@ -27,12 +27,14 @@ function Sparkline({ data, color = "#6C2EBE", width = 100, height = 28, strokeWi
   );
 }
 
-// PUBLIC_INTERFACE
 /**
  * SpendingTrendsWithInsights analyzes transaction data to reveal spending trends,
  * top categories, and generates human-friendly insights.
+ *
+ * Now always uses currencySymbol from Preferences context for live reactivity.
  */
-function SpendingTrendsWithInsights({ transactions, currencySymbol = "$" }) {
+function SpendingTrendsWithInsights({ transactions }) {
+  const { currencySymbol = "$" } = usePreferences() || {};
   // Only "expense" type transactions, normalized category
   const byMonth = useMemo(() => {
     const map = {};

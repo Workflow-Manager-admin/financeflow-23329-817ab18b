@@ -22,6 +22,8 @@ function Dashboard({
   setGoal,
   showToast,
   onAddTransaction,
+  // Optional: additional props for SavingsRing (e.g. {onSetGoal})
+  savingsRingProps = {},
 }) {
   const { currencySymbol } = usePreferences();
 
@@ -73,9 +75,13 @@ function Dashboard({
             <div className="dashboard-savings-goal" style={{ marginTop: 22 }}>
               <SavingsRing
                 goal={goal}
-                totalSaved={totalIncome - totalExpense}
+                stats={{ balance: totalIncome - totalExpense }}
+                // onSetGoal, currencySymbol may be forwarded via savingsRingProps:
+                {...(typeof savingsRingProps === "object" ? savingsRingProps : {})}
+                // For backward-compatibility also pass legacy props
                 setGoal={setGoal}
                 showToast={showToast}
+                currencySymbol={currencySymbol}
               />
             </div>
           </div>

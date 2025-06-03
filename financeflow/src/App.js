@@ -1067,6 +1067,14 @@ function App() {
               isOpen={showTransactionModal}
             />
           )}
+          {/* Savings Goal Modal */}
+          {showGoalModal && (
+            <SavingsGoalModal
+              onSave={handleSaveGoal}
+              onClose={handleCloseGoalModal}
+              initial={goal}
+            />
+          )}
           {/* Render onboarding modal for new users; allow closing to unblock app */}
           {showOnboarding && (
             <OnboardingModal onClose={handleOnboardingDismiss} />

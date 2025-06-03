@@ -10,7 +10,7 @@
   align-items: flex-start;
 }
 .expenses-card-modern {
-  background: var(--surface,#fff);
+  background: var(--surface, #fff);
   border-radius: 16px;
   padding: 24px 28px 22px 28px;
   margin: 0 auto;

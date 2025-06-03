@@ -5,7 +5,7 @@
   background: rgba(30,24,60,0.30);
   display: flex;
   align-items: center;
-  justify-content: center;   /* Center modal horizontally */
+  justify-content: center; /* Center modal horizontally */
   width: 100vw;
   height: 100vh;
   overflow-y: auto;

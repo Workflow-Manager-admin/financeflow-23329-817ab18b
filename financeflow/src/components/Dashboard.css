@@ -2,6 +2,7 @@
   padding: 26px 0 0 0;
   position: relative;
 }
+
 .fab-add.enhanced {
   position: fixed;
   bottom: 40px;
@@ -56,6 +57,7 @@
   justify-content: center;
   pointer-events: none;
 }
+
 .fab-label {
   font-size: 1.32rem;
   font-weight: 700;
@@ -119,6 +121,7 @@
     font-size: 1.01em;
   }
 }
+
 .dashboard-flex-grid {
   display: flex;
   flex-wrap: wrap;

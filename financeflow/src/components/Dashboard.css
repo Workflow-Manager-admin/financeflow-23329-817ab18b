@@ -47,7 +47,7 @@
 .fab-add:focus {
   background: #561DB7;
   transform: translateY(-2.5px) scale(1.055);
-  box-shadow: 0 3px 40px -4px rgba(108,46,190,0.22), 0 1px 14px rgba(60,42,150,0.14);
+  box-shadow: 0 7px 32px 0px rgba(108,46,190,0.16), 0 1px 14px rgba(60,42,150,0.14);
 }
 
 /* Icon styling for FAB */

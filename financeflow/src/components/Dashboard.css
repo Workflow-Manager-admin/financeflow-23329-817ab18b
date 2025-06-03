@@ -82,7 +82,7 @@
   gap: 15px;
 }
 .dashboard-insights-panel {
-  background: var(--surface, #fff);
+  background: #fff;
   border-radius: 11px;
   box-shadow: 0 3px 13px rgba(134,108,249,0.09);
   padding: 23px 17px 13px 15px;
@@ -91,7 +91,7 @@
 }
 .dashboard-savings-goal {
   margin-top: 0;
-  background: var(--surface, #fff);
+  background: #fff;
   border-radius: 11px;
   box-shadow: 0 1.5px 11px rgba(134,108,249,0.09);
   padding: 18px 12px 13px 13px;
@@ -100,7 +100,7 @@
   min-width: 270px;
   max-width: 430px;
   flex: 1 1 320px;
-  background: var(--surface, #fff);
+  background: #fff;
   border-radius: 11px;
   box-shadow: 0 3px 13px rgba(134,108,249,0.09);
   padding: 29px 15px 25px 17px;

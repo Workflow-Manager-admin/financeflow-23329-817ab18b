@@ -71,7 +71,7 @@ function ExpensesView() {
           </button>
         </div>
         <div className="expenses-analytics-bar">
-          <PieChart transactions={expenseTx} currencySymbol={currencySymbol} />
+          <PieChart transactions={expenseTx} />
         </div>
         <div className="expenses-filters-bar modern">
           <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
@@ -82,7 +82,6 @@ function ExpensesView() {
             onEdit={() => {}}
             onDelete={() => {}}
             emptyMsg="No expenses found."
-            currencySymbol={currencySymbol}
             modernExpenses
           />
           {filtered.length === 0 && (

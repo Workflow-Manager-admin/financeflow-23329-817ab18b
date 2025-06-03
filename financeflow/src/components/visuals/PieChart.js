@@ -50,9 +50,13 @@ function getPieData(transactions) {
  * PUBLIC_INTERFACE
  * PieChart displays a pie of expenses by category, with total expense value shown next to chart, filtered by month and year using dropdowns above the chart. UI matches FinanceFlow style.
  */
-function PieChart({ transactions, currencySymbol }) {
-  const { currencySymbol: contextCurrencySymbol } = usePreferences() || {};
-  const effectiveCurrencySymbol = currencySymbol || contextCurrencySymbol || '$';
+/**
+ * PUBLIC_INTERFACE
+ * PieChart now always uses currencySymbol from Preferences context for live reactivity to currency changes.
+ */
+function PieChart({ transactions }) {
+  const { currencySymbol } = usePreferences() || {};
+  const effectiveCurrencySymbol = currencySymbol || '$';
 
   // Filter state: month/year
   const { months, years } = getAvailableMonthsAndYears(transactions);

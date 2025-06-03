@@ -62,6 +62,115 @@
   display: none !important;
 }
 
+/* === Dashboard Layout Updates === */
+
+.dashboard-content-wrapper {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0 0 32px 0;
+}
+
+/* Responsive grid for dashboard main analytics section */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "piechart insights"
+    "piechart savingsgoal";
+  gap: 28px 30px;
+  align-items: start;
+  margin-top: 30px;
+  margin-bottom: 35px;
+}
+
+.dashboard-piechart-panel {
+  grid-area: piechart;
+  background: var(--surface, #fff);
+  border-radius: 15px;
+  box-shadow: 0 2px 16px rgba(60,42,150,0.07);
+  padding: 24px 14px 22px 20px;
+  min-width: 0;
+}
+.dashboard-insights-panel {
+  grid-area: insights;
+  background: var(--surface, #fff);
+  border-radius: 15px;
+  box-shadow: 0 2px 13px rgba(60,42,150,0.072);
+  padding: 24px 17px 18px 17px;
+  min-width: 0;
+}
+.dashboard-savings-goal {
+  grid-area: savingsgoal;
+  margin-top: 0;
+  background: var(--surface, #fff);
+  border-radius: 15px;
+  box-shadow: 0 2px 15px rgba(60,42,150,0.045);
+  padding: 13px 16px 18px 16px;
+}
+
+/* Transaction list below grid, full width */
+.dashboard-transactions-list {
+  margin-top: 10px;
+  background: var(--surface, #fff);
+  border-radius: 13px;
+  box-shadow: 0 2px 16px rgba(60,42,150,0.09);
+  padding: 23px 12px 14px 18px;
+  min-width: 0;
+}
+
+/* Offset for sidebar (desktop only) */
+@media (min-width: 800px) {
+  .dashboard-content-wrapper {
+    margin-left: 220px; /* matches sidebar width + spacing */
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* For small screens: single column (piechart, insights, then savingsgoal) */
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "piechart"
+      "insights"
+      "savingsgoal";
+    gap: 22px 0;
+  }
+  .dashboard-content-wrapper {
+    margin-left: 0;
+    padding-left: 0;
+  }
+  .dashboard-piechart-panel,
+  .dashboard-insights-panel,
+  .dashboard-savings-goal {
+    padding-left: 11px;
+    padding-right: 11px;
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
+
+/* Make grid panels responsive vertically */
+@media (max-width: 650px) {
+  .dashboard-grid {
+    margin-top: 14px;
+    margin-bottom: 18px;
+    gap: 17px 0;
+  }
+  .dashboard-piechart-panel,
+  .dashboard-insights-panel,
+  .dashboard-savings-goal {
+    padding: 12px 5.5vw 12px 5vw;
+  }
+  .dashboard-transactions-list {
+    padding: 12px 6vw 8px 7vw;
+  }
+}
+
+
 @media (max-width: 600px) {
   .fab-add {
     width: 30px;

@@ -4,10 +4,11 @@
 }
 
 /* Modern Floating Action Button: Add Transaction */
+/* Add Transaction - Floating Action Button (FAB): Modern, Prominent, Responsive */
 .fab-add {
   position: fixed;
   bottom: 38px;
-  right: 34px;
+  right: 38px;
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -15,95 +16,112 @@
   color: #fff;
   border: none;
   border-radius: 9999px;
-  /* box-shadow removed due to minifier error */
-  padding: 1.25em 2.8em 1.25em 1.35em;
-  font-size: 1.5rem;
+  box-shadow: 0 4px 28px rgba(60,42,150,0.15), 0 1.5px 12px rgba(60,42,150,0.08);
+  padding: 1.33em 2.85em 1.33em 1.35em;
+  font-size: 1.52rem;
   font-weight: 800;
   min-width: 0;
   min-height: 0;
   transition:
-    background 0.15s cubic-bezier(.4,0,.2,1),
+    background 0.14s cubic-bezier(.4,0,.2,1),
     transform 0.18s cubic-bezier(.4,0,.2,1),
-    box-shadow 0.18s cubic-bezier(.4,0,.2,1);
+    box-shadow 0.19s cubic-bezier(.4,0,.2,1);
   cursor: pointer;
   outline: none;
   user-select: none;
-  gap: 1.15em;
+  gap: 1.12em;
   border: 3px solid #fff;
-  will-change: transform, box-shadow;
 }
+
 .fab-add:focus-visible {
-  box-shadow: 0 0 0 0.35em var(--secondary, #e5d6f7), 0 2px 13px rgba(108,46,190,0.13);
+  box-shadow: 0 0 0 0.34em var(--secondary, #e5d6f7), 0 3px 18px rgba(108,46,190,0.18);
   outline: none;
 }
 .fab-add:active {
   background: #542497;
-  transform: scale(0.96);
+  transform: scale(0.965);
+  box-shadow: 0 0.5px 6px rgba(60,42,150,0.07);
 }
 .fab-add:hover,
 .fab-add:focus {
-  background: #4E208A;
-  transform: translateY(-2px) scale(1.042);
-  box-shadow: 0 2px 40px -4px rgba(108, 46, 190,0.23), 0 1px 12px rgba(60,42,150,0.17);
+  background: #561DB7;
+  transform: translateY(-2.5px) scale(1.055);
+  box-shadow: 0 3px 40px -4px rgba(108,46,190,0.22), 0 1px 14px rgba(60,42,150,0.14);
 }
 
-/* Icon: visually larger, center aligned */
+/* Icon: visually large, not cramped */
 .fab-icon {
-  font-size: 2.3em;
+  font-size: 2.56em;
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
-  margin-right: 0.20em;
+  min-width: 1.7em;
 }
 
-/* Label: always shown unless on smallest screens */
+/* Label: always visible except on narrow screens (<478px), with spacing */
 .fab-label {
-  font-size: 1.25em;
+  font-size: 1.27em;
   font-weight: 700;
-  margin-left: 0.5em;
-  margin-right: 0.9em;
+  margin-left: 0.57em;
+  margin-right: 1em;
   font-family: inherit;
-  letter-spacing: 0.018em;
+  letter-spacing: 0.019em;
   white-space: nowrap;
   text-align: left;
-  transition: opacity 0.2s;
+  transition: opacity 0.18s;
+  line-height: 1;
 }
 
-/* Responsiveness: shrink sizes/adapt padding as screen gets smaller */
-@media (max-width: 1200px) {
+/* Large desktop - extra pop, padding */
+@media (min-width: 1400px) {
   .fab-add {
-    font-size: 1.18rem;
-    padding: 1.1em 2em 1.1em 1.1em;
-    right: 15px;
-    bottom: 22px;
+    font-size: 1.69rem;
+    padding: 1.42em 3.13em 1.42em 1.46em;
+    right: 54px;
+    bottom: 45px;
   }
   .fab-label {
-    font-size: 1.08em;
-    margin-left: 0.35em;
-    margin-right: 0.75em;
+    font-size: 1.33em;
   }
   .fab-icon {
-    font-size: 2em;
+    font-size: 2.7em;
   }
 }
-@media (max-width: 800px) {
+/* Laptop/Desktop <1200px */
+@media (max-width: 1200px) {
   .fab-add {
-    font-size: 1rem;
-    padding: 0.95em 1.45em 0.95em 0.8em;
-    right: 8px;
-    bottom: 8px;
+    font-size: 1.19rem;
+    padding: 1.09em 1.92em 1.09em 1.08em;
+    right: 19px;
+    bottom: 19px;
   }
   .fab-label {
     font-size: 1em;
-    margin-left: 0.27em;
+    margin-left: 0.38em;
+    margin-right: 0.76em;
+  }
+  .fab-icon {
+    font-size: 1.95em;
+  }
+}
+/* Tablet/small desktop <800px */
+@media (max-width: 800px) {
+  .fab-add {
+    font-size: 0.99rem;
+    padding: 0.93em 1.36em 0.93em 0.82em;
+    right: 7px;
+    bottom: 10px;
+  }
+  .fab-label {
+    font-size: 0.97em;
+    margin-left: 0.22em;
     margin-right: 0.55em;
   }
   .fab-icon {
     font-size: 1.3em;
   }
 }
-/* Smallest screens: visually hide the label but keep it in markup for a11y */
+/* Smallest screens: visually hide the label for mobile appbar UX, keep semantically */
 @media (max-width: 478px) {
   .fab-label {
     position: absolute !important;
@@ -116,15 +134,17 @@
     border: 0 !important;
   }
   .fab-add {
-    font-size: 0.97rem;
-    padding: 0.6em 0.92em;
+    font-size: 0.91rem;
+    padding: 0.54em 0.77em;
+    min-width: 0;
   }
   .fab-icon {
     font-size: 1.08em;
   }
 }
 
-/* Remove legacy or unused FAB styles: (if classnames like .fab-add.enhanced, etc., existed before they're not needed with new design) */
+/* Remove any old, invalid, or unused FAB CSS (no .fab-add.enhanced, etc.) */
+/* Remainder of Dashboard.css unrelated to FAB below here */
 
 .dashboard-flex-grid {
   display: flex;

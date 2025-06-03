@@ -473,7 +473,7 @@ function CalendarView({ transactions: propTransactions }) {
           </div>
         }
       </div>
-      {/* Removed inline <style> block due to Css Minimizer build error */}
+      {/* Removed inline style block due to Css Minimizer build error */}
     </section>
   );
 }

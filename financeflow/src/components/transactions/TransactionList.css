@@ -1,90 +1,204 @@
-.modern-expenses-list {
+ /*
+ * TransactionList.css - modern, visually appealing & easy-to-scan
+ */
+
+/* Universal baseline style */
+.tx-list-modern.universal {
+  list-style: none;
   padding: 0;
   margin: 0;
-  list-style: none;
   width: 100%;
+  max-width: 680px;
 }
-.modern-expenses-item {
-  background: rgba(108,46,190,0.025);
-  margin-bottom: 9px;
-  border-radius: 13px;
-  border: none;
-  box-shadow: 0 2px 13px 0 rgba(87,47,177,0.08);
-  padding: 16px 23px 12px 15px;
+
+/* Card styling for each item */
+.tx-item-modern.universal {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  background: var(--surface,#fff);
+  border-radius: 17px;
+  box-shadow: 0 2px 13px 0 rgba(60,42,150,0.075);
+  margin: 0 0 23px 0;
+  padding: 18px 24px 15px 18px;
+  transition: box-shadow 0.16s;
   position: relative;
-  transition: background 0.14s, box-shadow 0.18s;
-}
-.modern-expenses-item.tx-expense {
-  border-left: 5px solid #E74C3C;
-}
-.modern-expenses-item.tx-income {
-  border-left: 5px solid #22C55E;
-}
-.modern-expenses-item:hover,
-.modern-expenses-item:focus-visible {
-  background: rgba(108,46,190,0.08);
-  box-shadow: 0 5px 24px 0 rgba(87,47,177,0.15);
 }
 
-.modern-amount-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  font-weight: 800;
-  font-size: 1.13em;
-  margin-bottom: 1.5px;
+.tx-item-modern.universal:hover,
+.tx-item-modern.universal:focus-within {
+  box-shadow: 0 6px 28px rgba(60,42,150,0.14);
 }
-.modern-amount {
-  font-size: 1.23em;
-  margin-right: 23px;
-  font-weight: 800;
-  color: #333;
+
+/* Main row: type dot, info, amount */
+.tx-row-modern-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+/* Colored dot for transaction type */
+.tx-type-dot {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border-radius: 100px;
+  margin-right: 12px;
+  margin-left: 2px;
+  background: var(--text-secondary,#BBB);
+  vertical-align: middle;
+}
+.tx-item-modern.universal.income .tx-type-dot {
+  background: var(--income,#22C55E);
+}
+.tx-item-modern.universal.expense .tx-type-dot {
+  background: var(--expense,#E74C3C);
+}
+
+/* Main info (category + description) */
+.tx-main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 68%;
+}
+
+.tx-category {
+  font-size: 1.11em;
+  color: var(--primary,#6C2EBE);
+  font-weight: 600;
+  margin-bottom: 0px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.tx-desc {
+  color: var(--text-secondary,#6d6382);
+  font-size: 1em;
+  margin-top: 2px;
+  font-weight: 400;
+  max-width: 98vw;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Amount - strong hierarchy, right aligned */
+.tx-amount-modern.universal {
+  font-size: 1.22em;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  min-width: 110px;
+  flex-shrink: 0;
+  text-align: right;
+  transition: color 0.13s;
+}
+
+.tx-amount-modern.universal.income {
+  color: var(--income,#22C55E);
+}
+.tx-amount-modern.universal.expense {
+  color: var(--expense,#E74C3C);
+}
+
+/* Meta row: date, actions */
+.tx-row-modern-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  gap: 11px;
+}
+
+.tx-date {
+  font-size: 0.97em;
+  color: var(--text-secondary,#8A889A);
+  font-weight: 400;
   letter-spacing: 0.01em;
 }
-.tx-expense .modern-amount,
-.modern-expenses-item.tx-expense .modern-amount {
-  color: #E74C3C;
-}
-.tx-income .modern-amount,
-.modern-expenses-item.tx-income .modern-amount {
-  color: #22C55E;
-}
-.modern-date {
-  color: #8b86a8;
-  font-size: 0.99em;
-  font-weight: 600;
-  margin-top: 0.5px;
+
+.tx-row-modern-actions {
+  display: flex;
+  gap: 7px;
 }
 
-.modern-category-row {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-top: 4px;
-  margin-bottom: 0px;
+.tx-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px 7px;
+  border-radius: 6px;
+  font-size: 1.10em;
+  line-height: 1.1;
+  color: var(--primary,#6C2EBE);
+  transition: background 0.11s, color 0.15s;
 }
-.modern-category {
-  font-size: 1.05em;
-  font-weight: 700;
-  color: #6C2EBE;
-  background: rgba(108,46,190,0.10);
-  border-radius: 5px;
-  padding: 2.5px 10px 2.5px 9px;
-  letter-spacing: 0.04em;
-  box-shadow: 0 1px 3px rgba(108,46,190,0.08);
+.tx-action-btn:hover,
+.tx-action-btn:focus {
+  background: var(--secondary,#f4edfd);
+  color: var(--accent,#463388);
+  outline: none;
 }
-.modern-description {
-  color: #9590a8;
-  font-size: 0.96em;
-  font-weight: 400;
-  margin-left: 10px;
-}
-.modern-expenses-list-empty {
-  color: #a89dbd;
+
+/* Empty message styling */
+.tx-list-empty-msg {
   text-align: center;
-  font-size: 1.11em;
+  color: var(--text-secondary,#888);
+  padding: 27px 12px 18px 12px;
+  font-size: 1.13em;
   font-weight: 500;
-  padding: 19px 0 10px 0;
+}
+
+/* Responsive design */
+@media (max-width: 680px) {
+  .tx-item-modern.universal {
+    padding: 13px 7px 13px 12px;
+    margin-bottom: 16px;
+  }
+  .tx-row-modern-main {
+    flex-direction: row;
+    gap: 8px;
+  }
+  .tx-main-info .tx-category, .tx-main-info .tx-desc {
+    font-size: 1em;
+  }
+  .tx-amount-modern.universal {
+    min-width: 94px;
+    font-size: 1.08em;
+  }
+}
+
+@media (max-width: 490px) {
+  .tx-row-modern-main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .tx-amount-modern.universal {
+    min-width: 0;
+    align-self: flex-start;
+    margin-top: 5px;
+    font-size: 1.02em;
+  }
+  .tx-row-modern-meta {
+    font-size: 0.97em;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+}
+
+/* Accessibility */
+.visually-hidden {
+  position: absolute!important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px,1px,1px,1px);
+  white-space: nowrap;
+  border: 0;
+  padding: 0;
+  margin: -1px;
 }

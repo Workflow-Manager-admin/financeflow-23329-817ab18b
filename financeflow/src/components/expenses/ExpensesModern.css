@@ -37,7 +37,7 @@
   margin: 0 0 1px 0;
   line-height: 1.08;
 }
-/* Removed .add-tx-fab-modern and .add-tx-fab-plus (add button) and .expenses-analytics-bar (ring chart) as these UI elements were removed in Expenses tab redesign. */
+
 .expenses-filters-bar {
   margin: 15px 0 16px 0;
 }

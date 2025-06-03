@@ -11,6 +11,7 @@ import TransactionList from './components/transactions/TransactionList';
 import FilterBar from './components/transactions/FilterBar';
 import BudgetPlanner from './components/BudgetPlanner';
 import TransactionFormModal from './components/transactions/TransactionFormModal'; // Import modal
+import PieChart from './components/visuals/PieChart';
 import './components/BudgetPlanner.css';
 // Modern Expenses tab redesign style
 import './components/expenses/ExpensesModern.css';

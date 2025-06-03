@@ -213,12 +213,20 @@ function CalendarView({ transactions: propTransactions }) {
     return `${y}-${m}-${d}`;
   }
 
+  // Use only local YMD string for Tx mapping, so string and calendar always match
   const txByDate = React.useMemo(() => {
     const map = {};
     transactions.forEach((tx) => {
       if (tx.date) {
-        if (!map[tx.date]) map[tx.date] = [];
-        map[tx.date].push(tx);
+        // Always reformat date to local YMD (prevents adding UTC offset!)
+        const dt = new Date(tx.date);
+        // If tx.date already in YYYY-MM-DD, Date() parses to midnight local, so safe.
+        const y = dt.getFullYear();
+        const m = String(dt.getMonth() + 1).padStart(2, "0");
+        const d = String(dt.getDate()).padStart(2, "0");
+        const localYMD = `${y}-${m}-${d}`;
+        if (!map[localYMD]) map[localYMD] = [];
+        map[localYMD].push(tx);
       }
     });
     return map;
@@ -406,7 +414,8 @@ function CalendarView({ transactions: propTransactions }) {
                                     (tx.type === "income" ? "+ " : "- ") +
                                     "$" + Number(tx.amount).toFixed(2) +
                                     (tx.type === "expense" ? (" | " + tx.category) : " | Income") +
-                                    (tx.description ? (" - " + tx.description) : "")
+                                    (tx.description ? (" - " + tx.description) : "") +
+                                    ` (${formatDateLocalYMD(new Date(tx.date))})`
                                   }
                                   style={{
                                     display: "inline-block",

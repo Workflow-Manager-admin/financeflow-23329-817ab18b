@@ -15,9 +15,6 @@ function SavingsGoalModal({ onSave, onClose, initial }) {
   const [saving, setSaving] = useState(false);
   const ref = useRef();
 
-  // New: Track if the current form state is valid as user types.
-  const isValid = (() => validate({ period, amount }) === "")();
-
   useEffect(() => {
     if (ref.current) ref.current.focus();
   }, []);
@@ -40,6 +37,9 @@ function SavingsGoalModal({ onSave, onClose, initial }) {
     return "";
   }
 
+  // Track if current form values are valid for live disabling
+  const isValid = validate({ period, amount }) === "";
+
   // PUBLIC_INTERFACE
   function handleSubmit(e) {
     e.preventDefault();
@@ -55,7 +55,10 @@ function SavingsGoalModal({ onSave, onClose, initial }) {
     // Simulate async save, but allow immediate feedback (fake, since it's localStorage)
     setTimeout(() => {
       try {
-        onSave({ period, target: Number(amount), achieved: false });
+        // Defensive: Only save if still valid
+        if (isValid) {
+          onSave({ period, target: Number(amount), achieved: false });
+        }
         setSaving(false);
       } catch (err) {
         setSaving(false);

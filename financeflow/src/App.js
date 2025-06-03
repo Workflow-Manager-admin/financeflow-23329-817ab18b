@@ -245,7 +245,14 @@ function CalendarView({ transactions: propTransactions }) {
             flex: "1 1 auto"
           }}>Transaction Calendar</h1>
         </div>
-        <div style={{ maxWidth: 430, margin: "0 auto", background: "var(--surface)", borderRadius: 13, boxShadow: "0 2px 16px rgba(60,42,150,0.07)", padding: 23 }}>
+        <div style={{ 
+          maxWidth: 430, 
+          margin: "0 auto", 
+          background: "var(--surface)", 
+          borderRadius: 13, 
+          boxShadow: "0 4px 16px 0 rgba(0,0,0,0.07)", 
+          padding: 23 
+        }}>
           <div style={{
             display: "flex", alignItems: "center", justifyContent: "center",
             fontWeight: 600, fontSize: "1.10rem", color: "var(--primary)", marginBottom: 8, gap: 16

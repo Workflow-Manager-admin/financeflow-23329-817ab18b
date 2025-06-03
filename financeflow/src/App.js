@@ -972,6 +972,7 @@ function App() {
   // Child Router
   // Add Transaction Modal state control
   const [showTransactionModal, setShowTransactionModal] = useState(false);
+  const [editTx, setEditTx] = useState(null); // For edit modal
 
   // Savings Goal Modal state control
   const [showGoalModal, setShowGoalModal] = useState(false);
@@ -990,10 +991,45 @@ function App() {
   };
 
   // Method to open modal (can be passed to Dashboard for FAB or Add button)
-  const handleOpenTransactionModal = () => setShowTransactionModal(true);
+  const handleOpenTransactionModal = () => {
+    setEditTx(null);
+    setShowTransactionModal(true);
+  };
+
+  // Opens modal for editing specific transaction
+  const handleEditTransaction = (tx) => {
+    setEditTx(tx);
+    setShowTransactionModal(true);
+  };
 
   // After transaction is added or modal closed
-  const handleCloseTransactionModal = () => setShowTransactionModal(false);
+  const handleCloseTransactionModal = () => {
+    setEditTx(null);
+    setShowTransactionModal(false);
+  };
+
+  // Handles saving both add and edit
+  const handleSaveTransaction = (tx) => {
+    if (editTx) {
+      setTransactions(prev =>
+        prev.map(t => (t.id === editTx.id ? { ...t, ...tx } : t))
+      );
+      setShowTransactionModal(false);
+      setEditTx(null);
+      notify('Transaction updated!', 'success');
+    } else {
+      setTransactions(prev => [...prev, tx]);
+      setShowTransactionModal(false);
+      setEditTx(null);
+      notify('Transaction added successfully!', 'success');
+    }
+  };
+
+  // Make edit handler globally detectable for legacy calls (from Dashboard inline)
+  React.useEffect(() => {
+    window.openTransactionEditModal = handleEditTransaction;
+    return () => { window.openTransactionEditModal = null; };
+  });
 
   let ViewRaw;
   switch (route) {
@@ -1005,12 +1041,17 @@ function App() {
         goal={goal}
         setGoal={setGoal} // still used for programmatic updates, but modal controls flow
         onAddTransaction={handleOpenTransactionModal} // Pass modal open handler
-        // Add handler for set goal/edit goal button in SavingsRing
-        savingsRingProps={{ onSetGoal: handleOpenGoalModal }} 
+        // Pass edit and delete action handlers via global edit fn
+        savingsRingProps={{ onSetGoal: handleOpenGoalModal }}
       />;
       break;
     case '/expenses':
-      ViewRaw = <ExpensesView transactions={transactions} />;
+      ViewRaw = <ExpensesView
+        allTransactions={transactions}
+        setTransactions={setTransactions}
+        onEditTransaction={handleEditTransaction}
+        showToast={notify}
+      />;
       break;
     case '/budget':
       ViewRaw = <BudgetPlanner transactions={transactions} showToast={notify} />;
@@ -1055,14 +1096,11 @@ function App() {
           </main>
           {showTransactionModal && (
             <TransactionFormModal
-              // Prevent modal from blocking UI and support escape key or overlay click to close
-              onSave={tx => {
-                setTransactions(prev => [...prev, tx]);
-                setShowTransactionModal(false);
-                notify('Transaction added successfully!', 'success');
-              }}
+              // Supports add and edit
+              onSave={handleSaveTransaction}
               onClose={handleCloseTransactionModal}
               isOpen={showTransactionModal}
+              initial={editTx}
             />
           )}
           {/* Savings Goal Modal */}

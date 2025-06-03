@@ -109,7 +109,12 @@
   transition: background 0.17s, box-shadow 0.17s;
 }
 
-.tx-action-btn:hover,
+.tx-action-btn:hover {
+  background: rgba(108,46,190,0.09);
+  box-shadow: 0 1px 5px rgba(108,46,190,0.06);
+  outline: none;
+}
+
 .tx-action-btn:focus {
   background: rgba(108,46,190,0.09);
   box-shadow: 0 1px 5px rgba(108,46,190,0.06);

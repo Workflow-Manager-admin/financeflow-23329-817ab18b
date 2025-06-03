@@ -3,6 +3,7 @@
   position: relative;
 }
 
+/* Floating Add Transaction Button */
 .fab-add.enhanced {
   position: fixed;
   bottom: 34px;
@@ -28,13 +29,11 @@
   box-sizing: border-box;
   will-change: transform, box-shadow;
 }
-
 .fab-add.enhanced:hover,
 .fab-add.enhanced:focus {
   background: #5b24ab;
   transform: translateY(-2px) scale(1.035);
 }
-
 .fab-icon {
   line-height: 1;
   font-size: 1.47em;
@@ -45,7 +44,6 @@
   align-items: center;
   justify-content: center;
 }
-
 .fab-label {
   font-size: 1.27rem;
   font-weight: 600;
@@ -89,10 +87,11 @@
   }
 }
 
+/* ---- DASHBOARD FLEX LAYOUT SWAPPED ---- */
 .dashboard-flex-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 3vw 2vw;
+  gap: 28px;
   max-width: 1170px;
   margin: 0 auto;
   width: 98%;
@@ -101,74 +100,103 @@
   align-items: flex-start;
 }
 
-.dashboard-left-col {
-  min-width: 250px;
-  max-width: 444px;
-  flex: 1 1 330px;
+/* New swapped column structures */
+.dashboard-pie-savings-col {
+  flex: 1 1 340px;
+  min-width: 290px;
+  max-width: 410px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
 }
 
-.dashboard-insights-panel {
-  background: #fff;
-  border-radius: 11px;
-  padding: 23px 17px 13px 15px;
-  min-height: 145px;
-  margin-bottom: 0;
-}
-
-.dashboard-savings-goal {
-  margin-top: 0;
-  background: #fff;
-  border-radius: 11px;
-  padding: 18px 12px 13px 13px;
+.dashboard-insights-col {
+  flex: 1 1 360px;
+  min-width: 300px;
+  max-width: 470px;
+  display: flex;
+  flex-direction: column;
 }
 
 .dashboard-piechart-panel {
-  min-width: 270px;
-  max-width: 430px;
-  flex: 1 1 320px;
-  background: #fff;
-  border-radius: 11px;
-  padding: 29px 15px 25px 17px;
-  min-height: 280px;
-  margin-left: auto;
-  margin-right: 0;
+  background: var(--surface, #fff);
+  border-radius: 12px;
+  box-shadow: 0 2px 14px rgba(60,42,150,0.08);
+  padding: 19px 19px 12px 19px;
+  margin-bottom: 15px;
+  min-height: 235px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+.dashboard-savings-goal {
+  background: var(--surface, #fff);
+  border-radius: 12px;
+  box-shadow: 0 2px 11px rgba(60,42,150,0.07);
+  padding: 16px 15px 7px 17px;
+}
 
+.dashboard-insights-panel {
+  background: var(--surface, #fff);
+  border-radius: 12px;
+  box-shadow: 0 2px 14px rgba(60,42,150,0.06);
+  padding: 19px 19px 19px 19px;
+  margin-bottom: 20px;
+}
+
+/* Responsive: stack columns and soften padding/gap on smaller screens */
 @media (max-width: 1050px) {
   .dashboard-flex-grid {
     flex-direction: column;
     gap: 1.5em;
     width: 99%;
   }
-  .dashboard-piechart-panel {
-    margin-top: 0;
-    margin-right: auto;
-    margin-left: 0;
-    min-width: 240px;
+  .dashboard-pie-savings-col,
+  .dashboard-insights-col {
+    min-width: 0;
     max-width: 100%;
-    justify-content: flex-start;
   }
-  .dashboard-left-col,
+  .dashboard-piechart-panel,
   .dashboard-insights-panel,
   .dashboard-savings-goal {
     max-width: 100%;
   }
 }
-
+@media (max-width: 900px) {
+  .dashboard-flex-grid {
+    flex-direction: column;
+    padding-top: 12px;
+    padding-bottom: 18px;
+    gap: 15px;
+  }
+}
 @media (max-width: 700px) {
   .dashboard-flex-grid {
-    padding-top: 18px;
-    padding-bottom: 13px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     gap: 1em;
+  }
+  .dashboard-piechart-panel,
+  .dashboard-insights-panel,
+  .dashboard-savings-goal {
+    padding: 14px 4vw 12px 4vw;
+    border-radius: 11px;
+  }
+}
+@media (max-width: 500px) {
+  .dashboard-flex-grid {
+    padding-top: 7px;
+    padding-bottom: 5px;
+    gap: 0.67em;
+  }
+  .dashboard-insights-panel,
+  .dashboard-savings-goal,
+  .dashboard-piechart-panel {
+    padding: 9px 3vw 7px 3vw;
+    min-height: unset;
   }
 }
 
+/* Transactions list */
 .dashboard-transactions-list {
   max-width: 1100px;
   margin: 0 auto 30px auto;
@@ -181,40 +209,5 @@
     margin-top: 10px;
     padding-left: 2px;
     padding-right: 2px;
-  }
-}
-@media (max-width: 650px) {
-  .fab-add.enhanced {
-    bottom: 22px;
-    right: 11px;
-    font-size: 1.34em;
-    padding: 0.79em 1.11em 0.79em 0.93em;
-  }
-  .dashboard {
-    padding: 10px 0;
-  }
-  .dashboard-flex-grid {
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-  .dashboard-piechart-panel,
-  .dashboard-insights-panel,
-  .dashboard-savings-goal {
-    padding: 14px 4vw 12px 4vw;
-    border-radius: 11px;
-  }
-}
-
-@media (max-width: 500px) {
-  .dashboard-flex-grid {
-    padding-top: 7px;
-    padding-bottom: 5px;
-    gap: 0.67em;
-  }
-  .dashboard-insights-panel,
-  .dashboard-savings-goal,
-  .dashboard-piechart-panel {
-    padding: 9px 3vw 7px 3vw;
-    min-height: unset;
   }
 }

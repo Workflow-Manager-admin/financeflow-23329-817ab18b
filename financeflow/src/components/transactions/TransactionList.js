@@ -1,5 +1,6 @@
 import React from 'react';
 import './TransactionList.css';
+import { usePreferences } from '../PreferencesProvider';
 
 function formatDateFriendly(dateStr) {
   if (!dateStr) return "";
@@ -8,15 +9,19 @@ function formatDateFriendly(dateStr) {
   return d.toLocaleDateString([], { year: "numeric", month: "short", day: "numeric" });
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * TransactionList will always use currencySymbol from Preferences context instead of a prop, to guarantee live updates on global currency changes.
+ */
 function TransactionList({
   transactions,
   onEdit,
   onDelete,
   emptyMsg,
-  currencySymbol = "$",
   modernExpenses,
 }) {
+  const { currencySymbol } = usePreferences();
+
   if (!transactions || transactions.length === 0) {
     return (
       <div className={`transaction-list-empty${modernExpenses ? ' modern-expenses-list-empty' : ''}`}>

@@ -2,8 +2,9 @@ import React from "react";
 import "./TransactionList.css";
 import { usePreferences } from "../PreferencesProvider";
 
+
 /**
- * TransactionList - Modern, visually appealing list with clear hierarchy.
+ * TransactionList - Modern, visually appealing list with edit/delete icon actions.
  *
  * @param {Object[]} transactions - Array of transaction objects.
  * @param {Function} [onEdit] - Handler for edit action.

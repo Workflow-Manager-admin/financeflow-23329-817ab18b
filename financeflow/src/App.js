@@ -12,6 +12,8 @@ import FilterBar from './components/transactions/FilterBar';
 import BudgetPlanner from './components/BudgetPlanner';
 import TransactionFormModal from './components/transactions/TransactionFormModal'; // Import modal
 import './components/BudgetPlanner.css';
+// Modern Expenses tab redesign style
+import './components/expenses/ExpensesModern.css';
 
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
 const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
@@ -20,84 +22,73 @@ function ExpensesView() {
   const [transactions] = React.useState(() => {
     return JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || [];
   });
-  // Map any "Salary" expense category (from legacy data) to "Rent/House"
+  // Map "Salary" legacy for historical, map to "Rent/House"
   const expenseTx = React.useMemo(
     () =>
       transactions
-        .filter(t => t.type === 'expense')
-        .map(tx =>
-          tx.category === 'Salary'
-            ? { ...tx, category: 'Rent/House' }
-            : tx
+        .filter((t) => t.type === "expense")
+        .map((tx) =>
+          tx.category === "Salary" ? { ...tx, category: "Rent/House" } : tx
         )
         .sort((a, b) => b.date.localeCompare(a.date)),
     [transactions]
   );
-  const [filters, setFilters] = React.useState({ category: 'All', from: '', to: '' });
-  // Categories: Only show actual used (no "Salary"), legacy "Salary" mapped to Rent/House above.
+  const [filters, setFilters] = React.useState({ category: "All", from: "", to: "" });
+  // Derive actual used categories for pills
   const categories = React.useMemo(() => {
-    const set = new Set(expenseTx.map(t => t.category === 'Salary' ? 'Rent/House' : t.category));
-    return ['All', ...Array.from(set).filter(Boolean)];
+    const set = new Set(expenseTx.map(t => t.category === "Salary" ? "Rent/House" : t.category));
+    return ["All", ...Array.from(set).filter(Boolean)];
   }, [expenseTx]);
   function applyFilters(data, filtersArg) {
-    const { category = 'All', from = '', to = '' } = filtersArg || {};
+    const { category = "All", from = "", to = "" } = filtersArg || {};
     let arr = data;
-    if (category && category !== 'All') {
-      arr = arr.filter(t => t.category === category);
+    if (category && category !== "All") {
+      arr = arr.filter((t) => t.category === category);
     }
-    if (from) arr = arr.filter(t => t.date >= from);
-    if (to) arr = arr.filter(t => t.date <= to);
+    if (from) arr = arr.filter((t) => t.date >= from);
+    if (to) arr = arr.filter((t) => t.date <= to);
     return arr;
   }
   const filtered = React.useMemo(() => applyFilters(expenseTx, filters), [expenseTx, filters]);
-  const { currencySymbol } = usePreferences(); // always use live context
+  const { currencySymbol } = usePreferences(); // always live
 
+  // Redesigned Expenses View: modern card with improved layout, visual hierarchy, and a smaller, visually clean Add Transaction button (FAB style)
   return (
-    <section className="placeholder-view">
-      <div
-        className="container"
-        style={{
-          maxWidth: 650,
-          background: "var(--surface,#fff)",
-          borderRadius: 13,
-          boxShadow: "0 2px 16px rgba(60,42,150,0.07)",
-          marginTop: 26,
-          marginBottom: 0,
-          padding: "0 0 32px 0"
-        }}
-      >
-        {/* ORIGINAL Expenses heading, left-aligned without margin shift */}
-        <h1
-          style={{
-            marginTop: 20,
-            marginBottom: 20,
-            fontSize: "2rem",
-            color: "var(--primary,#6C2EBE)",
-            fontWeight: 700,
-            letterSpacing: "0.01em",
-            textAlign: "left",
-            lineHeight: 1.13
-          }}
-        >
-          Expenses
-        </h1>
-        <div>
+    <section className="expenses-section-modern">
+      <div className="expenses-card-modern">
+        <div className="expenses-header-row-modern">
+          <h1 className="expenses-title-modern">Expenses</h1>
+          <button
+            className="add-tx-fab-modern"
+            title="Add Transaction"
+            aria-label="Add Transaction"
+            onClick={() => {
+              // Redirect to dashboard for now (actual onAddTransaction attached to Dashboard FAB centrally)
+              window.location.hash = "/";
+              // Consider exposing callback for direct launch in future refactors
+            }}
+          >
+            <span className="add-tx-fab-plus">＋</span>
+          </button>
+        </div>
+        <div className="expenses-filters-bar">
           <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
         </div>
-        <div>
+        <div className="expenses-list-panel-modern">
           <TransactionList
             transactions={filtered}
             onEdit={() => {}}
             onDelete={() => {}}
-            emptyMsg={`No expenses found.`}
+            emptyMsg="No expenses found."
             currencySymbol={currencySymbol}
+            modernExpenses
           />
+          {filtered.length === 0 && (
+            <p className="no-expenses-msg">No expenses for current filters.</p>
+          )}
         </div>
-        {filtered.length === 0 && (
-          <p style={{ color: "var(--text-secondary)", paddingLeft: 0 }}>No expenses for current filters.</p>
-        )}
-        <p style={{ color: "var(--text-secondary)", marginTop: 15, fontSize: "1.05em", paddingLeft: 0 }}>
-          Amounts shown in <span style={{ fontWeight: 600 }}>{currencySymbol}</span>
+        <p className="expenses-amount-caption">
+          Amounts shown in <span className="currency-inline">{currencySymbol}</span>
         </p>
       </div>
     </section>

@@ -100,7 +100,7 @@
   align-items: flex-start;
 }
 
-/* New swapped column structures */
+/* Swapped column structures for Pie/Savings and Insights */
 .dashboard-pie-savings-col {
   flex: 1 1 340px;
   min-width: 290px;

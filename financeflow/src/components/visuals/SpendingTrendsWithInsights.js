@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { usePreferences } from "../PreferencesProvider";
 
 /**
  * Minimal sparkline implementation (SVG, no dependencies).

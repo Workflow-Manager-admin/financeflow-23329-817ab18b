@@ -1,76 +1,91 @@
-import React from 'react';
-import './TransactionList.css';
-import { usePreferences } from '../PreferencesProvider';
-
-function formatDateFriendly(dateStr) {
-  if (!dateStr) return "";
-  const d = new Date(dateStr);
-  if (isNaN(d)) return dateStr;
-  return d.toLocaleDateString([], { year: "numeric", month: "short", day: "numeric" });
-}
+import React from "react";
+import "./TransactionList.css";
+import { usePreferences } from "../PreferencesProvider";
 
 /**
- * PUBLIC_INTERFACE
- * TransactionList will always use currencySymbol from Preferences context instead of a prop, to guarantee live updates on global currency changes.
+ * TransactionList - Modern, visually appealing list with clear hierarchy.
+ *
+ * @param {Object[]} transactions - Array of transaction objects.
+ * @param {Function} [onEdit] - Handler for edit action.
+ * @param {Function} [onDelete] - Handler for delete action.
+ * @param {string} [emptyMsg] - Message when the list is empty.
+ * @param {boolean} [modernExpenses=false] - Use modern, expenses-specific style.
+ * @returns {JSX.Element}
  */
+// PUBLIC_INTERFACE
 function TransactionList({
-  transactions,
+  transactions = [],
   onEdit,
   onDelete,
-  emptyMsg,
-  modernExpenses,
+  emptyMsg = "No transactions.",
+  modernExpenses = false,
 }) {
-  const { currencySymbol } = usePreferences();
+  if (!Array.isArray(transactions)) return null;
+  const { currencySymbol = "$" } = usePreferences?.() || {};
 
-  if (!transactions || transactions.length === 0) {
-    return (
-      <div className={`transaction-list-empty${modernExpenses ? ' modern-expenses-list-empty' : ''}`}>
-        {emptyMsg || "No transactions found."}
-      </div>
-    );
-  }
-
-  // Polished entry visuals if modernExpenses: highlight category, bold amount, tight hierarchy
+  // Always modern style (for dashboard/expenses/etc)
   return (
-    <ul className={`transaction-list${modernExpenses ? ' modern-expenses-list' : ''}`}>
+    <ul className={`tx-list-modern universal${modernExpenses ? " expenses" : ""}`}>
+      {transactions.length === 0 && (
+        <li className="tx-list-empty-msg">{emptyMsg}</li>
+      )}
       {transactions.map((tx, idx) => (
         <li
-          key={idx}
-          className={`transaction-list-item${tx.type === 'income'
-            ? ' tx-income'
-            : ' tx-expense'
-          }${modernExpenses ? ' modern-expenses-item' : ''}`}
+          key={tx.id ?? idx}
+          className={`tx-item-modern universal${tx.type === "income"
+            ? " income"
+            : tx.type === "expense"
+            ? " expense"
+            : ""}`}
         >
-          <div className={`tx-amount-row${modernExpenses ? ' modern-amount-row' : ''}`}>
+          <div className="tx-row-modern-main">
+            <span className="tx-type-dot" aria-label={tx.type === "income" ? "Income" : "Expense"} />
+            <span className="tx-main-info">
+              <span className="tx-category">{tx.category || (tx.type === "income" ? "Income" : "Expense")}</span>
+              {tx.description && (
+                <span className="tx-desc">{tx.description}</span>
+              )}
+            </span>
             <span
-              className={`tx-amount${tx.type === 'income'
-                ? ' tx-income'
-                : ' tx-expense'
-              }${modernExpenses ? ' modern-amount' : ''}`}
+              className={`tx-amount-modern universal${tx.type === "income"
+                ? " income"
+                : tx.type === "expense"
+                ? " expense"
+                : ""}`}
+              data-type={tx.type}
             >
-              {tx.type === 'expense' ? '-' : '+'}
+              {tx.type === "expense" ? "-" : tx.type === "income" ? "+" : ""}
               {currencySymbol}
-              {Number(tx.amount).toLocaleString(undefined, {
-                style: 'decimal',
+              {(tx.amount ?? 0).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
             </span>
-            <span className={modernExpenses ? "tx-date modern-date" : "tx-date"}>
-              {modernExpenses
-                ? formatDateFriendly(tx.date)
-                : tx.date}
-            </span>
           </div>
-          <div className={`tx-category-row${modernExpenses ? ' modern-category-row' : ''}`}>
-            <span className={modernExpenses ? "tx-category modern-category" : "tx-category"}>
-              {tx.category}
-            </span>
-            {tx.description && (
-              <span className={modernExpenses ? "tx-description modern-description" : "tx-description"}>
-                {tx.description}
-              </span>
-            )}
+          <div className="tx-row-modern-meta">
+            <span className="tx-date">{tx.date}</span>
+            <div className="tx-row-modern-actions">
+              {typeof onEdit === "function" && (
+                <button
+                  className="tx-action-btn"
+                  title="Edit transaction"
+                  aria-label="Edit"
+                  onClick={() => onEdit(tx)}
+                >
+                  <span className="visually-hidden">Edit</span>✏️
+                </button>
+              )}
+              {typeof onDelete === "function" && (
+                <button
+                  className="tx-action-btn"
+                  title="Delete transaction"
+                  aria-label="Delete"
+                  onClick={() => onDelete(tx)}
+                >
+                  <span className="visually-hidden">Delete</span>🗑️
+                </button>
+              )}
+            </div>
           </div>
         </li>
       ))}

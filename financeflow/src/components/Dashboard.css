@@ -3,7 +3,6 @@
   position: relative;
 }
 
-/* Enhanced Floating Action Button (FAB): with label, larger, responsive */
 .fab-add.enhanced {
   position: fixed;
   bottom: 34px;

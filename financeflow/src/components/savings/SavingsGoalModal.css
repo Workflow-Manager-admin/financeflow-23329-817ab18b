@@ -6,7 +6,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Make sure overlay always covers entire viewport */
   min-height: 100vh;
   min-width: 100vw;
   top: 0;

@@ -24,18 +24,22 @@ function Dashboard({ transactions, setTransactions, goal, setGoal, showToast, on
   return (
     <section className="dashboard">
       {/* PUBLIC_INTERFACE: Floating Add Transaction Button */}
+      {/* PUBLIC_INTERFACE: Floating Add Transaction Button */}
       <button
         className="fab-add enhanced"
         type="button"
-        title="Add Transaction"
-        aria-label="Add Transaction"
+        title="Add transaction"
+        aria-label="Add transaction"
         tabIndex={0}
         onClick={onAddTransaction}
+        // Add role for assistive technologies (mostly redundant for <button>, but extra safe)
+        role="button"
       >
+        {/* Icon */}
         <span className="fab-icon" aria-hidden="true">
           ＋
         </span>
-        {/* The label is visually hidden only on extra small screens for accessibility */}
+        {/* Label always visible except on screens <=475px for full clarity */}
         <span className="fab-label">
           Add transaction
         </span>

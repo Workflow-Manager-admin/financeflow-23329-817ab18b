@@ -86,7 +86,20 @@ function Dashboard({
           </div>
         </div>
         <div className="dashboard-transactions-list">
-          <TransactionList transactions={transactions} onEdit={() => {}} onDelete={() => {}} />
+          <TransactionList
+            transactions={transactions}
+            onEdit={typeof setTransactions === 'function' && typeof showToast === 'function' ? (tx) => {
+              if (typeof window?.openTransactionEditModal === 'function') {
+                window.openTransactionEditModal(tx);
+              }
+            } : undefined}
+            onDelete={typeof setTransactions === 'function' && typeof showToast === 'function' ? (tx) => {
+              if (window.confirm("Delete this transaction?")) {
+                setTransactions(prev => prev.filter(t => t.id !== tx.id));
+                showToast && showToast("Transaction deleted!", "success");
+              }
+            } : undefined}
+          />
         </div>
       </div>
     </section>

@@ -19,8 +19,6 @@ import './components/expenses/ExpensesModern.css';
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
 const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 
-import PieChart from './components/visuals/PieChart';
-
 function ExpensesView() {
   const [transactions] = React.useState(() => {
     return JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || [];

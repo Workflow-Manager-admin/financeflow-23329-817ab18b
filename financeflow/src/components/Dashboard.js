@@ -41,8 +41,8 @@ function Dashboard({
         {/* Plus-circle Icon (SVG) - Modern, prominent */}
         <span className="fab-icon" aria-hidden="true">
           <svg
-            width="36"
-            height="36"
+            width="30"
+            height="30"
             viewBox="0 0 36 36"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -54,34 +54,35 @@ function Dashboard({
             <rect x="17" y="9" width="2" height="18" rx="1" fill="currentColor" />
           </svg>
         </span>
-        {/* Label: always visible except on very narrow (<478px) screens for a11y/UX */}
         <span className="fab-label">Add transaction</span>
       </button>
 
-      {/* Dashboard flex/grid arrangement */}
-      <div className="dashboard-flex-grid">
-        <div className="dashboard-pie-savings-col">
-          <div className="dashboard-piechart-panel">
-            <PieChart transactions={transactions} />
+      {/* Dashboard main content with sidebar offset */}
+      <div className="dashboard-content-wrapper">
+        <div className="dashboard-flex-grid">
+          <div className="dashboard-pie-savings-col">
+            <div className="dashboard-piechart-panel">
+              <PieChart transactions={transactions} />
+            </div>
+            <div className="dashboard-savings-goal" style={{ marginTop: 22 }}>
+              <SavingsRing
+                goal={goal}
+                totalSaved={totalIncome - totalExpense}
+                setGoal={setGoal}
+                showToast={showToast}
+              />
+            </div>
           </div>
-          <div className="dashboard-savings-goal" style={{ marginTop: 22 }}>
-            <SavingsRing
-              goal={goal}
-              totalSaved={totalIncome - totalExpense}
-              setGoal={setGoal}
-              showToast={showToast}
-            />
+          <div className="dashboard-insights-col">
+            <div className="dashboard-insights-panel">
+              <SpendingTrendsWithInsights transactions={transactions} />
+            </div>
           </div>
         </div>
-        <div className="dashboard-insights-col">
-          <div className="dashboard-insights-panel">
-            <SpendingTrendsWithInsights transactions={transactions} />
-          </div>
-        </div>
-      </div>
 
-      <div className="dashboard-transactions-list">
-        <TransactionList transactions={transactions} onEdit={() => {}} onDelete={() => {}} />
+        <div className="dashboard-transactions-list">
+          <TransactionList transactions={transactions} onEdit={() => {}} onDelete={() => {}} />
+        </div>
       </div>
     </section>
   );

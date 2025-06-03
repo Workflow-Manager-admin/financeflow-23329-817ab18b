@@ -15,6 +15,9 @@ function SavingsGoalModal({ onSave, onClose, initial }) {
   const [saving, setSaving] = useState(false);
   const ref = useRef();
 
+  // New: Track if the current form state is valid as user types.
+  const isValid = (() => validate({ period, amount }) === "")();
+
   useEffect(() => {
     if (ref.current) ref.current.focus();
   }, []);
@@ -121,11 +124,11 @@ function SavingsGoalModal({ onSave, onClose, initial }) {
           <button
             type="submit"
             className="btn btn-large"
-            disabled={saving}
+            disabled={saving || !isValid}
             style={{
-              opacity: saving ? 0.75 : 1,
+              opacity: saving || !isValid ? 0.75 : 1,
               minWidth: 94,
-              pointerEvents: saving ? "none" : undefined,
+              pointerEvents: saving || !isValid ? "none" : undefined,
             }}
             aria-busy={saving ? "true" : undefined}
           >

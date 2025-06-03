@@ -3,10 +3,7 @@
   position: relative;
 }
 
-/* 
-  Add Transaction Floating Action Button (FAB)
-  Modern, prominent, responsive, with accessible text label
-*/
+/* Add Transaction Floating Action Button (FAB): Modern, prominent, responsive, accessible */
 .fab-add {
   position: fixed;
   bottom: 38px;
@@ -18,7 +15,7 @@
   color: #fff;
   border: none;
   border-radius: 9999px;
-  box-shadow: 0 4px 28px rgba(60,42,150,0.15), 0 1.5px 12px rgba(60,42,150,0.08);
+  box-shadow: 0 7px 32px 0px rgba(108,46,190,0.16), 0 1px 14px rgba(60,42,150,0.14);
   padding: 1.33em 2.85em 1.33em 1.35em;
   font-size: 1.52rem;
   font-weight: 800;
@@ -50,7 +47,7 @@
   box-shadow: 0 7px 32px 0px rgba(108,46,190,0.16), 0 1px 14px rgba(60,42,150,0.14);
 }
 
-/* Icon styling for FAB */
+/* Icon for FAB */
 .fab-icon {
   font-size: 2.56em;
   display: flex;
@@ -59,7 +56,7 @@
   min-width: 1.7em;
 }
 
-/* Always visible except on <=478px; spacing for accessibility */
+/* Label always visible except on small screens */
 .fab-label {
   font-size: 1.27em;
   font-weight: 700;
@@ -72,7 +69,7 @@
   transition: opacity 0.18s;
   line-height: 1;
 }
-/* Large desktop adjustments */
+/* Large desktop tweaks */
 @media (min-width: 1400px) {
   .fab-add {
     font-size: 1.69rem;
@@ -83,7 +80,7 @@
   .fab-label { font-size: 1.33em; }
   .fab-icon { font-size: 2.7em; }
 }
-/* Laptop/Desktop <1200px */
+/* Laptop/Desktop adjustments */
 @media (max-width: 1200px) {
   .fab-add {
     font-size: 1.19rem;
@@ -96,11 +93,9 @@
     margin-left: 0.38em;
     margin-right: 0.76em;
   }
-  .fab-icon {
-    font-size: 1.95em;
-  }
+  .fab-icon { font-size: 1.95em; }
 }
-/* Tablet/small desktop <800px */
+/* Tablet/small desktop */
 @media (max-width: 800px) {
   .fab-add {
     font-size: 0.99rem;
@@ -113,11 +108,9 @@
     margin-left: 0.22em;
     margin-right: 0.55em;
   }
-  .fab-icon {
-    font-size: 1.3em;
-  }
+  .fab-icon { font-size: 1.3em; }
 }
-/* Visually hide the label but keep it in markup for a11y <=478px */
+/* Hide label for accessibility on smallest screens */
 @media (max-width: 478px) {
   .fab-label {
     position: absolute !important;
@@ -134,13 +127,10 @@
     padding: 0.54em 0.77em;
     min-width: 0;
   }
-  .fab-icon {
-    font-size: 1.08em;
-  }
+  .fab-icon { font-size: 1.08em; }
 }
 
-/* ---- Dashboard layout below ----- */
-
+/* Layout for dashboard panels and grid */
 .dashboard-flex-grid {
   display: flex;
   flex-wrap: wrap;

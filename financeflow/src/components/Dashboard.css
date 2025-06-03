@@ -51,7 +51,6 @@
   white-space: nowrap;
 }
 
-/* Hide FAB text label on tiny screens for space */
 @media (max-width: 450px) {
   .fab-label {
     display: none;
@@ -113,7 +112,6 @@
   justify-content: center;
 }
 
-/* Responsive: stack for tablet/mobile */
 @media (max-width: 1050px) {
   .dashboard-flex-grid {
     flex-direction: column;
@@ -142,7 +140,6 @@
   }
 }
 
-/* Transactions list below the dashboard grid; consistent spacing and mobile responsive */
 .dashboard-transactions-list {
   max-width: 1100px;
   margin: 0 auto 30px auto;

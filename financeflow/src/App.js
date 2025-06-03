@@ -97,6 +97,10 @@ function ExpensesView({
   );
 }
 
+/**
+ * Transaction Calendar View with month/year navigation controls.
+ * Lets users navigate to previous/next month and select year via dropdown.
+ */
 function CalendarView({ transactions: propTransactions }) {
   // State for visible month/year navigation
   const today = new Date();
@@ -113,6 +117,7 @@ function CalendarView({ transactions: propTransactions }) {
   );
 
   // Month navigation
+  // PUBLIC_INTERFACE
   function goToPrevMonth() {
     setVisibleMonth((prev) => {
       if (prev === 0) {
@@ -122,6 +127,7 @@ function CalendarView({ transactions: propTransactions }) {
       return prev - 1;
     });
   }
+  // PUBLIC_INTERFACE
   function goToNextMonth() {
     setVisibleMonth((prev) => {
       if (prev === 11) {
@@ -131,9 +137,11 @@ function CalendarView({ transactions: propTransactions }) {
       return prev + 1;
     });
   }
+  // PUBLIC_INTERFACE
   function handleYearChange(e) {
     setVisibleYear(Number(e.target.value));
   }
+  // PUBLIC_INTERFACE
   function handleMonthChange(e) {
     setVisibleMonth(Number(e.target.value));
   }

@@ -3,8 +3,10 @@
   position: relative;
 }
 
-/* Modern Floating Action Button: Add Transaction */
-/* Add Transaction - Floating Action Button (FAB): Modern, Prominent, Responsive */
+/* 
+  Add Transaction Floating Action Button (FAB)
+  Modern, prominent, responsive, with accessible text label
+*/
 .fab-add {
   position: fixed;
   bottom: 38px;
@@ -32,7 +34,6 @@
   gap: 1.12em;
   border: 3px solid #fff;
 }
-
 .fab-add:focus-visible {
   box-shadow: 0 0 0 0.34em var(--secondary, #e5d6f7), 0 3px 18px rgba(108,46,190,0.18);
   outline: none;
@@ -49,7 +50,7 @@
   box-shadow: 0 3px 40px -4px rgba(108,46,190,0.22), 0 1px 14px rgba(60,42,150,0.14);
 }
 
-/* Icon: visually large, not cramped */
+/* Icon styling for FAB */
 .fab-icon {
   font-size: 2.56em;
   display: flex;
@@ -58,7 +59,7 @@
   min-width: 1.7em;
 }
 
-/* Label: always visible except on narrow screens (<478px), with spacing */
+/* Always visible except on <=478px; spacing for accessibility */
 .fab-label {
   font-size: 1.27em;
   font-weight: 700;
@@ -71,8 +72,7 @@
   transition: opacity 0.18s;
   line-height: 1;
 }
-
-/* Large desktop - extra pop, padding */
+/* Large desktop adjustments */
 @media (min-width: 1400px) {
   .fab-add {
     font-size: 1.69rem;
@@ -80,12 +80,8 @@
     right: 54px;
     bottom: 45px;
   }
-  .fab-label {
-    font-size: 1.33em;
-  }
-  .fab-icon {
-    font-size: 2.7em;
-  }
+  .fab-label { font-size: 1.33em; }
+  .fab-icon { font-size: 2.7em; }
 }
 /* Laptop/Desktop <1200px */
 @media (max-width: 1200px) {
@@ -121,7 +117,7 @@
     font-size: 1.3em;
   }
 }
-/* Smallest screens: visually hide the label for mobile appbar UX, keep semantically */
+/* Visually hide the label but keep it in markup for a11y <=478px */
 @media (max-width: 478px) {
   .fab-label {
     position: absolute !important;
@@ -143,8 +139,7 @@
   }
 }
 
-/* Remove any old, invalid, or unused FAB CSS (no .fab-add.enhanced, etc.) */
-/* Remainder of Dashboard.css unrelated to FAB below here */
+/* ---- Dashboard layout below ----- */
 
 .dashboard-flex-grid {
   display: flex;

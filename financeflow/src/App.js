@@ -238,17 +238,17 @@ function CalendarView({ transactions: propTransactions }) {
           <h1 style={{
             margin: 0,
             fontSize: "2rem",
-            color: "var(--primary,#6C2EBE)",
+            color: "var(--primary)",
             fontWeight: 700,
             letterSpacing: "0.01em",
             textAlign: "left",
             flex: "1 1 auto"
           }}>Transaction Calendar</h1>
         </div>
-        <div style={{ maxWidth: 430, margin: "0 auto", background: "var(--surface,#fff)", borderRadius: 13, boxShadow: "0 2px 16px rgba(60,42,150,0.07)", padding: 23 }}>
+        <div style={{ maxWidth: 430, margin: "0 auto", background: "var(--surface)", borderRadius: 13, boxShadow: "0 2px 16px rgba(60,42,150,0.07)", padding: 23 }}>
           <div style={{
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontWeight: 600, fontSize: "1.10rem", color: "var(--primary,#6C2EBE)", marginBottom: 8, gap: 16
+            fontWeight: 600, fontSize: "1.10rem", color: "var(--primary)", marginBottom: 8, gap: 16
           }}>
             {/* Prev month */}
             <button
@@ -275,11 +275,11 @@ function CalendarView({ transactions: propTransactions }) {
                 fontSize: "1em",
                 padding: "6px 10px",
                 borderRadius: 6,
-                border: "1px solid var(--border-color,#d5d5d5)",
-                background: "var(--background,#fff)",
+                border: "1px solid var(--border-color)",
+                background: "var(--background)",
                 fontWeight: 600,
                 minWidth: 96,
-                color: "var(--primary,#6C2EBE)"
+                color: "var(--primary)"
               }}
               aria-label="Month"
             >
@@ -295,11 +295,11 @@ function CalendarView({ transactions: propTransactions }) {
                 fontSize: "1em",
                 padding: "6px 10px",
                 borderRadius: 6,
-                border: "1px solid var(--border-color,#d5d5d5)",
-                background: "var(--background,#fff)",
+                border: "1px solid var(--border-color)",
+                background: "var(--background)",
                 fontWeight: 600,
                 minWidth: 75,
-                color: "var(--primary,#6C2EBE)"
+                color: "var(--primary)"
               }}
               aria-label="Year"
             >
@@ -351,7 +351,7 @@ function CalendarView({ transactions: propTransactions }) {
                           style={{
                             padding: "7px 3px 5px 3px",
                             verticalAlign: "top",
-                            background: cell.inMonth ? "none" : "var(--secondary,#f4f4f6)",
+                            background: cell.inMonth ? "none" : "var(--secondary)",
                             border: "none",
                             borderRadius: cell.inMonth ? (i === 0 || i === 6 ? 7 : 0) : 0,
                             opacity: cell.inMonth ? 1 : 0.5,
@@ -364,7 +364,7 @@ function CalendarView({ transactions: propTransactions }) {
                             fontSize: "1.05rem",
                             color: cell.inMonth
                               ? (isToday
-                                ? "var(--primary,#6C2EBE)" : "var(--text-color)")
+                                ? "var(--primary)" : "var(--text-color)")
                               : "var(--text-secondary)",
                             background: isToday
                               ? "rgba(108,46,190,0.09)" : "none",
@@ -399,8 +399,8 @@ function CalendarView({ transactions: propTransactions }) {
                                     height: 13,
                                     borderRadius: 3,
                                     background: tx.type === "income"
-                                      ? "var(--income,#22C55E)"
-                                      : "var(--expense,#E74C3C)",
+                                      ? "var(--income)"
+                                      : "var(--expense)",
                                     marginBottom: 2,
                                   }}
                                 />
@@ -430,7 +430,7 @@ function CalendarView({ transactions: propTransactions }) {
             }}>
               <span style={{
                 width: 13, height: 13,
-                background: "var(--income,#22C55E)", borderRadius: 3, display: "inline-block"
+                background: "var(--income)", borderRadius: 3, display: "inline-block"
               }} /> Income
             </span>
             <span style={{
@@ -438,7 +438,7 @@ function CalendarView({ transactions: propTransactions }) {
             }}>
               <span style={{
                 width: 13, height: 13,
-                background: "var(--expense,#E74C3C)", borderRadius: 3, display: "inline-block"
+                background: "var(--expense)", borderRadius: 3, display: "inline-block"
               }} /> Expense
             </span>
           </div>

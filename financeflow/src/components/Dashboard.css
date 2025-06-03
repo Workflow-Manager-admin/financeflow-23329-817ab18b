@@ -71,7 +71,6 @@
   justify-content: center;
   min-width: 0;
 }
-/* Visually hidden label for accessibility (except screen readers) */
 .fab-label.sr-only {
   position: absolute !important;
   width: 1px !important;
@@ -83,12 +82,10 @@
   border: 0 !important;
 }
 
-/* Remove all label spacing in FAB: only icon is shown */
 .fab-label {
   display: none !important;
 }
 
-/* Shrink button further below 478px - responsive */
 @media (max-width: 478px) {
   .fab-add {
     width: 37px;

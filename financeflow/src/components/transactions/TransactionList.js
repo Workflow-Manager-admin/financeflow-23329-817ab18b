@@ -2,7 +2,6 @@ import React from "react";
 import "./TransactionList.css";
 import { usePreferences } from "../PreferencesProvider";
 
-
 /**
  * TransactionList - Modern, visually appealing list with edit/delete icon actions.
  *
@@ -26,16 +25,16 @@ function TransactionList({
 
   if (!Array.isArray(transactions)) return null;
 
-  // Always modern style (for dashboard/expenses/etc)
+  // Remove use of 'universal' class
   return (
-    <ul className={`tx-list-modern universal${modernExpenses ? " expenses" : ""}`}>
+    <ul className={`tx-list-modern${modernExpenses ? " expenses" : ""}`}>
       {transactions.length === 0 && (
         <li className="tx-list-empty-msg">{emptyMsg}</li>
       )}
       {transactions.map((tx, idx) => (
         <li
           key={tx.id ?? idx}
-          className={`tx-item-modern universal${tx.type === "income"
+          className={`tx-item-modern${tx.type === "income"
             ? " income"
             : tx.type === "expense"
             ? " expense"
@@ -50,7 +49,7 @@ function TransactionList({
               )}
             </span>
             <span
-              className={`tx-amount-modern universal${tx.type === "income"
+              className={`tx-amount-modern${tx.type === "income"
                 ? " income"
                 : tx.type === "expense"
                 ? " expense"

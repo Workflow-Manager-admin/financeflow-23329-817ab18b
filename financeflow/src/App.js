@@ -15,6 +15,8 @@ import PieChart from './components/visuals/PieChart';
 import './components/BudgetPlanner.css';
 // Modern Expenses tab redesign style
 import './components/expenses/ExpensesModern.css';
+// Import SavingsGoalModal
+import SavingsGoalModal from './components/savings/SavingsGoalModal';
 
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
 const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
@@ -973,6 +975,22 @@ function App() {
   // Add Transaction Modal state control
   const [showTransactionModal, setShowTransactionModal] = useState(false);
 
+  // Savings Goal Modal state control
+  const [showGoalModal, setShowGoalModal] = useState(false);
+
+  // Open modal for new goal or edit
+  const handleOpenGoalModal = () => setShowGoalModal(true);
+
+  // Close modal
+  const handleCloseGoalModal = () => setShowGoalModal(false);
+
+  // Save goal from modal (validate/close/set/toast)
+  const handleSaveGoal = (goalObj) => {
+    setGoal(goalObj);
+    setShowGoalModal(false);
+    notify(goal ? "Goal updated!" : "Goal set successfully!", "success");
+  };
+
   // Method to open modal (can be passed to Dashboard for FAB or Add button)
   const handleOpenTransactionModal = () => setShowTransactionModal(true);
 
@@ -987,8 +1005,10 @@ function App() {
         transactions={transactions}
         setTransactions={setTransactions}
         goal={goal}
-        setGoal={setGoal}
+        setGoal={setGoal} // still used for programmatic updates, but modal controls flow
         onAddTransaction={handleOpenTransactionModal} // Pass modal open handler
+        // Add handler for set goal/edit goal button in SavingsRing
+        savingsRingProps={{ onSetGoal: handleOpenGoalModal }} 
       />;
       break;
     case '/expenses':

@@ -46,7 +46,6 @@
   box-shadow: 0 2px 38px -4px rgba(108, 46, 190,0.21), 0 1px 11px rgba(60,42,150,0.17);
 }
 
-/* Icon */
 .fab-icon {
   line-height: 1;
   font-size: 1.52em;
@@ -57,8 +56,6 @@
   justify-content: center;
   pointer-events: none;
 }
-
-/* Label (always visible except mobile) */
 .fab-label {
   font-size: 1.32rem;
   font-weight: 700;

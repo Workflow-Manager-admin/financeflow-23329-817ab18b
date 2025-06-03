@@ -1,11 +1,15 @@
 .goalmodal-bg {
   position: fixed;
-  z-index: 1001;
+  z-index: 1040; /* Ensures on top of most UI layers */
   top: 0; left: 0; bottom: 0; right: 0;
-  background: rgba(30,24,60,0.22);
+  background: rgba(30,24,60,0.30);
   display: flex;
   align-items: center;
-  justify-content: flex-end;   /* moved modal to the right side */
+  justify-content: center;   /* Center modal horizontally */
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 0 15px;
 }
 
 .goalmodal {

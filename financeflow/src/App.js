@@ -1010,9 +1010,14 @@ function App() {
 
   // Handles saving both add and edit
   const handleSaveTransaction = (tx) => {
+    // Always require a transaction to have a unique id
+    if (!tx.id) {
+      // Assign random id for safety (shouldn't happen for edits, but handles legacy/new)
+      tx.id = 'tx_' + Math.random().toString(36).substr(2, 9);
+    }
     if (editTx) {
       setTransactions(prev =>
-        prev.map(t => (t.id === editTx.id ? { ...t, ...tx } : t))
+        prev.map(t => (t.id === tx.id ? { ...t, ...tx } : t))
       );
       setShowTransactionModal(false);
       setEditTx(null);

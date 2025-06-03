@@ -19,10 +19,11 @@
   }
 }
 
+/* Minimal, small floating action button for Add Transaction */
 .fab-add {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
+  bottom: 18px;
+  right: 18px;
   z-index: 1000;
   display: inline-flex;
   align-items: center;
@@ -31,46 +32,46 @@
   color: #fff;
   border: none;
   border-radius: 50%;
-  box-shadow: 0 7px 32px 0px rgba(108,46,190,0.15), 0 1px 14px rgba(60,42,150,0.11);
-  padding: 0.5em;
-  width: 50px;
-  height: 50px;
-  min-width: 44px;
-  min-height: 44px;
+  box-shadow: 0 4px 12px 0px rgba(108,46,190,0.12), 0 1px 7px rgba(60,42,150,0.09);
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   transition:
-    background 0.14s cubic-bezier(.4,0,.2,1),
-    transform 0.18s cubic-bezier(.4,0,.2,1),
-    box-shadow 0.19s cubic-bezier(.4,0,.2,1);
+    background 0.16s cubic-bezier(.4,0,.2,1),
+    transform 0.19s cubic-bezier(.4,0,.2,1),
+    box-shadow 0.21s cubic-bezier(.4,0,.2,1);
   cursor: pointer;
   outline: none;
   user-select: none;
-  border: 3px solid #fff;
-  font-size: 1.3rem;
-  font-weight: 700;
+  border: 2px solid #fff;
+  font-size: 1rem;
+  font-weight: 600;
   gap: 0;
 }
 
 .fab-add:focus-visible {
-  box-shadow: 0 0 0 3px var(--secondary, #e5d6f7), 0 3px 14px rgba(108,46,190,0.17);
+  box-shadow: 0 0 0 3px var(--secondary, #e5d6f7), 0 2px 10px rgba(108,46,190,0.14);
   outline: none;
 }
 .fab-add:active {
   background: #542497;
-  transform: scale(0.955);
+  transform: scale(0.953);
 }
 .fab-add:hover,
 .fab-add:focus {
   background: #561DB7;
-  transform: translateY(-1.5px) scale(1.045);
+  transform: translateY(-1px) scale(1.03);
 }
 
 .fab-icon {
-  font-size: 1.52em;
+  font-size: 1.08em; /* icon smaller */
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 0;
 }
+
 .fab-label.sr-only {
   position: absolute !important;
   width: 1px !important;
@@ -86,73 +87,52 @@
   display: none !important;
 }
 
-@media (max-width: 478px) {
+/* Responsive small for mobile */
+@media (max-width: 600px) {
   .fab-add {
-    width: 37px;
-    height: 37px;
-    min-width: 33px;
-    min-height: 33px;
-    padding: 0.18em;
-    font-size: 1em;
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    right: 12px;
+    bottom: 12px;
+    font-size: 0.79rem;
+    border-width: 1.5px;
   }
-  .fab-icon { font-size: 1.05em; }
+  .fab-icon {
+    font-size: 0.93em;
+  }
 }
 
-@media (min-width: 1400px) {
+@media (min-width: 1200px) {
   .fab-add {
-    font-size: 1.69rem;
-    padding: 1.42em 3.13em 1.42em 1.46em;
-    right: 54px;
-    bottom: 45px;
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    min-height: 46px;
+    right: 41px;
+    bottom: 35px;
+    font-size: 1.13rem;
   }
-  .fab-label { font-size: 1.33em; }
-  .fab-icon { font-size: 2.7em; }
+  .fab-icon {
+    font-size: 1.32em;
+  }
 }
-@media (max-width: 1200px) {
+
+/* Tighter hit area on very small screens */
+@media (max-width: 400px) {
   .fab-add {
-    font-size: 1.19rem;
-    padding: 1.09em 1.92em 1.09em 1.08em;
-    right: 19px;
-    bottom: 19px;
-  }
-  .fab-label {
-    font-size: 1em;
-    margin-left: 0.38em;
-    margin-right: 0.76em;
-  }
-  .fab-icon { font-size: 1.95em; }
-}
-@media (max-width: 800px) {
-  .fab-add {
-    font-size: 0.99rem;
-    padding: 0.93em 1.36em 0.93em 0.82em;
+    width: 27px;
+    height: 27px;
+    min-width: 27px;
+    min-height: 27px;
     right: 7px;
-    bottom: 10px;
+    bottom: 8px;
+    font-size: 0.79rem;
   }
-  .fab-label {
-    font-size: 0.97em;
-    margin-left: 0.22em;
-    margin-right: 0.55em;
+  .fab-icon {
+    font-size: 0.8em;
   }
-  .fab-icon { font-size: 1.3em; }
-}
-@media (max-width: 478px) {
-  .fab-label {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
-    white-space: nowrap !important;
-    border: 0 !important;
-  }
-  .fab-add {
-    font-size: 0.91rem;
-    padding: 0.54em 0.77em;
-    min-width: 0;
-  }
-  .fab-icon { font-size: 1.08em; }
 }
 
 .dashboard-flex-grid {

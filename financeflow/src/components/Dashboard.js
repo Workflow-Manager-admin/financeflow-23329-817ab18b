@@ -23,6 +23,8 @@ function Dashboard({
   showToast,
   onAddTransaction,
 }) {
+  const { currencySymbol } = usePreferences();
+
   const income = transactions.filter((tx) => tx.type === "income");
   const expense = transactions.filter((tx) => tx.type === "expense");
   const totalIncome = income.reduce((sum, tx) => sum + Number(tx.amount), 0);
@@ -63,7 +65,8 @@ function Dashboard({
         <div className="dashboard-flex-grid">
           <div className="dashboard-pie-savings-col">
             <div className="dashboard-piechart-panel">
-              <PieChart transactions={transactions} />
+              {/* Pass currencySymbol to PieChart */}
+              <PieChart transactions={transactions} currencySymbol={currencySymbol} />
             </div>
             <div className="dashboard-savings-goal" style={{ marginTop: 22 }}>
               <SavingsRing

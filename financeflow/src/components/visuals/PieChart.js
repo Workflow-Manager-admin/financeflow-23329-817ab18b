@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './PieChart.css';
+import { usePreferences } from '../PreferencesProvider';
 
 const COLORS = [
   '#E87A41', '#6C2EBE', '#22C55E', '#E74C3C', '#F9D423',
@@ -49,7 +50,10 @@ function getPieData(transactions) {
  * PUBLIC_INTERFACE
  * PieChart displays a pie of expenses by category, with total expense value shown next to chart, filtered by month and year using dropdowns above the chart. UI matches FinanceFlow style.
  */
-function PieChart({ transactions, currencySymbol = '$' }) {
+function PieChart({ transactions, currencySymbol }) {
+  const { currencySymbol: contextCurrencySymbol } = usePreferences() || {};
+  const effectiveCurrencySymbol = currencySymbol || contextCurrencySymbol || '$';
+
   // Filter state: month/year
   const { months, years } = getAvailableMonthsAndYears(transactions);
   // Default to most recent available month

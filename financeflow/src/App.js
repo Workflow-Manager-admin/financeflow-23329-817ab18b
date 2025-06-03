@@ -456,27 +456,7 @@ function CalendarView({ transactions: propTransactions }) {
           </div>
         }
       </div>
-      <style>
-        {`
-        .calendar-table {
-          user-select: none;
-          border-spacing: 0;
-        }
-        .calendar-cell {
-          min-width: 44px;
-          max-width: 60px;
-          height: 56px;
-          position: relative;
-        }
-        .calendar-block {
-          transition: background 0.2s;
-        }
-        .btn-calendar-nav:active,
-        .btn-calendar-nav:focus {
-          background: rgba(108,46,190,0.07);
-        }
-        `}
-      </style>
+      {/* Removed inline <style> block due to Css Minimizer build error */}
     </section>
   );
 }

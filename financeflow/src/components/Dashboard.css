@@ -91,7 +91,6 @@
   }
 }
 
-/* Dashboard charts layout using flex and grid for proper arrangement */
 .dashboard-flex-grid {
   display: flex;
   flex-wrap: wrap;

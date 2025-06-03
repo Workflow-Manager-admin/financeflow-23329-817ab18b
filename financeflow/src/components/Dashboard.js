@@ -13,7 +13,7 @@ import TransactionList from "./transactions/TransactionList";
  * - TransactionList: below all charts
  * - Add Transaction button (FAB)
  * Responsive: columns stack on small screens, flex on desktop.
- */ 
+ */
 function Dashboard({
   transactions,
   setTransactions,
@@ -29,7 +29,7 @@ function Dashboard({
 
   return (
     <section className="dashboard">
-      {/* PUBLIC_INTERFACE: Modern Floating Add Transaction Button */}
+      {/* PUBLIC_INTERFACE: Modern Floating Add Transaction Button - Modern & Prominent */}
       <button
         className="fab-add"
         type="button"
@@ -38,24 +38,23 @@ function Dashboard({
         tabIndex={0}
         onClick={onAddTransaction}
       >
-        {/* SVG Plus icon for modern look */}
+        {/* Plus-circle Icon (SVG) - Modern, prominent */}
         <span className="fab-icon" aria-hidden="true">
           <svg
-            width="32"
-            height="32"
-            viewBox="0 0 28 28"
+            width="36"
+            height="36"
+            viewBox="0 0 36 36"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             role="presentation"
             focusable="false"
-            aria-hidden="true"
           >
-            <circle cx="14" cy="14" r="14" fill="currentColor" opacity="0.17" />
-            <rect x="7.7" y="13" width="12.6" height="2" rx="1" fill="currentColor" />
-            <rect x="13" y="7.7" width="2" height="12.6" rx="1" fill="currentColor" />
+            <circle cx="18" cy="18" r="18" fill="currentColor" opacity="0.14" />
+            <rect x="9" y="17" width="18" height="2" rx="1" fill="currentColor" />
+            <rect x="17" y="9" width="2" height="18" rx="1" fill="currentColor" />
           </svg>
         </span>
-        {/* Label: always visible except on <480px screens */}
+        {/* Label: always visible except on very narrow (<478px) screens for a11y/UX */}
         <span className="fab-label">Add transaction</span>
       </button>
 
@@ -87,4 +86,5 @@ function Dashboard({
     </section>
   );
 }
+
 export default Dashboard;

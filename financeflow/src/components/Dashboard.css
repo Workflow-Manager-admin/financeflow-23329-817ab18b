@@ -24,21 +24,22 @@
 /* Consolidated .fab-add styles to remove CSS minimizer error: */
 .fab-add {
   position: fixed;
-  bottom: 38px;
-  right: 38px;
+  bottom: 28px;
+  right: 28px;
   z-index: 1000;
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   background: #6C2EBE;
   color: #fff;
   border: none;
-  border-radius: 9999px;
-  box-shadow: 0 7px 32px 0px rgba(108,46,190,0.16), 0 1px 14px rgba(60,42,150,0.14);
-  padding: 1.33em 2.85em 1.33em 1.35em;
-  font-size: 1.52rem;
-  font-weight: 800;
-  min-width: 0;
-  min-height: 0;
+  border-radius: 50%;
+  box-shadow: 0 7px 32px 0px rgba(108,46,190,0.15), 0 1px 14px rgba(60,42,150,0.11);
+  padding: 0.5em;
+  width: 50px;
+  height: 50px;
+  min-width: 44px;
+  min-height: 44px;
   transition:
     background 0.14s cubic-bezier(.4,0,.2,1),
     transform 0.18s cubic-bezier(.4,0,.2,1),
@@ -46,49 +47,66 @@
   cursor: pointer;
   outline: none;
   user-select: none;
-  gap: 1.12em;
   border: 3px solid #fff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  gap: 0;
 }
 
 .fab-add:focus-visible {
-  box-shadow: 0 0 0 0.34em var(--secondary, #e5d6f7), 0 3px 18px rgba(108,46,190,0.18);
+  box-shadow: 0 0 0 3px var(--secondary, #e5d6f7), 0 3px 14px rgba(108,46,190,0.17);
   outline: none;
 }
 .fab-add:active {
   background: #542497;
-  transform: scale(0.965);
-  box-shadow: 0 0.5px 6px rgba(60,42,150,0.07);
+  transform: scale(0.955);
 }
 .fab-add:hover,
 .fab-add:focus {
   background: #561DB7;
-  transform: translateY(-2.5px) scale(1.055);
-  box-shadow: 0 7px 32px 0px rgba(108,46,190,0.16), 0 1px 14px rgba(60,42,150,0.14);
+  transform: translateY(-1.5px) scale(1.045);
 }
 
-/* Icon for FAB */
+/* Minimal icon for FAB */
 .fab-icon {
-  font-size: 2.56em;
+  font-size: 1.52em;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 1.7em;
+  min-width: 0;
+}
+/* Visually hidden label for accessibility (except screen readers) */
+.fab-label.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
-/* Label always visible except on small screens */
+/* Remove all label spacing in FAB: only icon is shown */
 .fab-label {
-  font-size: 1.27em;
-  font-weight: 700;
-  margin-left: 0.57em;
-  margin-right: 1em;
-  font-family: inherit;
-  letter-spacing: 0.019em;
-  white-space: nowrap;
-  text-align: left;
-  transition: opacity 0.18s;
-  line-height: 1;
+  display: none !important;
 }
 
+/* Shrink button further below 478px - responsive */
+@media (max-width: 478px) {
+  .fab-add {
+    width: 37px;
+    height: 37px;
+    min-width: 33px;
+    min-height: 33px;
+    padding: 0.18em;
+    font-size: 1em;
+  }
+  .fab-icon { font-size: 1.05em; }
+}
+
+/* Other dashboard layout styles - unchanged */
 /* Large desktop tweaks */
 @media (min-width: 1400px) {
   .fab-add {

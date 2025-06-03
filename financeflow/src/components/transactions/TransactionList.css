@@ -5,18 +5,18 @@
 }
 .transaction-list-item {
   padding: 13px 0;
-  border-bottom: 1px solid var(--border-color, #ececec);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   gap: 1px;
 }
 .tx-income .tx-amount,
 .tx-income .tx-category {
-  color: var(--income, #22C55E);
+  color: var(--income);
 }
 .tx-expense .tx-amount,
 .tx-expense .tx-category {
-  color: var(--expense, #E74C3C);
+  color: var(--expense);
 }
 .tx-amount-row {
   display: flex;
@@ -31,7 +31,7 @@
   font-size: 1.19em;
 }
 .tx-date {
-  color: var(--text-secondary, #8886A1);
+  color: var(--text-secondary);
   font-size: 0.96em;
   font-weight: 500;
 }
@@ -44,15 +44,15 @@
 .tx-category {
   font-size: 1.04em;
   font-weight: 600;
-  color: var(--primary, #6C2EBE);
+  color: var(--primary);
 }
 .tx-description {
-  color: var(--text-secondary, #7A748B);
+  color: var(--text-secondary);
   font-size: 0.98em;
   font-weight: 400;
 }
 .transaction-list-empty {
-  color: var(--text-secondary, #89869a);
+  color: var(--text-secondary);
   text-align: center;
   font-size: 1.10em;
   font-weight: 500;
@@ -76,10 +76,10 @@
   transition: background 0.14s, box-shadow 0.18s;
 }
 .modern-expenses-item.tx-expense {
-  border-left: 5px solid var(--expense, #E74C3C);
+  border-left: 5px solid var(--expense);
 }
 .modern-expenses-item.tx-income {
-  border-left: 5px solid var(--income, #22C55E);
+  border-left: 5px solid var(--income);
 }
 .modern-expenses-item:hover,
 .modern-expenses-item:focus-visible {
@@ -100,7 +100,7 @@
   font-weight: 800;
 }
 .modern-date {
-  color: var(--text-secondary, #8a86a7);
+  color: var(--text-secondary);
   font-size: 0.98em;
   font-weight: 600;
   margin-top: 0.5px;
@@ -114,19 +114,19 @@
 .modern-category {
   font-size: 1.05em;
   font-weight: 700;
-  color: var(--primary, #6C2EBE);
+  color: var(--primary);
   background: rgba(108,46,190,0.09);
   border-radius: 5px;
   padding: 2.5px 7px;
 }
 .modern-description {
-  color: var(--text-secondary, #86829c);
+  color: var(--text-secondary);
   font-size: 0.98em;
   font-weight: 400;
   margin-left: 7px;
 }
 .modern-expenses-list-empty {
-  color: var(--text-secondary, #a89dbd);
+  color: var(--text-secondary);
   text-align: center;
   font-size: 1.11em;
   font-weight: 500;

@@ -2,98 +2,113 @@
   padding: 26px 0 0 0;
   position: relative;
 }
+/* ==== ADD TRANSACTION FLOATING BUTTON - MODERN, PROMINENT & RESPONSIVE ==== */
+
+/* Main FAB style */
 .fab-add.enhanced {
   position: fixed;
-  bottom: 36px;
-  right: 32px;
-  z-index: 99;
+  bottom: 40px;
+  right: 36px;
+  z-index: 110;
   background: var(--primary, #6C2EBE);
   color: #fff;
   border: none;
-  border-radius: 999px;
-  box-shadow: 0 4px 28px -5px rgba(60,42,150,0.14), 0 1px 12px rgba(60,42,150,0.13);
-  padding: 1.18em 2.7em 1.18em 1.48em;
-  font-size: 2.25em;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 21px;
-  cursor: pointer;
-  outline: none;
-  transition: box-shadow 0.19s cubic-bezier(0.4,0,0.2,1), background 0.17s cubic-bezier(0.4,0,0.2,1), transform 0.17s cubic-bezier(0.4,0,0.2,1);
-  border: 2.5px solid #fff;
-  box-sizing: border-box;
+  border-radius: 9999px;
+  box-shadow: 0 6px 34px -4px rgba(60,42,150,0.18), 0 2px 14px rgba(60,42,150,0.12);
+  padding: 1.2em 3.35em 1.2em 1.7em;
+  font-size: 2.55em; /* Even larger for extra prominence */
+  font-weight: 800;
   min-width: 0;
   min-height: 0;
-  will-change: transform, box-shadow;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  cursor: pointer;
+  outline: none;
   user-select: none;
+  border: 3px solid #fff;
+  box-sizing: border-box;
+  will-change: transform, box-shadow;
+  transition: 
+    box-shadow 0.18s cubic-bezier(0.4,0,0.2,1), 
+    background 0.16s cubic-bezier(0.4,0,0.2,1),
+    transform 0.16s cubic-bezier(0.4,0,0.2,1);
 }
 .fab-add.enhanced:focus-visible {
-  box-shadow: 0 0 0 5px var(--secondary, #d7bbfa), 0 2px 11px rgba(108,46,190,0.11);
+  box-shadow: 0 0 0 7px var(--secondary, #d7bbfa), 0 2px 13px rgba(108,46,190,0.13);
   outline: none;
 }
 .fab-add.enhanced:active {
   background: #59209a;
-  transform: scale(0.98);
+  transform: scale(0.970);
 }
 .fab-add.enhanced:hover,
 .fab-add.enhanced:focus {
   background: #542497;
-  transform: translateY(-2px) scale(1.043);
-  box-shadow: 0 2px 33px -5px rgba(108, 46, 190,0.17), 0 1px 12px rgba(60,42,150,0.10);
+  transform: translateY(-2.3px) scale(1.055);
+  box-shadow: 0 2px 38px -4px rgba(108, 46, 190,0.21), 0 1px 11px rgba(60,42,150,0.17);
 }
+
+/* Icon */
 .fab-icon {
   line-height: 1;
-  font-size: 1.35em;
-  margin-right: 0.12em;
-  font-weight: 700;
+  font-size: 1.52em;
+  margin-right: 0.10em;
+  font-weight: 900;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
 }
+
+/* Label (always visible except mobile) */
 .fab-label {
-  font-size: 1.21rem;
-  font-weight: 600;
-  margin-left: 6px;
-  margin-right: 10px;
+  font-size: 1.32rem;
+  font-weight: 700;
+  margin-left: 10px;
+  margin-right: 14px;
   display: inline-block;
   font-family: inherit;
-  letter-spacing: 0.015em;
+  letter-spacing: 0.018em;
   white-space: nowrap;
   text-align: left;
+  /* Never uppercase for friendlier look */
 }
-@media (max-width: 950px) {
+
+@media (max-width: 1150px) {
   .fab-add.enhanced {
-    font-size: 2.01em;
-    padding: 1em 2em 1em 1em;
-    right: 22px;
-    bottom: 22px;
+    font-size: 2.11em;
+    padding: 1em 2.5em 1em 1em;
+    right: 19px;
+    bottom: 25px;
   }
   .fab-label {
-    font-size: 1.11rem;
-    margin-left: 4px;
-    margin-right: 6px;
+    font-size: 1.095rem;
+    margin-left: 6px;
+    margin-right: 9px;
   }
 }
-@media (max-width: 650px) {
+
+/* Tablet/small desktop */
+@media (max-width: 800px) {
   .fab-add.enhanced {
+    font-size: 1.32em;
+    padding: 0.90em 1.53em 0.90em 0.93em;
+    right: 11px;
     bottom: 15px;
-    right: 8px;
-    font-size: 1.33em;
-    padding: 0.92em 1.24em 0.92em 0.92em;
-    min-width: 0;
   }
   .fab-label {
     font-size: 1rem;
-    font-weight: 500;
-    margin-left: 3px;
-    margin-right: 2px;
+    font-weight: 600;
+    margin-left: 4px;
+    margin-right: 4px;
   }
   .fab-icon {
-    font-size: 1.08em;
+    font-size: 1.13em;
   }
 }
+
+/* Hide label for the narrowest mobile (≤ 475px) for FAB compactness, accessibility still available */
 @media (max-width: 475px) {
   .fab-label {
     position: absolute !important;
@@ -107,13 +122,14 @@
     border: 0;
   }
   .fab-add.enhanced {
-    font-size: 1.08em;
-    padding: 0.67em 0.9em;
+    font-size: 1.02em;
+    padding: 0.65em 0.9em;
   }
   .fab-icon {
     font-size: 1.01em;
   }
 }
+/* ==== END FAB OVERRIDE ==== */
 .dashboard-flex-grid {
   display: flex;
   flex-wrap: wrap;

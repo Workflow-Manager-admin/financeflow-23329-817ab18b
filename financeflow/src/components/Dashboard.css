@@ -19,7 +19,6 @@
   }
 }
 
-/* Minimal, small floating action button for Add Transaction */
 .fab-add {
   position: fixed;
   bottom: 18px;
@@ -87,7 +86,6 @@
   display: none !important;
 }
 
-/* Responsive small for mobile */
 @media (max-width: 600px) {
   .fab-add {
     width: 30px;
@@ -119,7 +117,6 @@
   }
 }
 
-/* Tighter hit area on very small screens */
 @media (max-width: 400px) {
   .fab-add {
     width: 27px;

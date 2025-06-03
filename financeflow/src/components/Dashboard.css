@@ -2,8 +2,6 @@
   padding: 26px 0 0 0;
   position: relative;
 }
-/* ==== ADD TRANSACTION FLOATING BUTTON - MODERN, PROMINENT & RESPONSIVE ==== */
-/* Main FAB style */
 .fab-add.enhanced {
   position: fixed;
   bottom: 40px;
@@ -128,7 +126,6 @@
     font-size: 1.01em;
   }
 }
-/* ==== END FAB OVERRIDE ==== */
 .dashboard-flex-grid {
   display: flex;
   flex-wrap: wrap;

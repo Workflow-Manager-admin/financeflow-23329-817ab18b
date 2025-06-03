@@ -41,23 +41,24 @@ function Dashboard({
         tabIndex={0}
         onClick={onAddTransaction}
       >
-        {/* Plus-circle Icon (SVG) - Modern, prominent */}
+        {/* Plus-circle Icon (SVG) - Minimal, prominent */}
         <span className="fab-icon" aria-hidden="true">
           <svg
-            width="30"
-            height="30"
-            viewBox="0 0 36 36"
+            width="22"
+            height="22"
+            viewBox="0 0 30 30"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             role="presentation"
             focusable="false"
           >
-            <circle cx="18" cy="18" r="18" fill="currentColor" opacity="0.14" />
-            <rect x="9" y="17" width="18" height="2" rx="1" fill="currentColor" />
-            <rect x="17" y="9" width="2" height="18" rx="1" fill="currentColor" />
+            <circle cx="15" cy="15" r="15" fill="currentColor" opacity="0.13" />
+            <rect x="7" y="14" width="16" height="2" rx="1" fill="currentColor" />
+            <rect x="14" y="7" width="2" height="16" rx="1" fill="currentColor" />
           </svg>
         </span>
-        <span className="fab-label">Add transaction</span>
+        {/* Visually hidden label for accessibility */}
+        <span className="fab-label sr-only">Add transaction</span>
       </button>
 
       {/* Dashboard main content with sidebar offset */}

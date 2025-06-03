@@ -61,20 +61,9 @@ function ExpensesView() {
       <div className="expenses-card-modern">
         <div className="expenses-header-row-modern">
           <h1 className="expenses-title-modern">Expenses</h1>
-          <button
-            className="add-tx-fab-modern"
-            title="Add Transaction"
-            aria-label="Add Transaction"
-            onClick={() => {
-              window.location.hash = "/";
-            }}
-          >
-            <span className="add-tx-fab-plus">＋</span>
-          </button>
+          {/* "+" Add button removed as per design requirements */}
         </div>
-        <div className="expenses-analytics-bar">
-          <PieChart transactions={expenseTx} />
-        </div>
+        {/* Expenses by category ring chart (PieChart) removed as per design requirements */}
         <div className="expenses-filters-bar modern">
           <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
         </div>

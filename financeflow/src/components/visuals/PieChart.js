@@ -192,7 +192,7 @@ function PieChart({ transactions, currencySymbol }) {
             Total Expense
           </span>
           <span data-testid="expense-total" style={{fontSize:"1.21rem"}}>
-            {currencySymbol}{total.toFixed(2)}
+            {effectiveCurrencySymbol}{total.toFixed(2)}
           </span>
         </div>
       </div>
@@ -202,7 +202,7 @@ function PieChart({ transactions, currencySymbol }) {
             <div key={d.category} className="piechart-legitem">
               <span className="piechart-colorball" style={{ background: d.color }} />
               <span>{d.category}</span>
-              <span className="piechart-legamt">{currencySymbol}{d.value.toFixed(2)}</span>
+              <span className="piechart-legamt">{effectiveCurrencySymbol}{d.value.toFixed(2)}</span>
             </div>
           )}
         </div>

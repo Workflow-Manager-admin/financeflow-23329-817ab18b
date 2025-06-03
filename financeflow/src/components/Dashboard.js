@@ -23,15 +23,22 @@ function Dashboard({ transactions, setTransactions, goal, setGoal, showToast, on
 
   return (
     <section className="dashboard">
-      {/* Floating Action Button (enhanced) */}
+      {/* PUBLIC_INTERFACE: Floating Add Transaction Button */}
       <button
         className="fab-add enhanced"
+        type="button"
         title="Add Transaction"
         aria-label="Add Transaction"
+        tabIndex={0}
         onClick={onAddTransaction}
       >
-        <span className="fab-icon" aria-hidden="true">＋</span>
-        <span className="fab-label">Add transaction</span>
+        <span className="fab-icon" aria-hidden="true">
+          ＋
+        </span>
+        {/* The label is visually hidden only on extra small screens for accessibility */}
+        <span className="fab-label">
+          Add transaction
+        </span>
       </button>
 
       {/* Dashboard flex/grid arrangement */}

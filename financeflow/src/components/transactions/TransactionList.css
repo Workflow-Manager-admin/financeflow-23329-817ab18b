@@ -1,8 +1,3 @@
-/*
- * TransactionList.css - modern, visually appealing & easy-to-scan
- */
-
-/* Universal baseline style */
 .tx-list-modern.universal {
   list-style: none;
   padding: 0;
@@ -10,8 +5,6 @@
   width: 100%;
   max-width: 680px;
 }
-
-/* Card styling for each item */
 .tx-item-modern.universal {
   display: flex;
   flex-direction: column;
@@ -24,21 +17,16 @@
   transition: box-shadow 0.16s;
   position: relative;
 }
-
 .tx-item-modern.universal:hover,
 .tx-item-modern.universal:focus-within {
   box-shadow: 0 6px 28px rgba(60,42,150,0.14);
 }
-
-/* Main row: type dot, info, amount */
 .tx-row-modern-main {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 18px;
 }
-
-/* Colored dot for transaction type */
 .tx-type-dot {
   display: inline-block;
   width: 13px;
@@ -55,8 +43,6 @@
 .tx-item-modern.universal.expense .tx-type-dot {
   background: var(--expense,#E74C3C);
 }
-
-/* Main info (category + description) */
 .tx-main-info {
   display: flex;
   flex-direction: column;
@@ -64,7 +50,6 @@
   min-width: 0;
   flex: 1 1 68%;
 }
-
 .tx-category {
   font-size: 1.11em;
   color: var(--primary,#6C2EBE);
@@ -85,8 +70,6 @@
   overflow: hidden;
   white-space: nowrap;
 }
-
-/* Amount - strong hierarchy, right aligned */
 .tx-amount-modern.universal {
   font-size: 1.22em;
   font-weight: 700;
@@ -96,15 +79,12 @@
   text-align: right;
   transition: color 0.13s;
 }
-
 .tx-amount-modern.universal.income {
   color: var(--income,#22C55E);
 }
 .tx-amount-modern.universal.expense {
   color: var(--expense,#E74C3C);
 }
-
-/* Meta row: date, actions */
 .tx-row-modern-meta {
   display: flex;
   align-items: center;
@@ -112,19 +92,16 @@
   margin-top: 6px;
   gap: 11px;
 }
-
 .tx-date {
   font-size: 0.97em;
   color: var(--text-secondary,#8A889A);
   font-weight: 400;
   letter-spacing: 0.01em;
 }
-
 .tx-row-modern-actions {
   display: flex;
   gap: 7px;
 }
-
 .tx-action-btn {
   background: none;
   border: none;
@@ -142,8 +119,6 @@
   color: var(--accent,#463388);
   outline: none;
 }
-
-/* Empty message styling */
 .tx-list-empty-msg {
   text-align: center;
   color: var(--text-secondary,#888);
@@ -151,8 +126,6 @@
   font-size: 1.13em;
   font-weight: 500;
 }
-
-/* Responsive design */
 @media (max-width: 680px) {
   .tx-item-modern.universal {
     padding: 13px 7px 13px 12px;
@@ -170,7 +143,6 @@
     font-size: 1.08em;
   }
 }
-
 @media (max-width: 490px) {
   .tx-row-modern-main {
     flex-direction: column;
@@ -190,8 +162,6 @@
     gap: 2px;
   }
 }
-
-/* Accessibility */
 .visually-hidden {
   position: absolute!important;
   height: 1px; width: 1px;

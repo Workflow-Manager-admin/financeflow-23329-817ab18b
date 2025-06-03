@@ -21,128 +21,7 @@
 }
 
 /* Add Transaction Floating Action Button (FAB): Smaller, modern, balanced, improved z-index */
-.fab-add {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  z-index: 1400;
-  display: flex;
-  align-items: center;
-  background: #6C2EBE;
-  color: #fff;
-  border: none;
-  border-radius: 9999px;
-  box-shadow: 0 7px 32px 0px rgba(108,46,190,0.14), 0 1px 9px rgba(60,42,150,0.11);
-  padding: 0.85em 2em 0.85em 1em;
-  font-size: 1.05rem;
-  font-weight: 800;
-  min-width: 0;
-  min-height: 0;
-  transition: background 0.18s cubic-bezier(.4,0,.2,1), transform 0.18s cubic-bezier(.4,0,.2,1), box-shadow 0.17s cubic-bezier(.4,0,.2,1);
-  cursor: pointer;
-  outline: none;
-  user-select: none;
-  gap: 0.8em;
-  border: 2px solid #fff;
-}
-.fab-add:focus-visible {
-  box-shadow: 0 0 0 0.18em var(--secondary, #e5d6f7), 0 3px 8px rgba(108,46,190,0.16);
-  outline: none;
-}
-.fab-add:active {
-  background: #542497;
-  transform: scale(0.96);
-  box-shadow: 0 0.5px 4px rgba(60,42,150,0.07);
-}
-.fab-add:hover,
-.fab-add:focus {
-  background: #561DB7;
-  transform: translateY(-1.5px) scale(1.045);
-  box-shadow: 0 7px 32px 0px rgba(108,46,190,0.13), 0 1px 9px rgba(60,42,150,0.13);
-}
-/* Icon for FAB smaller */
-.fab-icon {
-  font-size: 1.4em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.5em;
-}
-
-/* Label always visible except on small screens */
-.fab-label {
-  font-size: 1.05em;
-  font-weight: 700;
-  margin-left: 0.40em;
-  margin-right: 0.90em;
-  font-family: inherit;
-  letter-spacing: 0.015em;
-  white-space: nowrap;
-  text-align: left;
-  transition: opacity 0.18s;
-  line-height: 1;
-}
-/* Fine-tune below for larger screens if needed */
-@media (min-width: 1400px) {
-  .fab-add {
-    font-size: 1.15rem;
-    padding: 1em 2.4em 1em 1.2em;
-    right: 50px;
-    bottom: 44px;
-  }
-  .fab-label { font-size: 1.12em; }
-  .fab-icon { font-size: 1.6em; }
-}
-@media (max-width: 1200px) {
-  .fab-add {
-    font-size: 0.95rem;
-    padding: 0.89em 1.6em 0.89em 0.9em;
-    right: 16px;
-    bottom: 19px;
-  }
-  .fab-label {
-    font-size: 1em;
-    margin-left: 0.29em;
-    margin-right: 0.63em;
-  }
-  .fab-icon { font-size: 1.23em; }
-}
-@media (max-width: 800px) {
-  .fab-add {
-    font-size: 0.78rem;
-    padding: 0.74em 1.05em 0.74em 0.75em;
-    right: 6px;
-    bottom: 12px;
-  }
-  .fab-label {
-    font-size: 0.98em;
-    margin-left: 0.17em;
-    margin-right: 0.41em;
-  }
-  .fab-icon { font-size: 1.04em; }
-}
-/* Hide label on xs screens for accessibility */
-@media (max-width: 478px) {
-  .fab-label {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
-    white-space: nowrap !important;
-    border: 0 !important;
-  }
-  .fab-add {
-    font-size: 0.71rem;
-    padding: 0.44em 0.62em;
-    min-width: 0;
-  }
-  .fab-icon { font-size: 0.91em; }
-}
-
-
-/* Add Transaction Floating Action Button (FAB): Modern, prominent, responsive, accessible */
+/* Consolidated .fab-add styles to remove CSS minimizer error: */
 .fab-add {
   position: fixed;
   bottom: 38px;
@@ -170,6 +49,7 @@
   gap: 1.12em;
   border: 3px solid #fff;
 }
+
 .fab-add:focus-visible {
   box-shadow: 0 0 0 0.34em var(--secondary, #e5d6f7), 0 3px 18px rgba(108,46,190,0.18);
   outline: none;
@@ -208,6 +88,7 @@
   transition: opacity 0.18s;
   line-height: 1;
 }
+
 /* Large desktop tweaks */
 @media (min-width: 1400px) {
   .fab-add {

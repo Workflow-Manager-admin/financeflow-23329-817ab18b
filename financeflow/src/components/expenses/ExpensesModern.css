@@ -37,42 +37,7 @@
   margin: 0 0 1px 0;
   line-height: 1.08;
 }
-.add-tx-fab-modern {
-  border: none;
-  background: var(--accent, #6C2EBE);
-  color: #fff;
-  border-radius: 100px;
-  width: 44px;
-  height: 44px;
-  font-size: 2rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 12px rgba(60,42,150,0.09);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background .14s, box-shadow .17s;
-  outline: none;
-}
-.add-tx-fab-modern:hover, .add-tx-fab-modern:focus-visible {
-  background: #844bc5;
-  box-shadow: 0 5px 24px rgba(60,42,150,0.17);
-}
-.add-tx-fab-plus {
-  font-size: 2.10rem;
-  font-weight: 500;
-  line-height: 1;
-  display: inline-block;
-  margin-top: -2px;
-}
-
-.expenses-analytics-bar {
-  margin: 0 0 18px 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+/* Removed .add-tx-fab-modern and .add-tx-fab-plus (add button) and .expenses-analytics-bar (ring chart) as these UI elements were removed in Expenses tab redesign. */
 .expenses-filters-bar {
   margin: 15px 0 16px 0;
 }

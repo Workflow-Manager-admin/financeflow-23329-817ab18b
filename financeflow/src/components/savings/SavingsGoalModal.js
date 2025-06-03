@@ -81,71 +81,86 @@ function SavingsGoalModal({ onSave, onClose, initial }) {
 
   return (
     <div className="goalmodal-bg" role="dialog" aria-modal="true" tabIndex={-1}>
-      <form className="goalmodal" onSubmit={handleSubmit} noValidate>
-        <h3>Set Savings Goal</h3>
-        <label htmlFor="goal-period" style={{ marginBottom: 9, fontWeight: 500 }}>
-          Savings Period
-          <select
-            id="goal-period"
-            ref={ref}
-            aria-label="Savings period"
-            value={period}
-            onChange={handlePeriodChange}
-            disabled={saving}
-            style={{ marginTop: 3, marginBottom: 12, width: "100%" }}
-            required
-          >
-            <option value="weekly">Weekly Goal</option>
-            <option value="monthly">Monthly Goal</option>
-            <option value="quarterly">Quarterly Goal</option>
-            <option value="yearly">Yearly Goal</option>
-          </select>
-        </label>
-        <label htmlFor="goal-amount" style={{ fontWeight: 500 }}>
-          Target Amount
-          <input
-            id="goal-amount"
-            type="number"
-            aria-label="Target amount"
-            placeholder="Amount in $"
-            step="0.01"
-            min="0.01"
-            value={amount}
-            onChange={handleAmountChange}
-            required
-            disabled={saving}
-            style={{ marginTop: 3, marginBottom: 11, width: "100%" }}
-            inputMode="decimal"
-          />
-        </label>
-        {error && (
-          <div className="goalmodal-error" aria-live="polite" role="alert">
-            {error}
+      <form
+        className="goalmodal"
+        onSubmit={handleSubmit}
+        noValidate
+        role="form"
+        aria-labelledby="goalmodal-label-header"
+        autoComplete="off"
+      >
+        <div className="goalmodal-header">
+          <h2 id="goalmodal-label-header" style={{ margin: 0, fontSize: "1.22em" }}>
+            {initial ? "Edit Savings Goal" : "Set Savings Goal"}
+          </h2>
+        </div>
+        <div className="goalmodal-form-contents" tabIndex={0}>
+          <div className="goalmodal-group">
+            <label htmlFor="goal-period" className="goalmodal-label">
+              Savings Period
+            </label>
+            <select
+              id="goal-period"
+              className="goalmodal-select"
+              ref={ref}
+              aria-label="Savings period"
+              value={period}
+              onChange={handlePeriodChange}
+              disabled={saving}
+              required
+              tabIndex={0}
+              autoFocus
+            >
+              <option value="weekly">Weekly Goal</option>
+              <option value="monthly">Monthly Goal</option>
+              <option value="quarterly">Quarterly Goal</option>
+              <option value="yearly">Yearly Goal</option>
+            </select>
           </div>
-        )}
-        <div className="goalmodal-btnrow">
-          <button
-            type="submit"
-            className="btn btn-large"
-            disabled={saving || !isValid}
-            style={{
-              opacity: saving || !isValid ? 0.75 : 1,
-              minWidth: 94,
-              pointerEvents: saving || !isValid ? "none" : undefined,
-            }}
-            aria-busy={saving ? "true" : undefined}
-          >
-            {saving ? "Saving..." : "Save"}
-          </button>
-          <button
-            className="btn btn-cancel"
-            type="button"
-            onClick={onClose}
-            disabled={saving}
-            style={{ minWidth: 90, marginLeft: 8 }}
-          >
-            Cancel
-          </button>
+          <div className="goalmodal-group">
+            <label htmlFor="goal-amount" className="goalmodal-label">
+              Target Amount
+            </label>
+            <input
+              id="goal-amount"
+              className="goalmodal-input"
+              type="number"
+              aria-label="Target amount"
+              placeholder="Amount in $"
+              step="0.01"
+              min="0.01"
+              value={amount}
+              onChange={handleAmountChange}
+              required
+              disabled={saving}
+              inputMode="decimal"
+              autoComplete="off"
+              tabIndex={0}
+            />
+          </div>
+          {error && (
+            <div className="goalmodal-error" aria-live="polite" role="alert">
+              {error}
+            </div>
+          )}
+          <div className="goalmodal-btnrow">
+            <button
+              type="submit"
+              className="btn btn-large"
+              disabled={saving || !isValid}
+              aria-busy={saving ? "true" : undefined}
+            >
+              {saving ? "Saving..." : "Save"}
+            </button>
+            <button
+              className="btn btn-cancel"
+              type="button"
+              onClick={onClose}
+              disabled={saving}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </form>
     </div>

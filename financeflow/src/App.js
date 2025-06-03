@@ -21,20 +21,22 @@ import SavingsGoalModal from './components/savings/SavingsGoalModal';
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
 const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 
-function ExpensesView() {
-  const [transactions] = React.useState(() => {
-    return JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || [];
-  });
-  // Legacy category map
+function ExpensesView({
+  allTransactions,
+  setTransactions,
+  onEditTransaction,
+  showToast,
+}) {
+  // Only consider expense type transactions
   const expenseTx = React.useMemo(
     () =>
-      transactions
+      allTransactions
         .filter((t) => t.type === "expense")
         .map((tx) =>
           tx.category === "Salary" ? { ...tx, category: "Rent/House" } : tx
         )
         .sort((a, b) => b.date.localeCompare(a.date)),
-    [transactions]
+    [allTransactions]
   );
   const [filters, setFilters] = React.useState({ category: "All", from: "", to: "" });
   // Compute categories for filtering
@@ -70,8 +72,15 @@ function ExpensesView() {
         <div className="expenses-list-panel-modern">
           <TransactionList
             transactions={filtered}
-            onEdit={() => {}}
-            onDelete={() => {}}
+            onEdit={onEditTransaction}
+            onDelete={
+              (tx) => {
+                if (window.confirm("Delete this transaction?")) {
+                  setTransactions(prev => prev.filter(t => t.id !== tx.id));
+                  showToast && showToast("Transaction deleted!", "success");
+                }
+              }
+            }
             emptyMsg="No expenses found."
             modernExpenses
           />

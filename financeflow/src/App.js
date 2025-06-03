@@ -97,15 +97,65 @@ function ExpensesView({
   );
 }
 
-function CalendarView() {
-  const [transactions] = React.useState(
-    () => JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || []
+function CalendarView({ transactions: propTransactions }) {
+  // State for visible month/year navigation
+  const today = new Date();
+  const [visibleMonth, setVisibleMonth] = React.useState(today.getMonth());
+  const [visibleYear, setVisibleYear] = React.useState(today.getFullYear());
+
+  // Transactions come either as prop or from localStorage for resilience
+  const transactions = React.useMemo(
+    () =>
+      propTransactions ??
+      JSON.parse(localStorage.getItem("fflow-transactions-v1")) ??
+      [],
+    [propTransactions]
   );
 
-  const today = new Date();
-  const currentMonthDate = new Date(today.getFullYear(), today.getMonth(), 1);
+  // Month navigation
+  function goToPrevMonth() {
+    setVisibleMonth((prev) => {
+      if (prev === 0) {
+        setVisibleYear((y) => y - 1);
+        return 11;
+      }
+      return prev - 1;
+    });
+  }
+  function goToNextMonth() {
+    setVisibleMonth((prev) => {
+      if (prev === 11) {
+        setVisibleYear((y) => y + 1);
+        return 0;
+      }
+      return prev + 1;
+    });
+  }
+  function handleYearChange(e) {
+    setVisibleYear(Number(e.target.value));
+  }
+  function handleMonthChange(e) {
+    setVisibleMonth(Number(e.target.value));
+  }
+
+  // Years available in dropdown (limit for UI)
+  const yearsAvailable = React.useMemo(() => {
+    // Find min/max year in data for better UX
+    let years = [today.getFullYear()];
+    if (transactions && transactions.length > 0) {
+      const txYears = transactions.map((t) =>
+        t.date ? new Date(t.date).getFullYear() : today.getFullYear()
+      );
+      const minY = Math.min(...txYears, today.getFullYear() - 2);
+      const maxY = Math.max(...txYears, today.getFullYear() + 1);
+      years = [];
+      for (let y = minY - 1; y <= maxY + 1; y++) years.push(y);
+    }
+    return years;
+  }, [transactions, today]);
 
   function getMonthGrid(year, month) {
+    // Fix date off-by-one bug: always use local-time dates (no UTC).
     const firstOfMonth = new Date(year, month, 1);
     const lastOfMonth = new Date(year, month + 1, 0);
     const firstDayIdx = firstOfMonth.getDay();
@@ -122,7 +172,7 @@ function CalendarView() {
       days.push({
         dateObj,
         inMonth: false,
-        dateStr: dateObj.toISOString().slice(0, 10),
+        dateStr: formatDateLocalYMD(dateObj),
       });
     }
     for (let d = 1; d <= daysInMonth; d++) {
@@ -130,7 +180,7 @@ function CalendarView() {
       days.push({
         dateObj,
         inMonth: true,
-        dateStr: dateObj.toISOString().slice(0, 10),
+        dateStr: formatDateLocalYMD(dateObj),
       });
     }
     let totalCells = days.length;
@@ -140,10 +190,19 @@ function CalendarView() {
       days.push({
         dateObj,
         inMonth: false,
-        dateStr: dateObj.toISOString().slice(0, 10),
+        dateStr: formatDateLocalYMD(dateObj),
       });
     }
     return days;
+  }
+
+  // Utility for bug-free local YMD formatting
+  function formatDateLocalYMD(dateObj) {
+    // Returns date as 'YYYY-MM-DD' in local time, not UTC
+    const y = dateObj.getFullYear();
+    const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const d = String(dateObj.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
   }
 
   const txByDate = React.useMemo(() => {
@@ -158,11 +217,19 @@ function CalendarView() {
   }, [transactions]);
 
   const gridDays = React.useMemo(
-    () => getMonthGrid(currentMonthDate.getFullYear(), currentMonthDate.getMonth()),
-    [currentMonthDate]
+    () => getMonthGrid(visibleYear, visibleMonth),
+    [visibleYear, visibleMonth]
   );
 
   const weekdayLabels = ["S", "M", "T", "W", "T", "F", "S"];
+
+  const monthNames = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+
+  // Track today as YMD for coloring
+  const todayYMD = formatDateLocalYMD(today);
 
   return (
     <section className="placeholder-view calendar-view">
@@ -179,8 +246,84 @@ function CalendarView() {
           }}>Transaction Calendar</h1>
         </div>
         <div style={{ maxWidth: 430, margin: "0 auto", background: "var(--surface,#fff)", borderRadius: 13, boxShadow: "0 2px 16px rgba(60,42,150,0.07)", padding: 23 }}>
-          <div style={{ display: "flex", justifyContent: "center", fontWeight: 600, fontSize: "1.10rem", color: "var(--primary,#6C2EBE)", marginBottom: 3 }}>
-            {today.toLocaleString(undefined, { month: "long", year: "numeric" })}
+          <div style={{
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontWeight: 600, fontSize: "1.10rem", color: "var(--primary,#6C2EBE)", marginBottom: 8, gap: 16
+          }}>
+            {/* Prev month */}
+            <button
+              aria-label="Previous Month"
+              className="btn btn-calendar-nav"
+              style={{
+                borderRadius: "50%",
+                width: 33,
+                height: 33,
+                border: "none",
+                background: "transparent",
+                cursor: "pointer"
+              }}
+              onClick={goToPrevMonth}
+              tabIndex={0}
+            >
+              {"‹"}
+            </button>
+            {/* Month dropdown */}
+            <select
+              value={visibleMonth}
+              onChange={handleMonthChange}
+              style={{
+                fontSize: "1em",
+                padding: "6px 10px",
+                borderRadius: 6,
+                border: "1px solid var(--border-color,#d5d5d5)",
+                background: "var(--background,#fff)",
+                fontWeight: 600,
+                minWidth: 96,
+                color: "var(--primary,#6C2EBE)"
+              }}
+              aria-label="Month"
+            >
+              {monthNames.map((name, idx) => (
+                <option value={idx} key={idx}>{name}</option>
+              ))}
+            </select>
+            {/* Year dropdown */}
+            <select
+              value={visibleYear}
+              onChange={handleYearChange}
+              style={{
+                fontSize: "1em",
+                padding: "6px 10px",
+                borderRadius: 6,
+                border: "1px solid var(--border-color,#d5d5d5)",
+                background: "var(--background,#fff)",
+                fontWeight: 600,
+                minWidth: 75,
+                color: "var(--primary,#6C2EBE)"
+              }}
+              aria-label="Year"
+            >
+              {yearsAvailable.map(y => (
+                <option value={y} key={y}>{y}</option>
+              ))}
+            </select>
+            {/* Next month */}
+            <button
+              aria-label="Next Month"
+              className="btn btn-calendar-nav"
+              style={{
+                borderRadius: "50%",
+                width: 33,
+                height: 33,
+                border: "none",
+                background: "transparent",
+                cursor: "pointer"
+              }}
+              onClick={goToNextMonth}
+              tabIndex={0}
+            >
+              {"›"}
+            </button>
           </div>
           <table className="calendar-table" style={{ width: "100%", tableLayout: "fixed", borderCollapse: "collapse" }}>
             <thead>
@@ -199,6 +342,8 @@ function CalendarView() {
                   <tr key={w}>
                     {gridDays.slice(w * 7, w * 7 + 7).map((cell, i) => {
                       const txList = txByDate[cell.dateStr] || [];
+                      // Mark cell as today visually
+                      const isToday = cell.dateStr === todayYMD;
                       return (
                         <td
                           key={cell.dateStr}
@@ -218,14 +363,14 @@ function CalendarView() {
                             fontWeight: 500,
                             fontSize: "1.05rem",
                             color: cell.inMonth
-                              ? (cell.dateStr === today.toISOString().slice(0, 10)
+                              ? (isToday
                                 ? "var(--primary,#6C2EBE)" : "var(--text-color)")
                               : "var(--text-secondary)",
-                            background: cell.dateStr === today.toISOString().slice(0, 10)
+                            background: isToday
                               ? "rgba(108,46,190,0.09)" : "none",
                             borderRadius: 8,
                             display: "inline-block",
-                            padding: cell.dateStr === today.toISOString().slice(0, 10) ? "0 5px" : undefined,
+                            padding: isToday ? "0 5px" : undefined,
                             minWidth: 22,
                             textAlign: "center",
                           }}>{cell.dateObj.getDate()}</div>
@@ -242,7 +387,12 @@ function CalendarView() {
                                 <span
                                   key={idx}
                                   className="calendar-block"
-                                  title={(tx.type === "income" ? "+ " : "- ") + "$" + Number(tx.amount).toFixed(2) + (tx.type === "expense" ? (" | " + tx.category) : " | Income") + (tx.description ? (" - " + tx.description) : "")}
+                                  title={
+                                    (tx.type === "income" ? "+ " : "- ") +
+                                    "$" + Number(tx.amount).toFixed(2) +
+                                    (tx.type === "expense" ? (" | " + tx.category) : " | Income") +
+                                    (tx.description ? (" - " + tx.description) : "")
+                                  }
                                   style={{
                                     display: "inline-block",
                                     width: 13,
@@ -313,6 +463,10 @@ function CalendarView() {
         }
         .calendar-block {
           transition: background 0.2s;
+        }
+        .btn-calendar-nav:active,
+        .btn-calendar-nav:focus {
+          background: rgba(108,46,190,0.07);
         }
         `}
       </style>

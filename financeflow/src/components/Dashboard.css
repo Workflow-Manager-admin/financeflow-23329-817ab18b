@@ -6,58 +6,89 @@
 /* Enhanced Floating Action Button (FAB): with label, larger, responsive */
 .fab-add.enhanced {
   position: fixed;
-  bottom: 36px;
-  right: 32px;
+  bottom: 34px;
+  right: 30px;
   z-index: 30;
   background: var(--primary, #6C2EBE);
-  box-shadow: 0 4px 18px rgba(60,42,150,0.14), 0 1.5px 4px rgba(60,42,150,0.09);
+  box-shadow: 0 6px 22px rgba(91,36,171,0.17), 0 1.5px 8px rgba(60,42,150,0.13);
   border: none;
   border-radius: 999px;
-  padding: 0.85em 1.85em 0.85em 1.13em;
+  padding: 1.13em 2.5em 1.13em 1.37em;
   color: #fff;
-  font-size: 2em;
+  font-size: 2.14em;
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 19px;
   transition: box-shadow 0.18s, background 0.15s;
   cursor: pointer;
   outline: none;
   min-width: 0;
   min-height: 0;
+  border: 2.5px solid #fff;
+  box-sizing: border-box;
+  will-change: transform,box-shadow;
 }
-.fab-add.enhanced:hover, .fab-add.enhanced:focus {
-  box-shadow: 0 6px 28px rgba(60,42,150,0.22), 0 5px 16px rgba(60,42,150,0.18);
+
+.fab-add.enhanced:hover,
+.fab-add.enhanced:focus {
+  box-shadow: 0 8px 30px rgba(91,36,171,0.27), 0 5px 18px rgba(60,42,150,0.18);
   background: #5b24ab;
+  transform: translateY(-2px) scale(1.035);
 }
+
 .fab-icon {
   line-height: 1;
-  font-size: 1.17em;
+  font-size: 1.47em;
   font-weight: 700;
-  margin-right: 0.02em;
+  margin-right: 0.1em;
   user-select: none;
   display: flex;
   align-items: center;
-}
-.fab-label {
-  font-size: 1.13rem;
-  font-weight: 500;
-  margin-left: 3px;
-  margin-right: 3px;
-  display: inline-block;
-  font-family: inherit;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
+  justify-content: center;
 }
 
+.fab-label {
+  font-size: 1.27rem;
+  font-weight: 600;
+  margin-left: 5px;
+  margin-right: 6px;
+  display: inline-block;
+  font-family: inherit;
+  letter-spacing: 0.012em;
+  white-space: nowrap;
+  text-shadow: 0 1px 8px rgba(108,46,190,0.08);
+  text-align: left;
+}
+
+@media (max-width: 650px) {
+  .fab-add.enhanced {
+    bottom: 18px;
+    right: 7px;
+    font-size: 1.38em;
+    padding: 0.89em 1.23em 0.89em 0.98em;
+  }
+  .fab-label {
+    font-size: 1.08rem;
+    font-weight: 500;
+    margin-left: 3px;
+    margin-right: 2px;
+  }
+  .fab-icon {
+    font-size: 1.13em;
+  }
+}
 @media (max-width: 450px) {
   .fab-label {
     display: none;
   }
   .fab-add.enhanced {
-    font-size: 1.20em;
-    padding: 0.75em 0.90em;
+    font-size: 1.13em;
+    padding: 0.66em 0.88em;
+  }
+  .fab-icon {
+    font-size: 1.10em;
   }
 }
 

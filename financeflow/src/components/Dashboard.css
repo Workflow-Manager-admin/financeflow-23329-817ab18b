@@ -3,9 +3,8 @@
   position: relative;
 }
 
-/* Offset dashboard main content to avoid Sidebar overlap */
 .dashboard-content-wrapper {
-  margin-left: 230px; /* match sidebar width; adjust for collapsed if using responsive sidebar */
+  margin-left: 230px;
   transition: margin-left 0.22s cubic-bezier(0.4,0,0.2,1);
 }
 
@@ -20,8 +19,6 @@
   }
 }
 
-/* Add Transaction Floating Action Button (FAB): Smaller, modern, balanced, improved z-index */
-/* Consolidated .fab-add styles to remove CSS minimizer error: */
 .fab-add {
   position: fixed;
   bottom: 28px;
@@ -67,7 +64,6 @@
   transform: translateY(-1.5px) scale(1.045);
 }
 
-/* Minimal icon for FAB */
 .fab-icon {
   font-size: 1.52em;
   display: flex;

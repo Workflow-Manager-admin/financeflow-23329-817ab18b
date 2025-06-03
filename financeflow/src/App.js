@@ -18,11 +18,13 @@ import './components/expenses/ExpensesModern.css';
 const STORAGE_TRANSACTIONS = 'fflow-transactions-v1';
 const PROFILE_STORAGE_KEY = 'fflow-profile-v1';
 
+import PieChart from './components/visuals/PieChart';
+
 function ExpensesView() {
   const [transactions] = React.useState(() => {
     return JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS)) || [];
   });
-  // Map "Salary" legacy for historical, map to "Rent/House"
+  // Legacy category map
   const expenseTx = React.useMemo(
     () =>
       transactions
@@ -34,7 +36,7 @@ function ExpensesView() {
     [transactions]
   );
   const [filters, setFilters] = React.useState({ category: "All", from: "", to: "" });
-  // Derive actual used categories for pills
+  // Compute categories for filtering
   const categories = React.useMemo(() => {
     const set = new Set(expenseTx.map(t => t.category === "Salary" ? "Rent/House" : t.category));
     return ["All", ...Array.from(set).filter(Boolean)];
@@ -52,7 +54,7 @@ function ExpensesView() {
   const filtered = React.useMemo(() => applyFilters(expenseTx, filters), [expenseTx, filters]);
   const { currencySymbol } = usePreferences(); // always live
 
-  // Redesigned Expenses View: modern card with improved layout, visual hierarchy, and a smaller, visually clean Add Transaction button (FAB style)
+  // Modern, visually appealing layout for Expenses tab
   return (
     <section className="expenses-section-modern">
       <div className="expenses-card-modern">
@@ -63,15 +65,16 @@ function ExpensesView() {
             title="Add Transaction"
             aria-label="Add Transaction"
             onClick={() => {
-              // Redirect to dashboard for now (actual onAddTransaction attached to Dashboard FAB centrally)
               window.location.hash = "/";
-              // Consider exposing callback for direct launch in future refactors
             }}
           >
             <span className="add-tx-fab-plus">＋</span>
           </button>
         </div>
-        <div className="expenses-filters-bar">
+        <div className="expenses-analytics-bar">
+          <PieChart transactions={expenseTx} currencySymbol={currencySymbol} />
+        </div>
+        <div className="expenses-filters-bar modern">
           <FilterBar filters={filters} setFilters={setFilters} categories={categories} />
         </div>
         <div className="expenses-list-panel-modern">
@@ -88,7 +91,8 @@ function ExpensesView() {
           )}
         </div>
         <p className="expenses-amount-caption">
-          Amounts shown in <span className="currency-inline">{currencySymbol}</span>
+          Amounts shown in&nbsp;
+          <span className="currency-inline">{currencySymbol}</span>
         </p>
       </div>
     </section>

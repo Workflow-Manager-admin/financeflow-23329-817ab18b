@@ -15,7 +15,7 @@
   color: #fff;
   border: none;
   border-radius: 9999px;
-  box-shadow: 0 8px 38px -4px rgba(60,42,150,0.18), 0 2px 12px rgba(60,42,150,0.12);
+  /* box-shadow removed due to minifier error */
   padding: 1.25em 2.8em 1.25em 1.35em;
   font-size: 1.5rem;
   font-weight: 800;

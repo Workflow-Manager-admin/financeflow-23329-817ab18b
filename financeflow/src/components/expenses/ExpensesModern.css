@@ -1,5 +1,5 @@
 .expenses-section-modern {
-  background: var(--background);
+  background: #f5f6fa;
   padding: 0;
   width: 100%;
   min-height: 100vh;
@@ -10,10 +10,10 @@
 .expenses-card-modern {
   width: 100%;
   max-width: 670px;
-  background: var(--surface);
+  background: #fff;
   border-radius: 18px;
   margin: 38px 0 0 0;
-  box-shadow: 0 0 18px 0 rgba(87,47,177,0.11), 0 1.5px 6px 0 rgba(87,47,177,0.06);
+  box-shadow: 0 0 18px 0 rgba(87,47,177,0.11);
   padding: 0 0 37px 0;
   display: flex;
   flex-direction: column;
@@ -26,7 +26,7 @@
   align-items: flex-start;
   padding: 30px 32px 18px 32px;
   border-radius: 18px 18px 0 0;
-  background: var(--background);
+  background: #f5f6fa;
   justify-content: space-between;
   gap: 10px;
 }
@@ -34,7 +34,7 @@
 .expenses-title-modern {
   font-size: 2.2rem;
   font-weight: 800;
-  color: var(--primary);
+  color: #6C2EBE;
   margin: 0 0 0 0;
   letter-spacing: 0.015em;
   line-height: 1.10;
@@ -43,7 +43,7 @@
 
 .add-tx-fab-modern {
   border: none;
-  background: var(--primary);
+  background: #6C2EBE;
   color: #fff;
   width: 42px;
   height: 42px;
@@ -79,21 +79,21 @@
 }
 
 .no-expenses-msg {
-  color: var(--text-secondary);
+  color: #7a748b;
   font-size: 1.08em;
   padding-top: 7px;
   margin-bottom: 0;
 }
 
 .expenses-amount-caption {
-  color: var(--text-secondary);
+  color: #7a748b;
   font-size: 1.07em;
   margin: 19px 0 0 31px;
   padding: 0;
 }
 .currency-inline {
   font-weight: 600;
-  color: var(--primary);
+  color: #6C2EBE;
 }
 @media (max-width: 850px) {
   .expenses-card-modern {

@@ -1,8 +1,11 @@
 .goalmodal-bg {
   position: fixed;
   z-index: 1040;
-  top: 0; left: 0; bottom: 0; right: 0;
-  background: rgba(30,24,60,0.30);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(30,24,60,0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,7 +25,20 @@
   flex-direction: column;
   gap: 13px;
 }
-.goalmodal h3 { text-align: center; }
-.goalmodal-btnrow { display: flex; gap: 11px; justify-content: flex-end; }
-.btn-cancel { background: #bbb !important; color: #222 !important; }
-.goalmodal-error { color: #E74C3C; font-size: 0.98em; margin-bottom: -7px; }
+.goalmodal h3 {
+  text-align: center;
+}
+.goalmodal-btnrow {
+  display: flex;
+  gap: 11px;
+  justify-content: flex-end;
+}
+.btn-cancel {
+  background: #bbb !important;
+  color: #222 !important;
+}
+.goalmodal-error {
+  color: #E74C3C;
+  font-size: 0.98em;
+  margin-bottom: -7px;
+}

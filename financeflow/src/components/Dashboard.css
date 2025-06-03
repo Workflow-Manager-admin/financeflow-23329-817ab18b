@@ -110,6 +110,9 @@
   padding: 13px 16px 18px 16px;
 }
 
+/* Remove any inline property comments or slashes used as separators */
+
+
 /* Transaction list below grid, full width */
 .dashboard-transactions-list {
   margin-top: 10px;

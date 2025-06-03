@@ -7,12 +7,12 @@ import TransactionList from "./transactions/TransactionList";
 
 /**
  * PUBLIC_INTERFACE
- * Dashboard main panel - uses grid/flex for
- * - Top right: Expenses by Category (PieChart)
- * - Left: Spending Trends & Insights (short)
- * - Savings Goal: below insights
+ * Dashboard main panel - structure:
+ * - Left/First: Expenses by Category (PieChart) and Savings Goal
+ * - Right/Second: Spending Trends & Insights
  * - TransactionList: below all charts
- * - Enhanced Add Transaction button ("＋ Add transaction")
+ * - Add Transaction button (FAB)
+ * Responsive: columns stack on small screens, flex on desktop.
  */
 function Dashboard({ transactions, setTransactions, goal, setGoal, showToast, onAddTransaction }) {
   // Calculate values for charts and savings
@@ -36,11 +36,12 @@ function Dashboard({ transactions, setTransactions, goal, setGoal, showToast, on
 
       {/* Dashboard flex/grid arrangement */}
       <div className="dashboard-flex-grid">
-        <div className="dashboard-left-col">
-          <div className="dashboard-insights-panel">
-            <SpendingTrendsWithInsights transactions={transactions} />
+        {/* SWAPPED: PieChart + Savings column first, then Insights column */}
+        <div className="dashboard-pie-savings-col">
+          <div className="dashboard-piechart-panel">
+            <PieChart transactions={transactions} />
           </div>
-          <div className="dashboard-savings-goal">
+          <div className="dashboard-savings-goal" style={{ marginTop: 22 }}>
             <SavingsRing
               goal={goal}
               totalSaved={totalIncome - totalExpense}
@@ -49,8 +50,10 @@ function Dashboard({ transactions, setTransactions, goal, setGoal, showToast, on
             />
           </div>
         </div>
-        <div className="dashboard-piechart-panel">
-          <PieChart transactions={transactions} />
+        <div className="dashboard-insights-col">
+          <div className="dashboard-insights-panel">
+            <SpendingTrendsWithInsights transactions={transactions} />
+          </div>
         </div>
       </div>
 

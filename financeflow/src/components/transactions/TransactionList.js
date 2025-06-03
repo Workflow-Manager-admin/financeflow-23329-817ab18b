@@ -20,8 +20,10 @@ function TransactionList({
   emptyMsg = "No transactions.",
   modernExpenses = false,
 }) {
-  if (!Array.isArray(transactions)) return null;
+  // Always call hooks at the top-level
   const { currencySymbol = "$" } = usePreferences?.() || {};
+
+  if (!Array.isArray(transactions)) return null;
 
   // Always modern style (for dashboard/expenses/etc)
   return (

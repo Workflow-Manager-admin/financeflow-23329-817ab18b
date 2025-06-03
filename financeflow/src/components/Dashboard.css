@@ -2,13 +2,13 @@
   padding: 26px 0 0 0;
   position: relative;
 }
-/* -----------------------------------
-   Floating Action Button (FAB)
+/* Floating Action Button (FAB)
    for Add Transaction – prominent,
    modern, accessible, and responsive.
 
    .fab-add.enhanced : used in Dashboard.js
-   ----------------------------------- */
+   -- Comments have been minimized for compatibility --
+*/
 .fab-add.enhanced {
   /* Fixed to bottom-right, above main content */
   position: fixed;
@@ -132,8 +132,7 @@
   }
 }
 
-/* Remove any duplicate, old/legacy FAB classes if existing.
-   All floating action button rules now unified above. */
+/* All floating action button styles unified above. Old/legacy FAB class rules have been removed. */
 .dashboard-flex-grid {
   display: flex;
   flex-wrap: wrap;

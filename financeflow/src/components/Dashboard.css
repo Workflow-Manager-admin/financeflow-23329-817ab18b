@@ -126,8 +126,6 @@
 
 /* Remove legacy or unused FAB styles: (if classnames like .fab-add.enhanced, etc., existed before they're not needed with new design) */
 
-/* --- layout and dashboard panel styles below remain unchanged (copied from previous valid sections) --- */
-
 .dashboard-flex-grid {
   display: flex;
   flex-wrap: wrap;

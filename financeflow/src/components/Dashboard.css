@@ -3,7 +3,6 @@
   position: relative;
 }
 
-/* Floating Add Transaction Button */
 .fab-add.enhanced {
   position: fixed;
   bottom: 34px;
@@ -87,7 +86,7 @@
   }
 }
 
-/* ---- DASHBOARD FLEX LAYOUT SWAPPED ---- */
+/* Dashboard Flex Layout */
 .dashboard-flex-grid {
   display: flex;
   flex-wrap: wrap;
@@ -100,7 +99,6 @@
   align-items: flex-start;
 }
 
-/* Swapped column structures for Pie/Savings and Insights */
 .dashboard-pie-savings-col {
   flex: 1 1 340px;
   min-width: 290px;
@@ -143,7 +141,6 @@
   margin-bottom: 20px;
 }
 
-/* Responsive: stack columns and soften padding/gap on smaller screens */
 @media (max-width: 1050px) {
   .dashboard-flex-grid {
     flex-direction: column;
@@ -196,7 +193,6 @@
   }
 }
 
-/* Transactions list */
 .dashboard-transactions-list {
   max-width: 1100px;
   margin: 0 auto 30px auto;

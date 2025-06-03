@@ -1,6 +1,7 @@
 import React from "react";
 import "./Dashboard.css";
 import PieChart from "./visuals/PieChart";
+import { usePreferences } from './PreferencesProvider';
 import SpendingTrendsWithInsights from "./visuals/SpendingTrendsWithInsights";
 import SavingsRing from "./savings/SavingsRing";
 import TransactionList from "./transactions/TransactionList";

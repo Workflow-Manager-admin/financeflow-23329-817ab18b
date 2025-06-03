@@ -5,8 +5,9 @@
   background: rgba(30,24,60,0.22);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;   /* moved modal to the right side */
 }
+
 .goalmodal {
   background: var(--surface, #fff);
   color: var(--text-color, #23243A);
@@ -18,12 +19,14 @@
   flex-direction: column;
   gap: 13px;
 }
+
 .goalmodal h3 {
   margin: 0 0 7px;
   color: var(--primary, #6C2EBE);
   font-size: 1.18rem;
   text-align: center;
 }
+
 .goalmodal input,
 .goalmodal select {
   font-size: 1.07rem;
@@ -82,16 +85,19 @@
     min-width: 0;
   }
 }
+
 .goalmodal-btnrow {
   display: flex;
   gap: 11px;
   justify-content: flex-end;
   margin-top: 10px;
 }
+
 .btn-cancel {
   background: #bbb !important;
   color: #222 !important;
 }
+
 .goalmodal-error {
   color: var(--expense, #E74C3C);
   font-size: 0.98em;

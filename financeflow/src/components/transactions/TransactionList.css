@@ -1,10 +1,10 @@
-.universal .tx-list-modern {
+.tx-list-modern {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.tx-item-modern .universal {
+.tx-item-modern {
   background: var(--surface, #fff);
   margin-bottom: 12px;
   border-radius: 10px;
@@ -58,7 +58,7 @@
   word-break: break-word;
 }
 
-.tx-amount-modern.universal {
+.tx-amount-modern {
   font-weight: 700;
   font-size: 1.20em;
   line-height: 1.13;
@@ -67,12 +67,10 @@
   text-align: right;
   letter-spacing: 0.01em;
 }
-
-.tx-amount-modern.universal.expense {
+.tx-amount-modern.expense {
   color: var(--expense, #E74C3C);
 }
-
-.tx-amount-modern.universal.income {
+.tx-amount-modern.income {
   color: var(--income, #22C55E);
 }
 
@@ -139,14 +137,14 @@
 }
 
 @media (max-width: 600px) {
-  .tx-item-modern.universal {
+  .tx-item-modern {
     padding: 9px 4vw 7px 4vw;
     margin-bottom: 9px;
   }
   .tx-main-info {
     font-size: 0.96em;
   }
-  .tx-amount-modern.universal {
+  .tx-amount-modern {
     min-width: unset;
     font-size: 1.08em;
   }

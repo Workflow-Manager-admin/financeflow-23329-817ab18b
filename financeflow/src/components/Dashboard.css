@@ -3,124 +3,131 @@
   position: relative;
 }
 
-.fab-add.enhanced {
+/* Modern Floating Action Button: Add Transaction */
+.fab-add {
   position: fixed;
-  bottom: 40px;
-  right: 36px;
-  z-index: 110;
+  bottom: 38px;
+  right: 34px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
   background: var(--primary, #6C2EBE);
   color: #fff;
   border: none;
   border-radius: 9999px;
-  box-shadow: 0 6px 34px -4px rgba(60,42,150,0.18), 0 2px 14px rgba(60,42,150,0.12);
-  padding: 1.2em 3.35em 1.2em 1.7em;
-  font-size: 2.55em;
+  box-shadow: 0 8px 38px -4px rgba(60,42,150,0.18), 0 2px 12px rgba(60,42,150,0.12);
+  padding: 1.25em 2.8em 1.25em 1.35em;
+  font-size: 1.5rem;
   font-weight: 800;
   min-width: 0;
   min-height: 0;
-  display: flex;
-  align-items: center;
-  gap: 26px;
+  transition:
+    background 0.15s cubic-bezier(.4,0,.2,1),
+    transform 0.18s cubic-bezier(.4,0,.2,1),
+    box-shadow 0.18s cubic-bezier(.4,0,.2,1);
   cursor: pointer;
   outline: none;
   user-select: none;
+  gap: 1.15em;
   border: 3px solid #fff;
-  box-sizing: border-box;
   will-change: transform, box-shadow;
-  transition:
-    box-shadow 0.18s cubic-bezier(0.4,0,0.2,1),
-    background 0.16s cubic-bezier(0.4,0,0.2,1),
-    transform 0.16s cubic-bezier(0.4,0,0.2,1);
 }
-.fab-add.enhanced:focus-visible {
-  box-shadow: 0 0 0 7px var(--secondary, #d7bbfa), 0 2px 13px rgba(108,46,190,0.13);
+.fab-add:focus-visible {
+  box-shadow: 0 0 0 0.35em var(--secondary, #e5d6f7), 0 2px 13px rgba(108,46,190,0.13);
   outline: none;
 }
-.fab-add.enhanced:active {
-  background: #59209a;
-  transform: scale(0.970);
-}
-.fab-add.enhanced:hover,
-.fab-add.enhanced:focus {
+.fab-add:active {
   background: #542497;
-  transform: translateY(-2.3px) scale(1.055);
-  box-shadow: 0 2px 38px -4px rgba(108, 46, 190,0.21), 0 1px 11px rgba(60,42,150,0.17);
+  transform: scale(0.96);
+}
+.fab-add:hover,
+.fab-add:focus {
+  background: #4E208A;
+  transform: translateY(-2px) scale(1.042);
+  box-shadow: 0 2px 40px -4px rgba(108, 46, 190,0.23), 0 1px 12px rgba(60,42,150,0.17);
 }
 
+/* Icon: visually larger, center aligned */
 .fab-icon {
-  line-height: 1;
-  font-size: 1.52em;
-  margin-right: 0.10em;
-  font-weight: 900;
+  font-size: 2.3em;
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
+  line-height: 1;
+  margin-right: 0.20em;
 }
 
+/* Label: always shown unless on smallest screens */
 .fab-label {
-  font-size: 1.32rem;
+  font-size: 1.25em;
   font-weight: 700;
-  margin-left: 10px;
-  margin-right: 14px;
-  display: inline-block;
+  margin-left: 0.5em;
+  margin-right: 0.9em;
   font-family: inherit;
   letter-spacing: 0.018em;
   white-space: nowrap;
   text-align: left;
+  transition: opacity 0.2s;
 }
 
-@media (max-width: 1150px) {
-  .fab-add.enhanced {
-    font-size: 2.11em;
-    padding: 1em 2.5em 1em 1em;
-    right: 19px;
-    bottom: 25px;
+/* Responsiveness: shrink sizes/adapt padding as screen gets smaller */
+@media (max-width: 1200px) {
+  .fab-add {
+    font-size: 1.18rem;
+    padding: 1.1em 2em 1.1em 1.1em;
+    right: 15px;
+    bottom: 22px;
   }
   .fab-label {
-    font-size: 1.095rem;
-    margin-left: 6px;
-    margin-right: 9px;
+    font-size: 1.08em;
+    margin-left: 0.35em;
+    margin-right: 0.75em;
+  }
+  .fab-icon {
+    font-size: 2em;
   }
 }
 @media (max-width: 800px) {
-  .fab-add.enhanced {
-    font-size: 1.32em;
-    padding: 0.90em 1.53em 0.90em 0.93em;
-    right: 11px;
-    bottom: 15px;
+  .fab-add {
+    font-size: 1rem;
+    padding: 0.95em 1.45em 0.95em 0.8em;
+    right: 8px;
+    bottom: 8px;
   }
   .fab-label {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-left: 4px;
-    margin-right: 4px;
+    font-size: 1em;
+    margin-left: 0.27em;
+    margin-right: 0.55em;
   }
   .fab-icon {
-    font-size: 1.13em;
+    font-size: 1.3em;
   }
 }
-
-@media (max-width: 475px) {
+/* Smallest screens: visually hide the label but keep it in markup for a11y */
+@media (max-width: 478px) {
   .fab-label {
-    position: absolute !important;
+    position: absolute;
     width: 1px;
     height: 1px;
     padding: 0;
-    margin: 0 !important;
+    margin: 0;
     overflow: hidden;
-    clip: rect(0px, 0px, 0px, 0px);
+    clip: rect(0,0,0,0);
     white-space: nowrap;
     border: 0;
   }
-  .fab-add.enhanced {
-    font-size: 1.02em;
-    padding: 0.65em 0.9em;
+  .fab-add {
+    font-size: 0.97rem;
+    padding: 0.6em 0.92em;
   }
   .fab-icon {
-    font-size: 1.01em;
+    font-size: 1.08em;
   }
 }
+
+/* Remove legacy or unused FAB styles: (if classnames like .fab-add.enhanced, etc., existed before they're not needed with new design) */
+
+/* --- layout and dashboard panel styles below remain unchanged (copied from previous valid sections) --- */
 
 .dashboard-flex-grid {
   display: flex;
